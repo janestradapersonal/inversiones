@@ -1,4 +1,4 @@
-# InversionesFácil
+# InversionesFácilessss
 
 A Spanish financial education website — **inversionesfacil.es** — that teaches people how to invest simply and accessibly.
 
