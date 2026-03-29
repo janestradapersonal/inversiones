@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { base44 } from "@/api/base44Client";
+import { forumApi } from "@/api/forumClient";
 import { MessageCircle, Plus, ThumbsUp, ChevronDown, ChevronUp, Send, X, User } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -22,7 +22,7 @@ function NewPostModal({ onClose, onCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await base44.entities.ForumPost.create({
+    await forumApi.posts.create({
       ...form,
       author_name: form.is_anonymous ? "Anónimo" : form.author_name || "Anónimo"
     });
@@ -124,7 +124,7 @@ function ReplyForm({ postId, onReplied }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await base44.entities.ForumReply.create({
+    await forumApi.replies.create({
       post_id: postId,
       content: form.content,
       author_name: form.is_anonymous ? "Anónimo" : form.author_name || "Anónimo",
@@ -179,7 +179,7 @@ function PostCard({ post, onLike }) {
   const [replies, setReplies] = useState([]);
 
   const loadReplies = async () => {
-    const r = await base44.entities.ForumReply.filter({ post_id: post.id }, "-created_date");
+    const r = await forumApi.replies.list(post.id);
     setReplies(r);
   };
 
@@ -271,16 +271,16 @@ export default function Foro() {
 
   const loadPosts = async () => {
     setLoading(true);
-    const data = await base44.entities.ForumPost.list("-created_date", 50);
+    const data = await forumApi.posts.list();
     setPosts(data);
     setLoading(false);
   };
 
-  useEffect(() => {loadPosts();}, []);
+  useEffect(() => { loadPosts(); }, []);
 
   const handleLike = async (post) => {
     const newLikes = (post.likes || 0) + 1;
-    await base44.entities.ForumPost.update(post.id, { likes: newLikes });
+    await forumApi.posts.update(post.id, { likes: newLikes });
     setPosts(posts.map((p) => p.id === post.id ? { ...p, likes: newLikes } : p));
   };
 
@@ -289,7 +289,6 @@ export default function Foro() {
   return (
     <div className="bg-[#7dd0e3] pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -310,12 +309,10 @@ export default function Foro() {
           </p>
         </motion.div>
 
-        {/* Category filter + New post button */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setActiveCategory("all")} className="bg-blue-950 text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
-              
               
               🌐 Todos
             </button>
@@ -323,7 +320,6 @@ export default function Foro() {
             <button
               key={c}
               onClick={() => setActiveCategory(c)} className="bg-blue-950 text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
-              
               
                 {CAT_EMOJI[c]} {c}
               </button>
@@ -337,7 +333,6 @@ export default function Foro() {
           </button>
         </div>
 
-        {/* Posts */}
         {loading ?
         <div className="space-y-4">
             {[1, 2, 3].map((i) =>
