@@ -222,7 +222,7 @@ export default function MarketCharts() {
 
       {/* Charts grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {ASSETS.map((asset) =>
+        {ASSETS.filter((asset) => !loading || marketData[asset.key]).map((asset) =>
         <AssetChart
           key={asset.key}
           asset={asset}
