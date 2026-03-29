@@ -64,9 +64,9 @@ export default function Home() {
             </span>
 
             <h1 className="font-sora text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight mb-6">
-              Aprende en 5 minutos{" "}
+              Haz que tu dinero{" "}
               <span className="bg-gradient-to-r from-brand-orange via-brand-purple to-brand-pink bg-clip-text text-transparent">
-                trabajar por ti
+                trabaje por ti
               </span>
               <br />
               mientras duermes
