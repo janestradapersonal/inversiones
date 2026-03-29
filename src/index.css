@@ -62,9 +62,9 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground font-inter;
-    background-color: #f8faff;
+  html, body {
+    @apply text-foreground font-inter;
+    background-color: #7dd0e3;
   }
   h1, h2, h3 {
     font-family: 'Sora', sans-serif;
