@@ -27,10 +27,10 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-white/95 backdrop-blur-md shadow-lg shadow-black/5" : "bg-transparent"}`
+      scrolled ? "bg-[#7dd0e3]/95 backdrop-blur-md shadow-lg shadow-black/5" : "bg-transparent"}`
       }>
       
-      <div className="bg-[#7dd0e3] text-[#7dd0e3] mx-auto px-4 max-w-6xl sm:px-6 flex items-center justify-between h-16 md:h-20">
+      <div className="mx-auto px-4 max-w-6xl sm:px-6 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-orange to-brand-purple flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
