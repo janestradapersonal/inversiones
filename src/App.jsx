@@ -28,9 +28,20 @@ function NotFound() {
 }
 
 function App() {
+  const rawBase = import.meta.env.BASE_URL || '/';
+  let basename = '/';
+  if (rawBase && rawBase !== './') {
+    basename = rawBase.replace(/\/$/, '') || '/';
+  } else {
+    const repoName = 'inversiones';
+    const firstSeg = typeof window !== 'undefined' ? window.location.pathname.split('/').filter(Boolean)[0] || '' : '';
+    if (firstSeg === repoName) basename = '/' + repoName;
+    else basename = '/';
+  }
+
   return (
     <QueryClientProvider client={queryClientInstance}>
-      <Router basename="/inversiones">
+      <Router basename={basename}>
         <Routes>
           <Route element={<PageLayout />}>
             <Route path="/" element={<Home />} />

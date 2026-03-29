@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 
 export default defineConfig({
-  base: '/inversiones/',
+  base: './',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
