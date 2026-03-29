@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { ExternalLink, Gift, Star, CheckCircle, ArrowRight, Zap } from "lucide-react";
 
 const steps = [
-{ num: "1", title: "Elige una plataforma", desc: "MyInvestor o Trade Republic. Las dos son gratuitas, seguras y reguladas. Abajo te explicamos cuál va mejor para ti." },
+{ num: "1", title: "Elige una plataforma", desc: "MyInvestor o Trade Republic. Las dos son gratuitas, seguras y reguladas." },
 { num: "2", title: "Regístrate en 10 minutos", desc: "Solo necesitas DNI, email y un selfie. Todo online, sin ir a ninguna oficina." },
-{ num: "3", title: "Ingresa dinero", desc: "Desde 1€. Puedes hacer una transferencia desde tu banco habitual." },
+{ num: "3", title: "Ingresa dinero", desc: "Desde 1€. Puedes hacer una transferencia gratuita desde tu banco habitual y empezar a ivertir." },
 { num: "4", title: "Elige tu inversión", desc: "Busca un ETF global (por ejemplo MSCI World o S&P 500) y compra tu primera participación." },
 { num: "5", title: "Activa aportaciones mensuales", desc: "Programa una inversión automática mensual. Así inviertes sin pensar y aprovechas el DCA." }];
 

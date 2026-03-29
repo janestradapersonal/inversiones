@@ -4,10 +4,10 @@ import { TrendingUp, Shield, Zap, ArrowRight, Euro, Clock, Smile } from "lucide-
 import MarketCharts from "@/components/MarketCharts";
 
 const stats = [
-{ value: "70%", label: "de españoles no invierte su dinero", icon: "😴" },
-{ value: "3%", label: "es lo que pierde tu dinero al año por la inflación", icon: "📉" },
+{ value: "70%", label: "de españoles no invierte su dinero,(mucha gente piensa que es apostar)", icon: "😴" },
+{ value: "3%", label: "es lo que pierde tu dinero al año por la inflación ", icon: "📉" },
 { value: "7%", label: "rentabilidad media anual de un índice global", icon: "🚀" },
-{ value: "0€", label: "necesitas para empezar a invertir hoy", icon: "🎯" }];
+{ value: "1€", label: "necesitas para empezar a invertir hoy", icon: "🎯" }];
 
 
 const features = [
@@ -64,7 +64,7 @@ export default function Home() {
             </span>
 
             <h1 className="font-sora text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight mb-6">
-              Tu dinero puede{" "}
+              Aprende en 5 minutos{" "}
               <span className="bg-gradient-to-r from-brand-orange via-brand-purple to-brand-pink bg-clip-text text-transparent">
                 trabajar por ti
               </span>
