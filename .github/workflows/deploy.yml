@@ -15,7 +15,11 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-      - run: npm run build
+      - name: Build project
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
