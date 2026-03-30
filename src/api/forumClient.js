@@ -1,4 +1,4 @@
-const BASE = '/api/forum';
+const BASE = import.meta.env.VITE_API_URL || '/api/forum';
 
 export const forumApi = {
   posts: {

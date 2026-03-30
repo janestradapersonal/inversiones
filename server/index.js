@@ -1,9 +1,11 @@
 import express from 'express';
 import pg from 'pg';
+import cors from 'cors';
 
 const { Pool } = pg;
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: 'https://inversionesfacil.es' }));
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
