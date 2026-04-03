@@ -22,7 +22,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [location]);
+  useEffect(() => {
+    setOpen(false);
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <header
