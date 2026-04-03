@@ -95,12 +95,12 @@ function AccordionItem({ item, index }) {
   return (
     <div className="border border-border rounded-2xl overflow-hidden">
       <button
-        onClick={() => setOpen(!open)} className={`p-5 text-left w-full flex items-center justify-between hover:bg-muted/50 transition-colors ${open ? "bg-yellow-400" : "bg-blue-950"}`}>
+        onClick={() => setOpen(!open)} className={`group p-5 text-left w-full flex items-center justify-between transition-colors ${open ? "bg-yellow-400" : "bg-blue-950 hover:bg-yellow-400"}`}>
 
 
-        <span className={`pr-4 font-semibold ${open ? "text-black" : "text-gray-50"}`}>{item.q}</span>
+        <span className={`pr-4 font-semibold ${open ? "text-black" : "text-gray-50 group-hover:text-black"}`}>{item.q}</span>
         <ChevronDown
-          className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+          className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180 text-black" : "text-muted-foreground group-hover:text-black"}`} />
         
       </button>
       <AnimatePresence>
