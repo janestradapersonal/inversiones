@@ -177,10 +177,20 @@ function ReplyForm({ postId, onReplied }) {
 function PostCard({ post, onLike }) {
   const [expanded, setExpanded] = useState(false);
   const [replies, setReplies] = useState([]);
+  const [replyCount, setReplyCount] = useState(0);
+
+  useEffect(() => {
+    const fetchReplyCount = async () => {
+      const r = await forumApi.replies.list(post.id);
+      setReplyCount(r.length);
+    };
+    fetchReplyCount();
+  }, [post.id]);
 
   const loadReplies = async () => {
     const r = await forumApi.replies.list(post.id);
     setReplies(r);
+    setReplyCount(r.length);
   };
 
   const handleExpand = async () => {
@@ -225,9 +235,9 @@ function PostCard({ post, onLike }) {
         <button
           onClick={handleExpand}
           className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-purple transition-colors">
-          
+
           <MessageCircle className="text-slate-950 lucide lucide-message-circle w-4 h-4" />
-          <span className="text-slate-950">Responder</span>
+          <span className="text-slate-950">{replyCount} {replyCount === 1 ? 'respuesta' : 'respuestas'}</span>
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
