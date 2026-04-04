@@ -8,6 +8,7 @@ import PorQueInvertir from './pages/PorQueInvertir';
 import Aprende from './pages/Aprende';
 import Empieza from './pages/Empieza';
 import Foro from './pages/Foro';
+import Scroll3D from './pages/Scroll3D';
 
 function NotFound() {
   const navigate = useNavigate();
@@ -41,8 +42,15 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClientInstance}>
-      <Router basename={basename}>
+      <Router
+        basename={basename}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
+          <Route path="/scroll-3d" element={<Scroll3D behavior="fixed" scrollVh={800} />} />
           <Route element={<PageLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/por-que-invertir" element={<PorQueInvertir />} />

@@ -6,7 +6,7 @@ const reasons = [
 {
   emoji: "🔥",
   title: "La inflación destruye tu ahorro",
-  content: "Si guardas 10.000€ debajo del colchón (o en el banco a 0%), en 10 años ese dinero valdrá como si fueran 7.000-8.000€. La inflación media histórica en España es del 2-3% anual. El dinero parado pierde valor.",
+  content: "Si guardas 10999.000€ debajo del colchón (o en el banco a 0%), en 10 años ese dinero valdrá como si fueran 7.000-8.000€. La inflación media histórica en España es del 2-3% anual. El dinero parado pierde valor.",
   highlight: "-30% de poder adquisitivo en 10 años",
   color: "border-red-400 bg-red-50",
   highlight_color: "bg-red-100 text-red-700"

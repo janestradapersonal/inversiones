@@ -80,7 +80,24 @@ app.post('/api/forum/replies', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`API server running on port ${PORT}`);
-});
+const requestedPort = Number(process.env.API_PORT || process.env.PORT || 3001);
+
+function listen(port, retriesLeft) {
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`API server running on port ${port}`);
+  });
+
+  server.on('error', (err) => {
+    const envPortProvided = Boolean(process.env.API_PORT || process.env.PORT);
+    if (!envPortProvided && err?.code === 'EADDRINUSE' && retriesLeft > 0) {
+      console.warn(`Port ${port} in use. Trying ${port + 1}...`);
+      listen(port + 1, retriesLeft - 1);
+      return;
+    }
+
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+listen(Number.isFinite(requestedPort) ? requestedPort : 3001, 10);

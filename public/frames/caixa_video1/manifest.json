@@ -1,0 +1,7 @@
+{
+  "basePath": "/frames/caixa_video1",
+  "pattern": "frame_%04d.webp",
+  "pad": 4,
+  "extension": "webp",
+  "frameCount": 120
+}

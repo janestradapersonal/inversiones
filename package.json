@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server/index.js & vite",
+    "dev": "concurrently -n api,vite -c blue,green \"node server/index.js\" \"vite\"",
+    "frames:extract": "node extract-frames.js",
     "start": "node server/index.js",
     "server": "node server/index.js",
     "build": "vite build",
@@ -93,6 +94,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "baseline-browser-mapping": "^2.8.32",
+    "concurrently": "^9.2.1",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
