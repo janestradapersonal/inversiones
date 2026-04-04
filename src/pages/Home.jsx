@@ -55,7 +55,10 @@ export default function Home() {
     if (!section || elements.length === 0) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(elements, { autoAlpha: 0, y: 20 });
+      elements.forEach((el, idx) => {
+        const isLeft = idx === 0 || idx === 3;
+        gsap.set(el, { autoAlpha: 0, x: isLeft ? -60 : 60, y: 0 });
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -73,6 +76,7 @@ export default function Home() {
       const fade = 0.18 * seg;
 
       elements.forEach((el, idx) => {
+        const isLeft = idx === 0 || idx === 3;
         const start = idx * seg;
         const enter = start + fade;
         const exit = (idx + 1) * seg - fade;
@@ -81,7 +85,7 @@ export default function Home() {
           el,
           {
             autoAlpha: 1,
-            y: 0,
+            x: 0,
             duration: fade,
             ease: "power1.out",
           },
@@ -93,7 +97,7 @@ export default function Home() {
           el,
           {
             autoAlpha: 1,
-            y: 0,
+            x: 0,
             duration: Math.max(0, exit - enter),
             ease: "none",
           },
@@ -104,7 +108,7 @@ export default function Home() {
           el,
           {
             autoAlpha: 0,
-            y: -14,
+            x: isLeft ? -60 : 60,
             duration: fade,
             ease: "power1.in",
           },
@@ -195,16 +199,24 @@ export default function Home() {
       <section ref={cardsSectionRef} className="relative">
         <Scroll3D behavior="sticky" scrollVh={500}>
           <div className="h-full w-full flex items-center justify-center px-6">
-            <div className="relative w-full max-w-xl">
+            <div className="relative w-full h-full">
               {cards.map((f, idx) => (
                 <div
                   key={f.title}
                   ref={(el) => {
                     cardRefs.current[idx] = el;
                   }}
-                  className="absolute inset-0 flex items-center justify-center"
+                  className={
+                    idx === 0
+                      ? "absolute inset-0 flex items-start justify-start p-8"
+                      : idx === 1
+                        ? "absolute inset-0 flex items-start justify-end p-8"
+                        : idx === 2
+                          ? "absolute inset-0 flex items-end justify-end p-8"
+                          : "absolute inset-0 flex items-end justify-start p-8"
+                  }
                 >
-                  <div className="bg-white rounded-3xl p-8 border border-border w-full">
+                  <div className="bg-[#7dd0e3] rounded-3xl p-7 border border-primary/20 w-full max-w-sm">
                     <div
                       className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${f.color} flex items-center justify-center text-white mb-5`}
                     >
