@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TrendingUp, Shield, Zap, ArrowRight, Euro, Clock, Smile } from "lucide-react";
 import MarketCharts from "@/components/MarketCharts";
+import ScrollVault from "@/components/ScrollVault";
 
 const stats = [
 { value: "70%", label: "de españoles no invierte su dinero,(mucha gente piensa que es apostar)", icon: "😴" },
@@ -117,6 +118,9 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* ScrollVault - Caixa forta interactiva */}
+      <ScrollVault />
 
       {/* Stats bar */}
       <section className="py-16 bg-gradient-to-r from-brand-orange via-brand-purple to-brand-pink">
