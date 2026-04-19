@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { forumApi } from "@/api/forumClient";
-import { toast } from "@/components/ui/use-toast";
 import { MessageCircle, Plus, ThumbsUp, ChevronDown, ChevronUp, Send, X, User } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -229,9 +228,9 @@ function PostCard({ post, onLike }) {
         <button
           onClick={() => onLike(post)}
           title="Me gusta"
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-orange transition-colors">
+          className={`flex items-center gap-1.5 text-sm transition-colors ${post.liked ? "text-brand-orange" : "text-muted-foreground hover:text-brand-orange"}`}>
           
-          <ThumbsUp className="text-slate-950 lucide lucide-thumbs-up w-4 h-4" />
+          <ThumbsUp className={`lucide lucide-thumbs-up w-4 h-4 ${post.liked ? "text-brand-orange" : "text-slate-950"}`} />
           <span className="text-[#ff0000]">{post.likes || 0}</span>
         </button>
         <button
@@ -280,52 +279,107 @@ export default function Foro() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
-  const [likeCooldownUntil, setLikeCooldownUntil] = useState({});
+  const [likedByPostId, setLikedByPostId] = useState({});
 
-  const LIKE_COOLDOWN_FALLBACK_MS = 2 * 60 * 1000;
+  const LIKES_STORAGE_KEY = "forum_likes_v1";
+
+  const loadLikedFromStorage = () => {
+    try {
+      const raw = window.localStorage.getItem(LIKES_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      if (!parsed || typeof parsed !== "object") return {};
+      return parsed;
+    } catch {
+      return {};
+    }
+  };
+
+  const saveLikedToStorage = (next) => {
+    try {
+      window.localStorage.setItem(LIKES_STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // ignore
+    }
+  };
 
   const loadPosts = async () => {
     setLoading(true);
     const data = await forumApi.posts.list();
-    setPosts(data);
+    const likedMap = loadLikedFromStorage();
+    setLikedByPostId(likedMap);
+    setPosts(
+      (data || []).map((p) => ({
+        ...p,
+        liked: Boolean(likedMap?.[p.id]),
+      }))
+    );
     setLoading(false);
   };
 
   useEffect(() => { loadPosts(); }, []);
 
   const handleLike = async (post) => {
-    const now = Date.now();
-    const until = likeCooldownUntil?.[post.id] || 0;
-    if (until && now < until) {
-      const seconds = Math.max(1, Math.ceil((until - now) / 1000));
-      toast({
-        title: "Espera un poco",
-        description: `Puedes volver a dar like en ~${seconds}s.`,
-      });
-      return;
+    const wasLiked = Boolean(likedByPostId?.[post.id]);
+    const originalLikes = Number(post.likes || 0);
+
+    // Optimista (sin notificaciones)
+    const prevLikedMap = likedByPostId;
+    const nextLikedMap = { ...prevLikedMap };
+    if (wasLiked) {
+      delete nextLikedMap[post.id];
+    } else {
+      nextLikedMap[post.id] = true;
     }
 
-    try {
-      const updated = await forumApi.posts.like(post.id);
-      const cooldownMs = Number(updated?.likeCooldownMs) || LIKE_COOLDOWN_FALLBACK_MS;
-      setLikeCooldownUntil((prev) => ({ ...prev, [post.id]: Date.now() + cooldownMs }));
-      setPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, likes: updated.likes } : p)));
-    } catch (err) {
-      const status = err?.status;
-      const retryAfterMs = Number(err?.retryAfterMs) || 0;
-      if (status === 429 && retryAfterMs > 0) {
-        setLikeCooldownUntil((prev) => ({ ...prev, [post.id]: Date.now() + retryAfterMs }));
-        toast({
-          title: "Demasiado rápido",
-          description: "Espera unos minutos antes de volver a dar like.",
-        });
-        return;
-      }
+    setLikedByPostId(nextLikedMap);
+    saveLikedToStorage(nextLikedMap);
 
-      toast({
-        title: "No se pudo dar like",
-        description: "Inténtalo de nuevo en un momento.",
-      });
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === post.id
+          ? {
+              ...p,
+              liked: !wasLiked,
+              likes: Math.max(0, originalLikes + (wasLiked ? -1 : 1)),
+            }
+          : p
+      )
+    );
+
+    try {
+      const updated = wasLiked ? await forumApi.posts.unlike(post.id) : await forumApi.posts.like(post.id);
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === post.id
+            ? {
+                ...p,
+                likes: updated?.likes,
+                liked: Boolean(updated?.liked),
+              }
+            : p
+        )
+      );
+
+      const fixedLikedMap = { ...nextLikedMap };
+      if (!updated?.liked) delete fixedLikedMap[post.id];
+      setLikedByPostId(fixedLikedMap);
+      saveLikedToStorage(fixedLikedMap);
+    } catch {
+      // Revertir silenciosamente al estado original
+      setLikedByPostId(prevLikedMap);
+      saveLikedToStorage(prevLikedMap);
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === post.id
+            ? {
+                ...p,
+                liked: wasLiked,
+                likes: originalLikes,
+              }
+            : p
+        )
+      );
     }
   };
 

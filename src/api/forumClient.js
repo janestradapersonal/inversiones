@@ -39,7 +39,25 @@ export const forumApi = {
         }
         const err = new Error(payload?.error || 'Failed to like post');
         err.status = res.status;
-        err.retryAfterMs = payload?.retryAfterMs;
+        throw err;
+      }
+
+      return res.json();
+    },
+    unlike: async (id) => {
+      const res = await fetch(`${BASE}/posts/${id}/like`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        let payload = null;
+        try {
+          payload = await res.json();
+        } catch {
+          payload = null;
+        }
+        const err = new Error(payload?.error || 'Failed to unlike post');
+        err.status = res.status;
         throw err;
       }
 

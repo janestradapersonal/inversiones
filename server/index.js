@@ -10,15 +10,17 @@ app.use(cors({ origin: 'https://inversionesfacil.es' }));
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-const LIKE_COOLDOWN_MS = Number(process.env.LIKE_COOLDOWN_MS || 2 * 60 * 1000);
-const likeCooldownByIpAndPost = new Map();
+// Likes tipo "toggle" (sin login): máximo 1 like por IP+post.
+// Nota: es memoria en proceso; si reinicias el servidor se resetea el estado de "liked".
+const likedByIpAndPost = new Map();
 
-function cleanupLikeCooldowns(now) {
+function cleanupLikedMap(now) {
   // Limpieza simple para que el Map no crezca infinito.
-  // Elimina claves viejas (más de 2 ventanas de cooldown).
-  const maxAge = LIKE_COOLDOWN_MS * 2;
-  for (const [key, ts] of likeCooldownByIpAndPost.entries()) {
-    if (typeof ts !== 'number' || now - ts > maxAge) likeCooldownByIpAndPost.delete(key);
+  // Elimina claves inactivas de hace > 30 días.
+  const maxAge = 30 * 24 * 60 * 60 * 1000;
+  for (const [key, meta] of likedByIpAndPost.entries()) {
+    const ts = typeof meta?.ts === 'number' ? meta.ts : 0;
+    if (!ts || now - ts > maxAge) likedByIpAndPost.delete(key);
   }
 }
 
@@ -73,24 +75,24 @@ app.patch('/api/forum/posts/:id', async (req, res) => {
 app.post('/api/forum/posts/:id/like', async (req, res) => {
   const { id } = req.params;
   const now = Date.now();
-
   const ip = getClientIp(req);
   const key = `${ip}|${id}`;
-  const last = likeCooldownByIpAndPost.get(key) || 0;
-  const elapsed = now - last;
-  const remaining = LIKE_COOLDOWN_MS - elapsed;
 
-  if (likeCooldownByIpAndPost.size > 5000) cleanupLikeCooldowns(now);
+  if (likedByIpAndPost.size > 10000) cleanupLikedMap(now);
 
-  if (remaining > 0) {
-    res.set('Retry-After', String(Math.ceil(remaining / 1000)));
-    return res.status(429).json({
-      error: 'Cooldown: espera antes de volver a dar like',
-      retryAfterMs: remaining,
-    });
+  const alreadyLiked = Boolean(likedByIpAndPost.get(key)?.liked);
+  if (alreadyLiked) {
+    try {
+      const existing = await pool.query('SELECT * FROM forum_posts WHERE id = $1', [id]);
+      if (!existing.rows?.length) return res.status(404).json({ error: 'Post not found' });
+      return res.json({ ...existing.rows[0], liked: true });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Failed to like post' });
+    }
   }
 
-  likeCooldownByIpAndPost.set(key, now);
+  likedByIpAndPost.set(key, { liked: true, ts: now });
 
   try {
     const result = await pool.query(
@@ -104,11 +106,53 @@ app.post('/api/forum/posts/:id/like', async (req, res) => {
 
     return res.json({
       ...result.rows[0],
-      likeCooldownMs: LIKE_COOLDOWN_MS,
+      liked: true,
     });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Failed to like post' });
+  }
+});
+
+app.delete('/api/forum/posts/:id/like', async (req, res) => {
+  const { id } = req.params;
+  const now = Date.now();
+  const ip = getClientIp(req);
+  const key = `${ip}|${id}`;
+
+  if (likedByIpAndPost.size > 10000) cleanupLikedMap(now);
+
+  const alreadyLiked = Boolean(likedByIpAndPost.get(key)?.liked);
+  if (!alreadyLiked) {
+    try {
+      const existing = await pool.query('SELECT * FROM forum_posts WHERE id = $1', [id]);
+      if (!existing.rows?.length) return res.status(404).json({ error: 'Post not found' });
+      return res.json({ ...existing.rows[0], liked: false });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Failed to unlike post' });
+    }
+  }
+
+  likedByIpAndPost.set(key, { liked: false, ts: now });
+
+  try {
+    const result = await pool.query(
+      'UPDATE forum_posts SET likes = GREATEST(COALESCE(likes, 0) - 1, 0) WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if (!result.rows?.length) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    return res.json({
+      ...result.rows[0],
+      liked: false,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Failed to unlike post' });
   }
 });
 
