@@ -313,8 +313,13 @@ export default function Scroll3D({
       {/* Capa fija del canvas */}
       <div
         ref={fixedLayerRef}
-        className="fixed left-0 right-0 bg-black z-0 pointer-events-none"
-        style={{ top: `${topOffsetPx}px`, height: frameHeight }}
+        className={`fixed left-0 right-0 ${behavior === "fixed" ? "bg-black" : "bg-transparent"} z-0 pointer-events-none`}
+        style={{
+          top: `${topOffsetPx}px`,
+          height: frameHeight,
+          opacity: behavior === "fixed" ? 1 : 0,
+          visibility: behavior === "fixed" ? "visible" : "hidden",
+        }}
       >
         <canvas ref={canvasRef} className="block h-full w-full pointer-events-none" />
       </div>
@@ -324,7 +329,12 @@ export default function Scroll3D({
         <div
           ref={fixedOverlayRef}
           className="fixed left-0 right-0 z-20 pointer-events-none"
-          style={{ top: `${topOffsetPx}px`, height: frameHeight }}
+          style={{
+            top: `${topOffsetPx}px`,
+            height: frameHeight,
+            opacity: behavior === "fixed" ? 1 : 0,
+            visibility: behavior === "fixed" ? "visible" : "hidden",
+          }}
         >
           <div className="h-full w-full">{children}</div>
         </div>

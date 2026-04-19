@@ -206,6 +206,7 @@ export default function Home() {
                   ref={(el) => {
                     cardRefs.current[idx] = el;
                   }}
+                  style={{ opacity: 0, visibility: "hidden" }}
                   className={
                     idx === 0
                       ? "absolute inset-0 flex items-start justify-start p-8"
