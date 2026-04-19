@@ -25,6 +25,26 @@ export const forumApi = {
       if (!res.ok) throw new Error('Failed to update post');
       return res.json();
     },
+    like: async (id) => {
+      const res = await fetch(`${BASE}/posts/${id}/like`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        let payload = null;
+        try {
+          payload = await res.json();
+        } catch {
+          payload = null;
+        }
+        const err = new Error(payload?.error || 'Failed to like post');
+        err.status = res.status;
+        err.retryAfterMs = payload?.retryAfterMs;
+        throw err;
+      }
+
+      return res.json();
+    },
   },
   replies: {
     list: async (postId) => {

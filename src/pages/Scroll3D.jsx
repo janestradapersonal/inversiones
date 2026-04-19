@@ -4,15 +4,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/** @param {number} value @param {number} min @param {number} max */
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+/** @param {number} n @param {number} width */
 function padNumber(n, width) {
   const s = String(n);
   return s.length >= width ? s : "0".repeat(width - s.length) + s;
 }
 
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {HTMLImageElement} img
+ * @param {number} width
+ * @param {number} height
+ */
 function drawCover(ctx, img, width, height) {
   if (!img || !img.naturalWidth || !img.naturalHeight) return;
 
@@ -29,24 +37,44 @@ function drawCover(ctx, img, width, height) {
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
+/**
+ * @param {{
+ *  children?: import('react').ReactNode,
+ *  behavior?: 'sticky'|'fixed',
+ *  scrollVh?: number,
+ *  manifestUrl?: string,
+ *  overlayPointerEvents?: 'none'|'auto',
+ *  initiallyVisible?: boolean,
+ *  posterFrameUrl?: string,
+ *  layout?: 'spacer'|'none',
+ *  rangeStartRef?: import('react').RefObject<HTMLElement|null> | null,
+ *  rangeEndRef?: import('react').RefObject<HTMLElement|null> | null,
+ * }} props
+ */
 export default function Scroll3D({
   children,
   behavior = "sticky", // "sticky" (sección) | "fixed" (demo)
-  scrollVh,
+  scrollVh = 0,
   manifestUrl = "/frames/caixa_video1/manifest.json",
+  overlayPointerEvents = "none", // "none" | "auto"
+  initiallyVisible = false,
+  posterFrameUrl = "",
+  layout = "spacer",
+  rangeStartRef = null,
+  rangeEndRef = null,
 }) {
-  const containerRef = useRef(null);
-  const fixedLayerRef = useRef(null);
-  const fixedOverlayRef = useRef(null);
-  const canvasRef = useRef(null);
+  const containerRef = useRef(/** @type {HTMLDivElement|null} */ (null));
+  const fixedLayerRef = useRef(/** @type {HTMLDivElement|null} */ (null));
+  const fixedOverlayRef = useRef(/** @type {HTMLDivElement|null} */ (null));
+  const canvasRef = useRef(/** @type {HTMLCanvasElement|null} */ (null));
 
-  const rafIdRef = useRef(null);
+  const rafIdRef = useRef(/** @type {number|null} */ (null));
   const lastTickRef = useRef(0);
 
   const targetFrameRef = useRef(0);
   const currentFrameRef = useRef(0);
 
-  const imagesRef = useRef([]);
+  const imagesRef = useRef(/** @type {(HTMLImageElement|undefined)[]} */ ([]));
   const [frameCount, setFrameCount] = useState(0);
   const [manifest, setManifest] = useState(null);
   const [topOffsetPx, setTopOffsetPx] = useState(0);
@@ -57,6 +85,8 @@ export default function Scroll3D({
     // Regla simple: ~200 frames => 800vh
     return clamp(Math.ceil(frameCount * 4), 400, 1400);
   }, [frameCount, scrollVh]);
+
+  const shouldBeVisibleInitially = behavior === "fixed" ? true : Boolean(initiallyVisible);
 
   const frameHeight = useMemo(() => `calc(100vh - ${topOffsetPx}px)`, [topOffsetPx]);
 
@@ -114,6 +144,7 @@ export default function Scroll3D({
 
     const { basePath = "/frames/caixa_video1", pad = 4, extension = "webp" } = manifest;
 
+    /** @param {number} idx0 */
     const makeUrl = (idx0) => {
       const n = idx0 + 1;
       return `${basePath}/frame_${padNumber(n, pad)}.${extension}`;
@@ -121,6 +152,7 @@ export default function Scroll3D({
 
     let cancelled = false;
 
+    /** @param {number} idx0 */
     const loadOne = (idx0) => {
       if (idx0 < 0 || idx0 >= frameCount) return;
       if (imagesRef.current[idx0]) return;
@@ -197,6 +229,7 @@ export default function Scroll3D({
     const canvas = canvasRef.current;
     if (!canvas || !frameCount) return;
 
+    /** @param {number} ts */
     const tick = (ts) => {
       const c = canvasRef.current;
       if (!c) return;
@@ -255,24 +288,27 @@ export default function Scroll3D({
 
   // ScrollTrigger: controla visibilidad (modo sección) y targetFrame.
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container || !frameCount) return;
+    const startEl = rangeStartRef?.current || containerRef.current;
+    const endEl = rangeEndRef?.current || null;
+    if (!startEl || !frameCount) return;
 
     const ctx = gsap.context(() => {
       const fixedLayer = fixedLayerRef.current;
       const fixedOverlay = fixedOverlayRef.current;
       const isAlwaysVisible = behavior === "fixed";
+      const keepVisibleBeforeStart = layout === "none" && shouldBeVisibleInitially;
 
       if (!isAlwaysVisible) {
-        gsap.set([fixedLayer, fixedOverlay].filter(Boolean), { autoAlpha: 0 });
+        gsap.set([fixedLayer, fixedOverlay].filter(Boolean), { autoAlpha: shouldBeVisibleInitially ? 1 : 0 });
       } else {
         gsap.set([fixedLayer, fixedOverlay].filter(Boolean), { autoAlpha: 1 });
       }
 
       const st = ScrollTrigger.create({
-        trigger: container,
+        trigger: startEl,
         start: () => `top top+=${topOffsetPx}`,
-        end: "bottom bottom",
+        endTrigger: endEl || undefined,
+        end: endEl ? () => `top top+=${topOffsetPx}` : "bottom bottom",
         invalidateOnRefresh: true,
         onEnter: () => {
           if (isAlwaysVisible) return;
@@ -288,6 +324,7 @@ export default function Scroll3D({
         },
         onLeaveBack: () => {
           if (isAlwaysVisible) return;
+          if (keepVisibleBeforeStart) return;
           gsap.to([fixedLayer, fixedOverlay].filter(Boolean), { autoAlpha: 0, duration: 0.15, overwrite: true });
         },
         onUpdate: (self) => {
@@ -297,18 +334,18 @@ export default function Scroll3D({
       });
 
       return () => st.kill();
-    }, container);
+    }, startEl);
 
     ScrollTrigger.refresh();
 
     return () => ctx.revert();
-  }, [behavior, frameCount, topOffsetPx]);
+  }, [behavior, frameCount, topOffsetPx, rangeStartRef, rangeEndRef, shouldBeVisibleInitially, layout]);
 
   return (
     <div
       ref={containerRef}
       className={behavior === "fixed" ? "relative bg-black" : "relative bg-transparent"}
-      style={{ height: `${scrollHeightVh}vh` }}
+      style={layout === "spacer" ? { height: `${scrollHeightVh}vh` } : { height: 0 }}
     >
       {/* Capa fija del canvas */}
       <div
@@ -317,8 +354,12 @@ export default function Scroll3D({
         style={{
           top: `${topOffsetPx}px`,
           height: frameHeight,
-          opacity: behavior === "fixed" ? 1 : 0,
-          visibility: behavior === "fixed" ? "visible" : "hidden",
+          opacity: shouldBeVisibleInitially ? 1 : 0,
+          visibility: shouldBeVisibleInitially ? "visible" : "hidden",
+          backgroundImage: posterFrameUrl ? `url(${posterFrameUrl})` : undefined,
+          backgroundSize: posterFrameUrl ? "cover" : undefined,
+          backgroundPosition: posterFrameUrl ? "center" : undefined,
+          backgroundRepeat: posterFrameUrl ? "no-repeat" : undefined,
         }}
       >
         <canvas ref={canvasRef} className="block h-full w-full pointer-events-none" />
@@ -328,12 +369,12 @@ export default function Scroll3D({
       {children ? (
         <div
           ref={fixedOverlayRef}
-          className="fixed left-0 right-0 z-20 pointer-events-none"
+          className={`fixed left-0 right-0 z-20 ${overlayPointerEvents === "auto" ? "pointer-events-auto" : "pointer-events-none"}`}
           style={{
             top: `${topOffsetPx}px`,
             height: frameHeight,
-            opacity: behavior === "fixed" ? 1 : 0,
-            visibility: behavior === "fixed" ? "visible" : "hidden",
+            opacity: shouldBeVisibleInitially ? 1 : 0,
+            visibility: shouldBeVisibleInitially ? "visible" : "hidden",
           }}
         >
           <div className="h-full w-full">{children}</div>
@@ -341,7 +382,7 @@ export default function Scroll3D({
       ) : null}
 
       {/* Spacer de scroll */}
-      <div aria-hidden className="h-full" />
+      {layout === "spacer" ? <div aria-hidden className="h-full" /> : null}
     </div>
   );
 }

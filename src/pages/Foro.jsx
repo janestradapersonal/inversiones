@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { forumApi } from "@/api/forumClient";
+import { toast } from "@/components/ui/use-toast";
 import { MessageCircle, Plus, ThumbsUp, ChevronDown, ChevronUp, Send, X, User } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -227,6 +228,7 @@ function PostCard({ post, onLike }) {
       <div className="text-slate-600 flex items-center gap-4">
         <button
           onClick={() => onLike(post)}
+          title="Me gusta"
           className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-orange transition-colors">
           
           <ThumbsUp className="text-slate-950 lucide lucide-thumbs-up w-4 h-4" />
@@ -278,6 +280,9 @@ export default function Foro() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [likeCooldownUntil, setLikeCooldownUntil] = useState({});
+
+  const LIKE_COOLDOWN_FALLBACK_MS = 2 * 60 * 1000;
 
   const loadPosts = async () => {
     setLoading(true);
@@ -289,9 +294,39 @@ export default function Foro() {
   useEffect(() => { loadPosts(); }, []);
 
   const handleLike = async (post) => {
-    const newLikes = (post.likes || 0) + 1;
-    await forumApi.posts.update(post.id, { likes: newLikes });
-    setPosts(posts.map((p) => p.id === post.id ? { ...p, likes: newLikes } : p));
+    const now = Date.now();
+    const until = likeCooldownUntil?.[post.id] || 0;
+    if (until && now < until) {
+      const seconds = Math.max(1, Math.ceil((until - now) / 1000));
+      toast({
+        title: "Espera un poco",
+        description: `Puedes volver a dar like en ~${seconds}s.`,
+      });
+      return;
+    }
+
+    try {
+      const updated = await forumApi.posts.like(post.id);
+      const cooldownMs = Number(updated?.likeCooldownMs) || LIKE_COOLDOWN_FALLBACK_MS;
+      setLikeCooldownUntil((prev) => ({ ...prev, [post.id]: Date.now() + cooldownMs }));
+      setPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, likes: updated.likes } : p)));
+    } catch (err) {
+      const status = err?.status;
+      const retryAfterMs = Number(err?.retryAfterMs) || 0;
+      if (status === 429 && retryAfterMs > 0) {
+        setLikeCooldownUntil((prev) => ({ ...prev, [post.id]: Date.now() + retryAfterMs }));
+        toast({
+          title: "Demasiado rápido",
+          description: "Espera unos minutos antes de volver a dar like.",
+        });
+        return;
+      }
+
+      toast({
+        title: "No se pudo dar like",
+        description: "Inténtalo de nuevo en un momento.",
+      });
+    }
   };
 
   const filtered = activeCategory === "all" ? posts : posts.filter((p) => p.category === activeCategory);

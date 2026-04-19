@@ -4,10 +4,28 @@ import cors from 'cors';
 
 const { Pool } = pg;
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
 app.use(cors({ origin: 'https://inversionesfacil.es' }));
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+const LIKE_COOLDOWN_MS = Number(process.env.LIKE_COOLDOWN_MS || 2 * 60 * 1000);
+const likeCooldownByIpAndPost = new Map();
+
+function cleanupLikeCooldowns(now) {
+  // Limpieza simple para que el Map no crezca infinito.
+  // Elimina claves viejas (más de 2 ventanas de cooldown).
+  const maxAge = LIKE_COOLDOWN_MS * 2;
+  for (const [key, ts] of likeCooldownByIpAndPost.entries()) {
+    if (typeof ts !== 'number' || now - ts > maxAge) likeCooldownByIpAndPost.delete(key);
+  }
+}
+
+function getClientIp(req) {
+  // Con trust proxy=true, req.ip respeta X-Forwarded-For.
+  return req.ip || req.socket?.remoteAddress || 'unknown';
+}
 
 app.get('/api/forum/posts', async (req, res) => {
   try {
@@ -38,16 +56,59 @@ app.post('/api/forum/posts', async (req, res) => {
 
 app.patch('/api/forum/posts/:id', async (req, res) => {
   const { id } = req.params;
-  const { likes } = req.body;
   try {
-    const result = await pool.query(
-      'UPDATE forum_posts SET likes = $1 WHERE id = $2 RETURNING *',
-      [likes, id]
-    );
-    res.json(result.rows[0]);
+    // Este endpoint ya no permite modificar likes desde el cliente.
+    // Usa POST /api/forum/posts/:id/like.
+    if (Object.prototype.hasOwnProperty.call(req.body || {}, 'likes')) {
+      return res.status(400).json({ error: 'No se puede modificar likes directamente. Usa /api/forum/posts/:id/like.' });
+    }
+
+    return res.status(400).json({ error: 'Endpoint no soportado.' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to update post' });
+  }
+});
+
+app.post('/api/forum/posts/:id/like', async (req, res) => {
+  const { id } = req.params;
+  const now = Date.now();
+
+  const ip = getClientIp(req);
+  const key = `${ip}|${id}`;
+  const last = likeCooldownByIpAndPost.get(key) || 0;
+  const elapsed = now - last;
+  const remaining = LIKE_COOLDOWN_MS - elapsed;
+
+  if (likeCooldownByIpAndPost.size > 5000) cleanupLikeCooldowns(now);
+
+  if (remaining > 0) {
+    res.set('Retry-After', String(Math.ceil(remaining / 1000)));
+    return res.status(429).json({
+      error: 'Cooldown: espera antes de volver a dar like',
+      retryAfterMs: remaining,
+    });
+  }
+
+  likeCooldownByIpAndPost.set(key, now);
+
+  try {
+    const result = await pool.query(
+      'UPDATE forum_posts SET likes = COALESCE(likes, 0) + 1 WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if (!result.rows?.length) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    return res.json({
+      ...result.rows[0],
+      likeCooldownMs: LIKE_COOLDOWN_MS,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Failed to like post' });
   }
 });
 

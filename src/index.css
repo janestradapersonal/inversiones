@@ -77,3 +77,16 @@
     font-family: 'Sora', sans-serif;
   }
 }
+
+@layer utilities {
+  /* Contorno blanco muy fino para títulos sobre vídeo */
+  .text-stroke-white-thin {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.95);
+    /* Fallback aproximado si no hay text-stroke */
+    text-shadow:
+      1px 0 0 rgba(255, 255, 255, 0.85),
+      -1px 0 0 rgba(255, 255, 255, 0.85),
+      0 1px 0 rgba(255, 255, 255, 0.85),
+      0 -1px 0 rgba(255, 255, 255, 0.85);
+  }
+}

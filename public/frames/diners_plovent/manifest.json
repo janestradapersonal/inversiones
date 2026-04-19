@@ -1,0 +1,7 @@
+{
+  "basePath": "/frames/diners_plovent",
+  "pattern": "frame_%04d.webp",
+  "pad": 4,
+  "extension": "webp",
+  "frameCount": 119
+}
