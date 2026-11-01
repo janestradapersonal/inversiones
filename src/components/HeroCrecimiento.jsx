@@ -67,7 +67,7 @@ export default function HeroCrecimiento() {
         />
 
         {/* Gráfico de barras de fondo */}
-        <div className="absolute left-[4vw] right-[4vw] bottom-[10.5rem] h-[38dvh] md:bottom-[6vh] md:h-[68vh]">
+        <div className="absolute left-[4vw] right-[4vw] bottom-[5.5rem] h-[46dvh] md:bottom-[6vh] md:h-[68vh]">
           {LINEAS.map((l) => (
             <div key={l} className="absolute left-0 right-0 border-t border-white/[0.07]" style={{ bottom: alto(l) }}>
               <span className="absolute -top-2.5 left-0 text-[9px] md:text-[11px] text-white/35 tabular-nums">{l / 1000}k €</span>
@@ -82,6 +82,11 @@ export default function HeroCrecimiento() {
               const enCurso = i + 1 === actual && p > 0 && p < 1;
               return (
                 <div key={i} className="relative flex-1 h-full flex flex-col justify-end">
+                  {/* Silueta de cómo acabará la barra */}
+                  <div
+                    className="absolute left-0 right-0 bottom-0 rounded-t-[3px] bg-white/[0.06] border border-b-0 border-white/10"
+                    style={{ height: alto(valor((i + 1) * 12)) }}
+                  />
                   {/* Monedas cayendo en la barra del año en curso */}
                   {enCurso &&
                     [0, 1, 2].map((k) => {
@@ -100,90 +105,117 @@ export default function HeroCrecimiento() {
                       );
                     })}
                   <div
-                    className="rounded-t-[3px] bg-brand-mint"
+                    className="relative rounded-t-[3px] bg-brand-mint"
                     style={{
                       height: alto(tot - pue),
                       boxShadow: enCurso ? "0 0 18px rgba(136,249,192,0.8)" : undefined,
                     }}
                   />
-                  <div className="bg-white/80" style={{ height: alto(pue) }} />
+                  <div className="relative bg-white/80" style={{ height: alto(pue) }} />
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Números abajo a la derecha */}
+        {/* Números: franja compacta abajo en móvil, tarjeta abajo a la derecha en escritorio */}
         <div
-          className="absolute left-[4vw] right-[4vw] bottom-3 md:left-auto md:bottom-[8vh] md:w-[22rem] rounded-3xl bg-brand-onyx/75 backdrop-blur-md border border-white/10 p-3 md:p-5"
+          className="absolute left-[4vw] right-[4vw] bottom-3 md:left-auto md:bottom-[8vh] md:w-[22rem] rounded-2xl md:rounded-3xl bg-brand-onyx/75 backdrop-blur-md border border-white/10 px-3 py-2 md:p-5"
           style={{ opacity: panel, transform: `translateY(${(1 - panel) * 20}px)` }}
         >
-          <div className="flex items-baseline justify-between">
-            <p className="text-xs uppercase tracking-wider text-white/60">100 € al mes al 7%</p>
-            <p className="font-display text-2xl md:text-3xl text-white tabular-nums">AÑO {Math.floor(anos)}</p>
-          </div>
-          <div className="mt-1 md:mt-3 grid grid-cols-2 gap-3">
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-sm bg-white/80" /> Has puesto
+          {/* Móvil */}
+          <div className="md:hidden">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-display text-xl text-white tabular-nums leading-none">AÑO {Math.floor(anos)}</p>
+              <p className="text-[10px] leading-tight text-white/60 tabular-nums">
+                Puesto <span className="text-white font-semibold">{euros(puesto)}</span>
+                <br />
+                Crecido <span className="text-brand-mint font-semibold">+{euros(total - puesto)}</span>
               </p>
-              <p className="font-display text-xl md:text-2xl text-white tabular-nums">{euros(puesto)}</p>
+              <p className="font-display text-2xl text-brand-mint tabular-nums leading-none">{euros(total)}</p>
             </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-sm bg-brand-mint" /> Ha crecido
-              </p>
-              <p className="font-display text-xl md:text-2xl text-brand-mint tabular-nums">+{euros(total - puesto)}</p>
+            <p className="mt-1 text-[8px] leading-tight text-white/40">
+              Ejemplo: 100 €/mes al 7% anual fijo, sin comisiones ni impuestos. Ninguna inversión lo garantiza.
+            </p>
+          </div>
+
+          {/* Escritorio */}
+          <div className="hidden md:block">
+            <div className="flex items-baseline justify-between">
+              <p className="text-xs uppercase tracking-wider text-white/60">100 € al mes al 7%</p>
+              <p className="font-display text-3xl text-white tabular-nums">AÑO {Math.floor(anos)}</p>
             </div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-sm bg-white/80" /> Has puesto
+                </p>
+                <p className="font-display text-2xl text-white tabular-nums">{euros(puesto)}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-sm bg-brand-mint" /> Ha crecido
+                </p>
+                <p className="font-display text-2xl text-brand-mint tabular-nums">+{euros(total - puesto)}</p>
+              </div>
+            </div>
+            <div className="mt-3 rounded-2xl bg-brand-mint text-brand-onyx px-4 py-2 flex items-baseline justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-semibold opacity-70">Tienes</span>
+              <span className="font-display text-4xl tabular-nums">{euros(total)}</span>
+            </div>
+            <p className="mt-2 text-[10px] leading-snug text-white/45">
+              Ejemplo con un 7% anual fijo, sin comisiones ni impuestos. Ninguna inversión garantiza una rentabilidad fija.
+            </p>
           </div>
-          <div className="mt-2 md:mt-3 rounded-2xl bg-brand-mint text-brand-onyx px-4 py-1 md:py-2 flex items-baseline justify-between">
-            <span className="text-[11px] uppercase tracking-wider font-semibold opacity-70">Tienes</span>
-            <span className="font-display text-3xl md:text-4xl tabular-nums">{euros(total)}</span>
-          </div>
-          <p className="mt-1.5 md:mt-2 text-[9px] md:text-[10px] leading-snug text-white/45">
-            Ejemplo con un 7% anual fijo, sin comisiones ni impuestos. Ninguna inversión garantiza una rentabilidad fija.
-          </p>
         </div>
 
         {/* Textos por encima del gráfico, sincronizados con él */}
         {/* 1. Entrada */}
-        <div className="absolute inset-0 flex items-center" style={estilo(tramo(v, 0, 0.12), -v * 400)}>
-          <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-16">
+        <div className="absolute inset-0 flex items-start md:items-center" style={estilo(tramo(v, 0, 0.12), -v * 400)}>
+          <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-24 md:pt-16">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="max-w-2xl"
             >
-              <span className="inline-block px-4 py-1.5 rounded-full border border-brand-mint/40 text-brand-mint font-semibold text-sm mb-6">
+              <span className="hidden md:inline-block px-4 py-1.5 rounded-full border border-brand-mint/40 text-brand-mint font-semibold text-sm mb-6">
                 Educación financiera para todos
               </span>
-              <h1 className="font-display uppercase text-white text-[3.4rem] sm:text-7xl md:text-[7.5rem] leading-[0.88] tracking-tight">
+              <h1 className="font-display uppercase text-white text-[2.9rem] sm:text-7xl md:text-[7.5rem] leading-[0.88] tracking-tight">
                 Tu dinero
                 <br />
                 puede crecer
-                <span className="block font-serif italic normal-case text-brand-mint text-[2.6rem] sm:text-6xl md:text-8xl leading-[1] mt-2">
+                <span className="block font-serif italic normal-case text-brand-mint text-[2.3rem] sm:text-6xl md:text-8xl leading-[1] mt-1 md:mt-2">
                   mientras duermes
                 </span>
               </h1>
-              <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/75">
+              <p className="hidden md:block mt-6 max-w-xl text-lg leading-relaxed text-white/75">
                 Guardar el dinero en el banco hace que pierda valor cada año. Invertir es más fácil de lo que crees, y te lo explicamos desde cero.
               </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <div className="mt-5 md:mt-8 flex flex-row gap-3 items-center">
                 <Link
                   to="/por-que-invertir"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-brand-mint text-brand-onyx font-bold text-base hover:scale-105 transition-transform"
+                  className="inline-flex shrink-0 whitespace-nowrap items-center justify-center gap-2 px-5 py-3 md:px-7 md:py-4 rounded-full bg-brand-mint text-brand-onyx font-bold text-sm md:text-base hover:scale-105 transition-transform"
                 >
                   Quiero aprender <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/empieza"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border-2 border-white/70 text-white font-bold text-base hover:bg-white hover:text-brand-onyx transition-colors"
+                  className="hidden md:inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border-2 border-white/70 text-white font-bold text-base hover:bg-white hover:text-brand-onyx transition-colors"
                 >
                   ¡Empieza ahora!
                 </Link>
+                {/* En móvil, la invitación a bajar va junto al botón */}
+                <motion.span
+                  className="md:hidden flex items-center gap-1 text-sm font-semibold text-white/75"
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  Desliza y mira cómo crece <ChevronDown className="w-5 h-5" />
+                </motion.span>
               </div>
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-semibold uppercase tracking-wider text-white/60">
+              <ul className="hidden md:flex mt-8 flex-wrap gap-x-6 gap-y-2 text-[11px] font-semibold uppercase tracking-wider text-white/60">
                 {ventajas.map((t) => (
                   <li key={t} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-mint" /> {t}
