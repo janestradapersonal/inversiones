@@ -37,7 +37,7 @@ function NewPostModal({ onClose, onCreated }) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-brand-onyx text-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden">
+        className="bg-brand-surface text-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden">
         
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="font-sora text-xl font-bold">Nueva publicación</h2>
@@ -202,7 +202,7 @@ function PostCard({ post, onLike }) {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-brand-onyx rounded-3xl border border-white/10 p-6 hover:shadow-md transition-shadow">
+      className="bg-brand-surface rounded-3xl border border-white/10 p-6 hover:shadow-md transition-shadow">
       
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
@@ -393,7 +393,7 @@ export default function Foro() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
             💬 Comunidad
           </span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
@@ -411,14 +411,14 @@ export default function Foro() {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setActiveCategory("all")} className="bg-brand-onyx text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
+              onClick={() => setActiveCategory("all")} className="bg-brand-surface text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
               
               🌐 Todos
             </button>
             {CATEGORIES.map((c) =>
             <button
               key={c}
-              onClick={() => setActiveCategory(c)} className="bg-brand-onyx text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
+              onClick={() => setActiveCategory(c)} className="bg-brand-surface text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
               
                 {CAT_EMOJI[c]} {c}
               </button>
@@ -435,7 +435,7 @@ export default function Foro() {
         {loading ?
         <div className="space-y-4">
             {[1, 2, 3].map((i) =>
-          <div key={i} className="bg-brand-onyx rounded-3xl border border-white/10 p-6 animate-pulse">
+          <div key={i} className="bg-brand-surface rounded-3xl border border-white/10 p-6 animate-pulse">
                 <div className="flex gap-3 mb-4">
                   <div className="w-9 h-9 rounded-2xl bg-muted" />
                   <div className="space-y-2">

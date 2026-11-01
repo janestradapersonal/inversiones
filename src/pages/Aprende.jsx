@@ -97,7 +97,7 @@ function AccordionItem({ item, index }) {
       <button
         onClick={() => setOpen(!open)}
         className={`group p-5 text-left w-full flex items-center justify-between transition-colors ${
-          open ? "bg-brand-mint" : "bg-brand-onyx hover:bg-brand-mint"
+          open ? "bg-brand-mint" : "bg-brand-surface hover:bg-brand-mint"
         }`}>
 
         <span className={`pr-4 font-semibold transition-colors ${
@@ -136,7 +136,7 @@ export default function Aprende() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
             3 - Aprende
           </span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
@@ -162,7 +162,7 @@ export default function Aprende() {
             viewport={{ once: true }}>
             
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-12 h-12 rounded-2xl bg-brand-onyx flex items-center justify-center text-2xl`}>
+                <div className={`w-12 h-12 rounded-2xl bg-brand-surface flex items-center justify-center text-2xl`}>
                   {section.emoji}
                 </div>
                 <h2 className="font-display uppercase text-3xl">{section.title}</h2>

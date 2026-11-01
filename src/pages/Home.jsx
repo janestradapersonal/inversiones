@@ -66,7 +66,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="rounded-3xl bg-brand-onyx p-6"
+              className="rounded-3xl bg-brand-surface p-6 border border-white/10"
             >
               <p className="font-display text-5xl md:text-6xl text-brand-mint">{s.value}</p>
               <p className="text-white/75 text-sm mt-3 leading-snug">{s.label}</p>
@@ -90,7 +90,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
               viewport={{ once: true }}
-              className="rounded-3xl bg-brand-onyx p-7 border border-white/10"
+              className="rounded-3xl bg-brand-surface p-7 border border-white/10"
             >
               <div className="flex items-center justify-between mb-5">
                 <div className="w-12 h-12 rounded-2xl bg-brand-mint flex items-center justify-center text-brand-onyx">
@@ -107,8 +107,8 @@ export default function Home() {
 
       {/* CTA Banner */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-8 pt-8">
-        <div className="relative overflow-hidden rounded-3xl bg-brand-onyx p-10 md:p-14 text-white text-center">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[30rem] h-[30rem] rounded-full bg-brand-indigo/40 blur-[100px] pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl bg-brand-indigo p-10 md:p-14 text-white text-center">
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[30rem] h-[30rem] rounded-full bg-white/15 blur-[100px] pointer-events-none" />
           <div className="relative">
             <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.95] mb-4">
               ¿Listo para que tu dinero

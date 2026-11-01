@@ -55,7 +55,7 @@ export default function PorQueInvertir() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
             2 - Por qué invertir
           </span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
@@ -77,13 +77,13 @@ export default function PorQueInvertir() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
           
-          <div className="rounded-3xl p-8 bg-brand-onyx border-2 border-red-400/40 text-center">
+          <div className="rounded-3xl p-8 bg-brand-surface border-2 border-red-400/40 text-center">
             <TrendingDown className="w-12 h-12 text-red-400 mx-auto mb-4" />
             <h3 className="font-sora text-xl font-bold text-white mb-2">Tu dinero en el banco</h3>
             <p className="text-white/70 text-sm">10.000€ → 7.000€ reales en 15 años (inflación)</p>
             <p className="font-display text-6xl text-red-400 mt-4">-30%</p>
           </div>
-          <div className="rounded-3xl p-8 bg-brand-onyx border-2 border-brand-mint/40 text-center">
+          <div className="rounded-3xl p-8 bg-brand-surface border-2 border-brand-mint/40 text-center">
             <TrendingUp className="w-12 h-12 text-brand-mint mx-auto mb-4" />
             <h3 className="font-sora text-xl font-bold text-white mb-2">Tu dinero invertido</h3>
             <p className="text-white/70 text-sm">10.000€ → 27.000€ en 15 años al 7% anual</p>
@@ -100,7 +100,7 @@ export default function PorQueInvertir() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.08 }}
             viewport={{ once: true }}
-            className={`rounded-3xl p-8 bg-brand-onyx border-l-4 ${r.color}`}>
+            className={`rounded-3xl p-8 bg-brand-surface border border-white/10 border-l-4 ${r.color}`}>
             
               <div className="flex items-start gap-5">
                 <span className="text-4xl flex-shrink-0">{r.emoji}</span>

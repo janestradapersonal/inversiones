@@ -13,7 +13,7 @@ import Scroll3D from './pages/Scroll3D';
 function NotFound() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-indigo">
+    <div className="min-h-screen flex items-center justify-center bg-brand-onyx">
       <div className="text-center p-8">
         <h1 className="text-7xl font-light text-white/60 mb-4">404</h1>
         <h2 className="text-2xl font-medium text-white mb-4">Página no encontrada</h2>

@@ -61,6 +61,7 @@ module.exports = {
           onyx: '#01010D',
           indigo: '#6331FB',
           mint: '#88F9C0',
+          surface: '#110D33',
           orange: '#88F9C0',
           purple: '#633CFF',
           yellow: '#0EA5E9',

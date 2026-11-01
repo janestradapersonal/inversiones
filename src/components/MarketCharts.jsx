@@ -57,9 +57,9 @@ const EDUCATIONAL_CONTENT = {
 };
 
 const STYLES = {
-  red: "bg-brand-onyx border-red-400/50",
-  yellow: "bg-brand-onyx border-amber-300/50",
-  green: "bg-brand-onyx border-brand-mint/50"
+  red: "bg-brand-surface border-red-400/50",
+  yellow: "bg-brand-surface border-amber-300/50",
+  green: "bg-brand-surface border-brand-mint/50"
 };
 
 const ICON_COLORS = {
@@ -79,7 +79,7 @@ export default function MarketCharts() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-3">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-3">
             📊 Temporalidad importa
           </span>
           <h2 className="font-display uppercase text-5xl md:text-6xl leading-[0.95]">
@@ -93,7 +93,7 @@ export default function MarketCharts() {
 
       {/* Period buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
-        <div className="bg-brand-onyx p-1 rounded-2xl flex flex-wrap gap-1">
+        <div className="bg-brand-surface p-1 rounded-2xl flex flex-wrap gap-1">
           {PERIODS.map((p) =>
             <button
               key={p.key}

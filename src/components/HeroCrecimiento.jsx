@@ -15,9 +15,6 @@ const LINEAS = [25000, 50000, 75000, 100000, 125000];
 // Punto de miles siempre (toLocaleString no lo pone en números de 4 cifras)
 const euros = (n) => `${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €`;
 
-const ONYX = [1, 1, 13];
-const INDIGO = [99, 49, 251];
-const mezcla = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 
 const ventajas = ["Explicado desde cero", "Sin jerga", "Desde 1€", "100% gratis"];
 
@@ -48,14 +45,12 @@ export default function HeroCrecimiento() {
   const puesto = APORTACION * meses;
   const actual = Math.min(ANOS, Math.floor(anos) + 1);
   const alto = (x) => `${(x / EJE) * 100}%`;
-  // Negro al principio; al final se funde con el índigo del resto de la web
-  const fondo = mezcla(ONYX, INDIGO, Math.min(1, Math.max(0, (v - 0.82) / 0.18)));
   const panel = Math.min(1, p * 12);
 
   return (
     <section ref={ref} className="relative h-[380vh]">
       {/* Fondo fijo mientras dura la sección */}
-      <div className="sticky top-0 h-[100dvh] overflow-hidden" style={{ backgroundColor: `rgb(${fondo.join(",")})` }}>
+      <div className="sticky top-0 h-[100dvh] overflow-hidden bg-brand-onyx">
         {/* Luz índigo de ambiente y brillo del ratón */}
         <div className="absolute -top-1/3 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/25 blur-[140px]" />
         <div
@@ -111,7 +106,8 @@ export default function HeroCrecimiento() {
                       boxShadow: enCurso ? "0 0 18px rgba(136,249,192,0.8)" : undefined,
                     }}
                   />
-                  <div className="relative bg-white/80" style={{ height: alto(pue) }} />
+                  {/* Dorado = lo que pones (como las monedas); línea oscura que separa de lo ganado */}
+                  <div className="relative bg-[#F5C542] border-t-2 border-brand-onyx/70" style={{ height: alto(pue) }} />
                 </div>
               );
             })}
@@ -128,7 +124,7 @@ export default function HeroCrecimiento() {
             <div className="flex items-center justify-between gap-3">
               <p className="font-display text-xl text-white tabular-nums leading-none">AÑO {Math.floor(anos)}</p>
               <p className="text-[10px] leading-tight text-white/60 tabular-nums">
-                Puesto <span className="text-white font-semibold">{euros(puesto)}</span>
+                Puesto <span className="text-[#F5C542] font-semibold">{euros(puesto)}</span>
                 <br />
                 Crecido <span className="text-brand-mint font-semibold">+{euros(total - puesto)}</span>
               </p>
@@ -148,9 +144,9 @@ export default function HeroCrecimiento() {
             <div className="mt-3 grid grid-cols-2 gap-3">
               <div>
                 <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-sm bg-white/80" /> Has puesto
+                  <span className="w-2 h-2 rounded-sm bg-[#F5C542]" /> Has puesto
                 </p>
-                <p className="font-display text-2xl text-white tabular-nums">{euros(puesto)}</p>
+                <p className="font-display text-2xl text-[#F5C542] tabular-nums">{euros(puesto)}</p>
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-wider text-white/55 flex items-center gap-1.5">

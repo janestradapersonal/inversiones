@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    --background: 99 49 251;
+    --background: 1 1 13;
     --foreground: 255 255 255;
-    --card: 1 1 13;
+    --card: 17 13 51;
     --card-foreground: 255 255 255;
     --popover: 1 1 13;
     --popover-foreground: 255 255 255;
@@ -16,14 +16,14 @@
     --primary-foreground: 1 1 13;
     --secondary: 1 1 13;
     --secondary-foreground: 255 255 255;
-    --muted: 80 34 222;
-    --muted-foreground: 222 214 255;
+    --muted: 26 21 66;
+    --muted-foreground: 200 195 235;
     --accent: 136 249 192;
     --accent-foreground: 1 1 13;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-    --border: 131 92 252;
-    --input: 131 92 252;
+    --border: 45 38 100;
+    --input: 45 38 100;
     --ring: 136 249 192;
     --radius: 1rem;
 
@@ -36,9 +36,9 @@
   }
 
   .dark {
-    --background: 99 49 251;
+    --background: 1 1 13;
     --foreground: 255 255 255;
-    --card: 1 1 13;
+    --card: 17 13 51;
     --card-foreground: 255 255 255;
     --popover: 1 1 13;
     --popover-foreground: 255 255 255;
@@ -46,14 +46,14 @@
     --primary-foreground: 1 1 13;
     --secondary: 1 1 13;
     --secondary-foreground: 255 255 255;
-    --muted: 80 34 222;
-    --muted-foreground: 222 214 255;
+    --muted: 26 21 66;
+    --muted-foreground: 200 195 235;
     --accent: 136 249 192;
     --accent-foreground: 1 1 13;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-    --border: 131 92 252;
-    --input: 131 92 252;
+    --border: 45 38 100;
+    --input: 45 38 100;
     --ring: 136 249 192;
   }
 }
@@ -64,7 +64,7 @@
   }
   html, body {
     @apply text-foreground font-inter;
-    background-color: #6331FB;
+    background-color: #01010D;
     margin: 0;
     padding: 0;
     overflow-x: clip;
@@ -91,8 +91,8 @@
   }
 }
 /* Las tarjetas negras se iluminan cerca del ratón (menta si sube, rojo si baja) (coordenadas de CursorGlow) */
-.cursor-activo .bg-brand-onyx.rounded-3xl,
-.cursor-activo .bg-brand-onyx.rounded-2xl {
+.cursor-activo .bg-brand-surface.rounded-3xl,
+.cursor-activo .bg-brand-surface.rounded-2xl {
   background-image: radial-gradient(420px circle at var(--x) var(--y), rgba(var(--brillo, 136, 249, 192), 0.13), transparent 60%);
   background-attachment: fixed;
 }

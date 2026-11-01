@@ -13,7 +13,7 @@ const myinvestor = {
   name: "MyInvestor",
   emoji: "🇪🇸",
   color: "from-blue-600 to-blue-800",
-  bg: "bg-brand-onyx border-white/10",
+  bg: "bg-brand-surface border-white/10",
   badge_color: "bg-blue-100 text-blue-700",
   referralUrl: "https://newapp.myinvestor.es/do/signup?promotionalCode=IYZED",
   reward: "25€ de regalo",
@@ -32,7 +32,7 @@ const traderepublic = {
   name: "Trade Republic",
   emoji: "🇩🇪",
   color: "from-emerald-500 to-teal-600",
-  bg: "bg-brand-onyx border-white/10",
+  bg: "bg-brand-surface border-white/10",
   badge_color: "bg-emerald-100 text-emerald-700",
   referralUrl: "https://refnocode.trade.re/znw9qk74",
   reward: "Recompensa de bienvenida",
@@ -111,7 +111,7 @@ export default function Empieza() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
             🚀 ¡Acción!
           </span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
@@ -162,7 +162,7 @@ export default function Empieza() {
         </div>
 
         {/* Disclaimer */}
-        <div className="bg-brand-onyx p-6 text-center rounded-2xl">
+        <div className="bg-brand-surface border border-white/10 p-6 text-center rounded-2xl">
           <p className="text-sm text-muted-foreground">
             ⚠️ <strong>Aviso:</strong> Los enlaces de arriba son de referido. Si los usas, obtienes la recompensa indicada y yo una pequeña comisión que me ayuda a mantener esta web. Esto no afecta a tu experiencia ni a las condiciones del producto. Siempre investiga por tu cuenta antes de invertir.
           </p>

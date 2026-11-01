@@ -99,7 +99,7 @@ function ScrollVault() {
   return (
     <div
       ref={containerRef}
-      className="relative bg-brand-indigo"
+      className="relative bg-brand-onyx"
       style={{ height: `${FRAME_NAMES.length * 100}vh` }}
     >
       {/* Canvas sticky */}
