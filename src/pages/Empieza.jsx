@@ -13,7 +13,7 @@ const myinvestor = {
   name: "MyInvestor",
   emoji: "🇪🇸",
   color: "from-blue-600 to-blue-800",
-  bg: "bg-blue-50 border-blue-200",
+  bg: "bg-brand-onyx border-white/10",
   badge_color: "bg-blue-100 text-blue-700",
   referralUrl: "https://newapp.myinvestor.es/do/signup?promotionalCode=IYZED",
   reward: "25€ de regalo",
@@ -32,7 +32,7 @@ const traderepublic = {
   name: "Trade Republic",
   emoji: "🇩🇪",
   color: "from-emerald-500 to-teal-600",
-  bg: "bg-emerald-50 border-emerald-200",
+  bg: "bg-brand-onyx border-white/10",
   badge_color: "bg-emerald-100 text-emerald-700",
   referralUrl: "https://refnocode.trade.re/znw9qk74",
   reward: "Recompensa de bienvenida",
@@ -68,7 +68,7 @@ function PlatformCard({ platform }) {
         <h3 className="font-sora text-2xl font-extrabold">{platform.name}</h3>
       </div>
 
-      <p className="text-slate-950 mb-5 text-sm leading-relaxed">
+      <p className="text-white mb-5 text-sm leading-relaxed">
         🎁 <strong>¡Recompensa exclusiva!</strong> {platform.reward} {platform.reward_condition} si te registras con mi enlace. Me ayudas a mantener esta web gratuita.
       </p>
 
@@ -81,8 +81,8 @@ function PlatformCard({ platform }) {
         )}
       </ul>
 
-      <div className="mb-6 p-3 rounded-2xl bg-white/70">
-        <p className="text-slate-950 text-xs">👆 Ideal para:</p>
+      <div className="mb-6 p-3 rounded-2xl bg-white/10">
+        <p className="text-white text-xs">👆 Ideal para:</p>
         <p className="font-semibold text-sm">{platform.best_for}</p>
       </div>
 
@@ -94,7 +94,7 @@ function PlatformCard({ platform }) {
         
         Abrir cuenta en {platform.name} <ExternalLink className="w-4 h-4" />
       </a>
-      <p className="text-slate-950 mt-3 text-xs text-center">⭐ Enlace de referido — te llevas tu recompensa y me apoyas
+      <p className="text-white mt-3 text-xs text-center">⭐ Enlace de referido — te llevas tu recompensa y me apoyas
 
       </p>
     </motion.div>);
@@ -103,7 +103,7 @@ function PlatformCard({ platform }) {
 
 export default function Empieza() {
   return (
-    <div className="bg-[#7dd0e3] pt-28 pb-20">
+    <div className="pt-28 pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -111,16 +111,16 @@ export default function Empieza() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-green-100 text-green-700 font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
             🚀 ¡Acción!
           </span>
-          <h1 className="font-sora text-4xl md:text-5xl font-extrabold mb-5">
+          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
             Empieza a invertir{" "}
-            <span className="bg-gradient-to-r from-brand-green to-teal-500 bg-clip-text text-transparent">
+            <span className="font-serif italic normal-case text-brand-mint">
               hoy mismo
             </span>
           </h1>
-          <p className="text-gray-950 mx-auto text-xl leading-relaxed max-w-2xl">El mejor momento para empezar era hace 10 años. El segundo mejor momento es ahora. Te recomiendo dos plataformas que uso personalmente.
+          <p className="text-white/85 mx-auto text-xl leading-relaxed max-w-2xl">El mejor momento para empezar era hace 10 años. El segundo mejor momento es ahora. Te recomiendo dos plataformas que uso personalmente.
 
 
           </p>
@@ -128,7 +128,7 @@ export default function Empieza() {
 
         {/* Steps */}
         <div className="mb-16">
-          <h2 className="font-sora text-2xl font-bold text-center mb-8">📋 Cómo empezar en 5 pasos</h2>
+          <h2 className="font-display uppercase text-4xl text-center mb-8">📋 Cómo empezar en 5 pasos</h2>
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
             {steps.map((s, i) =>
             <motion.div
@@ -139,11 +139,11 @@ export default function Empieza() {
               viewport={{ once: true }}
               className="text-center">
               
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-purple text-white font-sora font-extrabold text-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                <div className="w-12 h-12 rounded-2xl bg-brand-mint text-brand-onyx font-sora font-extrabold text-xl flex items-center justify-center mx-auto mb-3 shadow-md">
                   {s.num}
                 </div>
                 <h3 className="font-bold text-sm mb-1">{s.title}</h3>
-                <p className="text-slate-950 text-xs">{s.desc}</p>
+                <p className="text-white text-xs">{s.desc}</p>
               </motion.div>
             )}
           </div>
@@ -151,8 +151,8 @@ export default function Empieza() {
 
         {/* Platforms */}
         <div className="mb-12">
-          <h2 className="font-sora text-2xl font-bold text-center mb-4">🏆 Mis plataformas recomendadas</h2>
-          <p className="text-slate-950 mb-8 text-center">Si usas mis enlaces de referido, obtienes una recompensa y me ayudas a mantener esta web educativa gratuita. ¡Win-win!
+          <h2 className="font-display uppercase text-4xl text-center mb-4">🏆 Mis plataformas recomendadas</h2>
+          <p className="text-white mb-8 text-center">Si usas mis enlaces de referido, obtienes una recompensa y me ayudas a mantener esta web educativa gratuita. ¡Win-win!
 
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -162,7 +162,7 @@ export default function Empieza() {
         </div>
 
         {/* Disclaimer */}
-        <div className="bg-green-800 p-6 text-center rounded-2xl">
+        <div className="bg-brand-onyx p-6 text-center rounded-2xl">
           <p className="text-sm text-muted-foreground">
             ⚠️ <strong>Aviso:</strong> Los enlaces de arriba son de referido. Si los usas, obtienes la recompensa indicada y yo una pequeña comisión que me ayuda a mantener esta web. Esto no afecta a tu experiencia ni a las condiciones del producto. Siempre investiga por tu cuenta antes de invertir.
           </p>

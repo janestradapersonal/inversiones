@@ -3,13 +3,13 @@ import { TrendingUp, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background py-12 mt-20">
+    <footer className="relative z-10 bg-brand-onyx text-white py-12 mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-orange to-brand-purple flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-brand-mint flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-brand-onyx" />
               </div>
               <span className="font-sora font-bold text-lg text-white">
                 inversionesfacil<span className="text-brand-orange">.es</span>

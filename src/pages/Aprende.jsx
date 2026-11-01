@@ -97,7 +97,7 @@ function AccordionItem({ item, index }) {
       <button
         onClick={() => setOpen(!open)}
         className={`group p-5 text-left w-full flex items-center justify-between transition-colors ${
-          open ? "bg-yellow-400" : "bg-blue-950 hover:bg-yellow-400"
+          open ? "bg-brand-mint" : "bg-brand-onyx hover:bg-brand-mint"
         }`}>
 
         <span className={`pr-4 font-semibold transition-colors ${
@@ -118,7 +118,7 @@ function AccordionItem({ item, index }) {
           transition={{ duration: 0.2 }}
           className="overflow-hidden">
           
-            <p className="text-slate-950 pb-5 px-5 leading-relaxed">{item.a}</p>
+            <p className="text-white/90 pt-4 pb-5 px-5 leading-relaxed">{item.a}</p>
           </motion.div>
         }
       </AnimatePresence>
@@ -128,7 +128,7 @@ function AccordionItem({ item, index }) {
 
 export default function Aprende() {
   return (
-    <div className="bg-[#7dd0e3] pt-28 pb-20">
+    <div className="pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -136,17 +136,17 @@ export default function Aprende() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-purple/10 text-brand-purple font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
             3 - Aprende
           </span>
-          <h1 className="font-sora text-4xl md:text-5xl font-extrabold mb-5">
+          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
             Todo lo que necesitas{" "}
-            <span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
+            <span className="font-serif italic normal-case text-brand-mint">
               saber
             </span>{" "}
             para empezar
           </h1>
-          <p className="text-slate-950 text-xl leading-relaxed">Sin jerga financiera innecesaria. Explicado para que lo entienda cualquier persona.
+          <p className="text-white/85 text-xl leading-relaxed">Sin jerga financiera innecesaria. Explicado para que lo entienda cualquier persona.
 
           </p>
         </motion.div>
@@ -162,10 +162,10 @@ export default function Aprende() {
             viewport={{ once: true }}>
             
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${section.color} flex items-center justify-center text-2xl shadow-md`}>
+                <div className={`w-12 h-12 rounded-2xl bg-brand-onyx flex items-center justify-center text-2xl`}>
                   {section.emoji}
                 </div>
-                <h2 className="font-sora text-2xl font-bold">{section.title}</h2>
+                <h2 className="font-display uppercase text-3xl">{section.title}</h2>
               </div>
               <div className="space-y-3">
                 {section.items.map((item, i) =>
@@ -181,7 +181,7 @@ export default function Aprende() {
           <p className="text-muted-foreground mb-6 text-lg">¿Ya tienes los conocimientos? ¡Es hora de pasar a la acción!</p>
           <Link
             to="/empieza"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-purple text-white font-bold text-lg shadow-xl hover:scale-105 transition-all">
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-brand-mint text-brand-onyx font-bold text-lg shadow-xl hover:scale-105 transition-all">
             
             ¡Empieza a invertir hoy! <ArrowRight className="w-5 h-5" />
           </Link>

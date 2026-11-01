@@ -37,7 +37,7 @@ function NewPostModal({ onClose, onCreated }) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden">
+        className="bg-brand-onyx text-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden">
         
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="font-sora text-xl font-bold">Nueva publicación</h2>
@@ -107,7 +107,7 @@ function NewPostModal({ onClose, onCreated }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-purple text-white font-bold hover:scale-105 transition-all disabled:opacity-60">
+            className="w-full py-3 rounded-2xl bg-brand-mint text-brand-onyx font-bold hover:scale-105 transition-all disabled:opacity-60">
             
             {loading ? "Publicando..." : "Publicar"}
           </button>
@@ -165,7 +165,7 @@ function ReplyForm({ postId, onReplied }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-orange text-white font-medium text-sm hover:bg-orange-600 transition-colors disabled:opacity-60">
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-mint text-brand-onyx font-medium text-sm hover:bg-orange-600 transition-colors disabled:opacity-60">
           
           <Send className="w-4 h-4" /> Responder
         </button>
@@ -202,11 +202,11 @@ function PostCard({ post, onLike }) {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl border border-border p-6 hover:shadow-md transition-shadow">
+      className="bg-brand-onyx rounded-3xl border border-white/10 p-6 hover:shadow-md transition-shadow">
       
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-purple flex items-center justify-center">
+          <div className="w-9 h-9 rounded-2xl bg-brand-mint flex items-center justify-center">
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -222,23 +222,23 @@ function PostCard({ post, onLike }) {
       </div>
 
       <h3 className="font-sora font-bold text-base mb-2">{post.title}</h3>
-      <p className="text-slate-950 mb-4 text-sm leading-relaxed">{post.content}</p>
+      <p className="text-white mb-4 text-sm leading-relaxed">{post.content}</p>
 
-      <div className="text-slate-600 flex items-center gap-4">
+      <div className="text-white/70 flex items-center gap-4">
         <button
           onClick={() => onLike(post)}
           title="Me gusta"
           className={`flex items-center gap-1.5 text-sm transition-colors ${post.liked ? "text-brand-orange" : "text-muted-foreground hover:text-brand-orange"}`}>
           
-          <ThumbsUp className={`lucide lucide-thumbs-up w-4 h-4 ${post.liked ? "text-brand-orange" : "text-slate-950"}`} />
+          <ThumbsUp className={`lucide lucide-thumbs-up w-4 h-4 ${post.liked ? "text-brand-orange" : "text-white"}`} />
           <span className="text-[#ff0000]">{post.likes || 0}</span>
         </button>
         <button
           onClick={handleExpand}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-purple transition-colors">
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-mint transition-colors">
 
-          <MessageCircle className="text-slate-950 lucide lucide-message-circle w-4 h-4" />
-          <span className="text-slate-950">{replyCount} {replyCount === 1 ? 'respuesta' : 'respuestas'}</span>
+          <MessageCircle className="text-white lucide lucide-message-circle w-4 h-4" />
+          <span className="text-white">{replyCount} {replyCount === 1 ? 'respuesta' : 'respuestas'}</span>
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
@@ -255,12 +255,12 @@ function PostCard({ post, onLike }) {
           <div className="mt-4 space-y-3">
                 {replies.map((reply) =>
             <div key={reply.id} className="flex gap-3 bg-muted/40 rounded-2xl p-4">
-                    <div className="bg-brand-purple/20 text-slate-950 rounded-xl w-7 h-7 flex items-center justify-center flex-shrink-0">
-                      <User className="w-3.5 h-3.5 text-brand-purple" />
+                    <div className="bg-brand-purple/20 text-white rounded-xl w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-brand-mint" />
                     </div>
                     <div>
                       <p className="font-semibold text-xs mb-1">{reply.author_name || "Anónimo"}</p>
-                      <p className="text-slate-950 text-sm">{reply.content}</p>
+                      <p className="text-white text-sm">{reply.content}</p>
                     </div>
                   </div>
             )}
@@ -386,24 +386,24 @@ export default function Foro() {
   const filtered = activeCategory === "all" ? posts : posts.filter((p) => p.category === activeCategory);
 
   return (
-    <div className="bg-[#7dd0e3] pt-28 pb-20">
+    <div className="pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12">
           
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-pink/10 text-brand-pink font-semibold text-sm mb-5">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-semibold text-sm mb-5">
             💬 Comunidad
           </span>
-          <h1 className="font-sora text-4xl md:text-5xl font-extrabold mb-4">
+          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
             El{" "}
-            <span className="bg-gradient-to-r from-brand-pink to-brand-purple bg-clip-text text-transparent">
+            <span className="font-serif italic normal-case text-brand-mint">
               foro
             </span>{" "}
             de la comunidad
           </h1>
-          <p className="text-slate-950 mx-auto text-xl max-w-xl">Pregunta, comparte tu experiencia, ayuda a otros. No hay preguntas tontas, todos empezamos desde cero.
+          <p className="text-white/85 mx-auto text-xl max-w-xl">Pregunta, comparte tu experiencia, ayuda a otros. No hay preguntas tontas, todos empezamos desde cero.
 
           </p>
         </motion.div>
@@ -411,14 +411,14 @@ export default function Foro() {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setActiveCategory("all")} className="bg-blue-950 text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
+              onClick={() => setActiveCategory("all")} className="bg-brand-onyx text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
               
               🌐 Todos
             </button>
             {CATEGORIES.map((c) =>
             <button
               key={c}
-              onClick={() => setActiveCategory(c)} className="bg-blue-950 text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
+              onClick={() => setActiveCategory(c)} className="bg-brand-onyx text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
               
                 {CAT_EMOJI[c]} {c}
               </button>
@@ -426,7 +426,7 @@ export default function Foro() {
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-purple text-white font-bold text-sm hover:scale-105 hover:shadow-lg transition-all">
+            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-brand-mint text-brand-onyx font-bold text-sm hover:scale-105 hover:shadow-lg transition-all">
             
             <Plus className="w-4 h-4" /> Nueva publicación
           </button>
@@ -435,7 +435,7 @@ export default function Foro() {
         {loading ?
         <div className="space-y-4">
             {[1, 2, 3].map((i) =>
-          <div key={i} className="bg-white rounded-3xl border border-border p-6 animate-pulse">
+          <div key={i} className="bg-brand-onyx rounded-3xl border border-white/10 p-6 animate-pulse">
                 <div className="flex gap-3 mb-4">
                   <div className="w-9 h-9 rounded-2xl bg-muted" />
                   <div className="space-y-2">

@@ -1,12 +1,14 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import CursorGlow from "./CursorGlow";
 import { Outlet } from "react-router-dom";
 
 export default function PageLayout() {
   return (
-    <div className="bg-[#7dd0e3] min-h-screen flex flex-col">
+    <div className="bg-brand-indigo min-h-screen flex flex-col">
+      <CursorGlow />
       <Navbar />
-      <main className="flex-1">
+      <main className="relative z-10 flex-1">
         <Outlet />
       </main>
       <Footer />

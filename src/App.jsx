@@ -13,13 +13,13 @@ import Scroll3D from './pages/Scroll3D';
 function NotFound() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#7dd0e3]">
+    <div className="min-h-screen flex items-center justify-center bg-brand-indigo">
       <div className="text-center p-8">
-        <h1 className="text-7xl font-light text-slate-300 mb-4">404</h1>
-        <h2 className="text-2xl font-medium text-slate-800 mb-4">Página no encontrada</h2>
+        <h1 className="text-7xl font-light text-white/60 mb-4">404</h1>
+        <h2 className="text-2xl font-medium text-white mb-4">Página no encontrada</h2>
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-3 rounded-xl bg-brand-orange text-white font-semibold hover:bg-orange-600 transition-colors"
+          className="px-6 py-3 rounded-xl bg-brand-mint text-brand-onyx font-semibold hover:bg-orange-600 transition-colors"
         >
           Volver al inicio
         </button>

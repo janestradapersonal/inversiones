@@ -30,14 +30,14 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-[#7dd0e3]/95 backdrop-blur-md shadow-lg shadow-black/5" : "bg-transparent"}`
+      scrolled ? "bg-brand-indigo/95 backdrop-blur-md shadow-lg shadow-black/20" : "bg-transparent"}`
       }>
       
       <div className="mx-auto px-4 max-w-6xl sm:px-6 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-orange to-brand-purple flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-            <TrendingUp className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-xl bg-brand-mint flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <TrendingUp className="w-5 h-5 text-brand-onyx" />
           </div>
           <span className="font-sora font-800 text-xl text-foreground">
             inversionesfacil<span className="text-brand-orange font-bold">.es</span>
@@ -52,8 +52,8 @@ export default function Navbar() {
             to={link.path}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
             location.pathname === link.path ?
-            "bg-brand-orange text-white shadow-md shadow-orange-200" :
-            "text-foreground/70 hover:text-foreground hover:bg-muted"}`
+            "bg-brand-mint text-brand-onyx shadow-md" :
+            "text-white/75 hover:text-white hover:bg-white/10"}`
             }>
             
               {link.label}
@@ -64,14 +64,14 @@ export default function Navbar() {
         {/* CTA desktop */}
         <Link
           to="/empieza"
-          className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-purple text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-mint text-brand-onyx text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
           
           ¡Empieza gratis!
         </Link>
 
         {/* Mobile toggle */}
         <button
-          onClick={() => setOpen(!open)} className="bg-slate-50 text-slate-400 p-2 rounded-xl md:hidden">
+          onClick={() => setOpen(!open)} className="bg-brand-onyx text-white p-2 rounded-xl md:hidden">
           
           
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -85,7 +85,7 @@ export default function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-white/98 backdrop-blur-md border-t border-border">
+          className="md:hidden bg-brand-onyx/98 backdrop-blur-md border-t border-white/10">
           
             <nav className="flex flex-col gap-1 p-4">
               {navLinks.map((link) =>
@@ -94,8 +94,8 @@ export default function Navbar() {
               to={link.path}
               className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${
               location.pathname === link.path ?
-              "bg-brand-orange text-white" :
-              "text-foreground hover:bg-muted"}`
+              "bg-brand-mint text-brand-onyx" :
+              "text-white hover:bg-white/10"}`
               }>
               
                   {link.label}
@@ -103,7 +103,7 @@ export default function Navbar() {
             )}
               <Link
               to="/empieza"
-              className="mt-2 text-center px-5 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-purple text-white font-semibold">
+              className="mt-2 text-center px-5 py-3 rounded-xl bg-brand-mint text-brand-onyx font-semibold">
               
                 ¡Empieza gratis!
               </Link>
