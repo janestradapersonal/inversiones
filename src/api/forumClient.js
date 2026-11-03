@@ -1,8 +1,12 @@
-// Cliente del foro. Con VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY usa Supabase (la web publicada es estática);
-// sin ellas, la API local de server/index.js (npm run dev).
-const SUPA = import.meta.env.VITE_SUPABASE_URL;
-const CLAVE = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Cliente del foro. Usa Supabase (la web publicada es estática). La clave anon es pública por diseño:
+// solo permite lo que dejan las políticas de supabase/foro.sql.
+// Con VITE_FORO_LOCAL=1 (npm run dev) usa en su lugar la API local de server/index.js.
+const SUPABASE_URL = 'https://ocyzergjotoobbtezxuw.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_1BT5wV69t3hyzJNuOWvkwA_bu2U42uq';
 const LOCAL = '/api/forum';
+const usarLocal = import.meta.env.VITE_FORO_LOCAL === '1';
+const SUPA = usarLocal ? null : import.meta.env.VITE_SUPABASE_URL || SUPABASE_URL;
+const CLAVE = import.meta.env.VITE_SUPABASE_ANON_KEY || SUPABASE_ANON_KEY;
 
 // Identificador aleatorio de este navegador: sirve para que cada uno dé un solo "me gusta"
 export function clienteId() {
