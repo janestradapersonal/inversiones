@@ -8,7 +8,7 @@
     "frames:extract": "node extract-frames.js",
     "start": "node server/index.js",
     "server": "node server/index.js",
-    "build": "vite build",
+    "build": "vite build && node scripts/rutas-spa.js",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview"

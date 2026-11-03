@@ -3,7 +3,8 @@ import { defineConfig } from 'vite'
 import path from 'path'
 
 export default defineConfig({
-  base: './',
+  // Rutas desde la raíz del dominio (inversionesfacil.es): necesario para que /aprende/ y demás carguen bien
+  base: '/',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
