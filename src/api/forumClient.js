@@ -41,7 +41,7 @@ async function pedir(url, opciones = {}) {
 
 // Aviso por correo de cada publicación o respuesta nueva (FormSubmit, sin cuenta).
 // Vacío = desactivado. La primera vez, FormSubmit manda un correo para activar el aviso.
-const CORREO_AVISOS = '';
+const CORREO_AVISOS = 'janestrada888@gmail.com';
 
 function avisar(tipo, d) {
   if (!CORREO_AVISOS) return;

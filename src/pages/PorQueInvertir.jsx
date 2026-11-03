@@ -26,12 +26,12 @@ const razones = [
   {
     icon: <Landmark className="w-6 h-6" />,
     titulo: "Ya estás invertido, quieras o no",
-    texto: "Si tienes euros, tu dinero está apostado a que el euro mantenga su valor. Y es la apuesta que, a la larga, siempre pierde. Ya que vas a estar invertido en algo, mejor elige tú en qué.",
+    texto: "Si tienes euros, tu dinero está apostado a que el euro mantenga su valor. Y es la apuesta que, a la larga, siempre pierde. Ya que siempre vas a estar invirtiendo en algo, quieras o no, escapa del euro: al propio Estado le interesa que pierda valor, porque así su deuda pesa menos.",
   },
   {
     icon: <Printer className="w-6 h-6" />,
-    titulo: "Tu dinero lo controlan otros",
-    texto: "Tú no decides cuántos euros existen. En cada crisis se crean muchos más para salvar la economía. Tú no vendes nada, tu cuenta marca lo mismo… pero cada euro compra menos.",
+    titulo: "Tu dinero lo controla el Estado, no tú",
+    texto: "Si hay una crisis, aunque sigas viendo el mismo número en el banco, el Estado (con su banco central, el BCE) estará imprimiendo e inyectando más dinero para superarla. Y si se fabrica más dinero, el que ya hay vale menos: es la ley de la oferta y la demanda, y se llama inflación. Además, no hace falta una crisis: se imprime constantemente. Por eso la gente huye a activos refugio, que son limitados y no se pueden imprimir, como el oro, o a empresas que suben de valor año tras año.",
   },
   {
     icon: <Sprout className="w-6 h-6" />,
