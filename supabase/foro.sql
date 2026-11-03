@@ -40,7 +40,11 @@ create policy "leer" on forum_replies for select to anon using (true);
 create policy "responder" on forum_replies for insert to anon with check (true);
 -- forum_likes: sin políticas → nadie la toca directamente, solo las funciones de abajo
 
-grant select, insert on forum_posts, forum_replies to anon;
+grant select on forum_posts, forum_replies to anon;
+-- Al publicar solo se rellenan estas columnas: la fecha la pone siempre la base de datos
+revoke insert on forum_posts, forum_replies from anon;
+grant insert (title, content, category, author_name) on forum_posts to anon;
+grant insert (post_id, content, author_name) on forum_replies to anon;
 
 -- Listados con contadores (se calculan con permisos del propietario, sin exponer forum_likes)
 create or replace view forum_posts_v as

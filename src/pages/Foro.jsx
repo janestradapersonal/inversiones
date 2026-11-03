@@ -6,8 +6,9 @@ import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { forumApi } from "@/api/forumClient";
 
-const CATEGORIAS = ["pregunta", "experiencia", "duda", "consejo", "otro"];
-const CAT_EMOJI = { pregunta: "❓", experiencia: "💪", duda: "🤔", consejo: "💡", otro: "💬" };
+const CATEGORIAS = ["duda", "consejo", "otro"];
+const NOMBRE = { duda: "Dudas", consejo: "Consejos y experiencias", otro: "Otros" };
+const SECCION = { pregunta: "duda", duda: "duda", experiencia: "consejo", consejo: "consejo", otro: "otro" };
 const campo =
   "w-full px-4 py-2.5 rounded-xl border border-white/15 bg-brand-onyx/60 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-mint/50 text-sm disabled:opacity-50";
 
@@ -32,7 +33,7 @@ function AvisoError({ texto }) {
 }
 
 function NuevaPublicacion({ onClose, onCreated }) {
-  const [form, setForm] = useState({ title: "", content: "", category: "pregunta", author_name: "" });
+  const [form, setForm] = useState({ title: "", content: "", category: "duda", author_name: "" });
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
 
@@ -79,7 +80,7 @@ function NuevaPublicacion({ onClose, onCreated }) {
                 onClick={() => setForm({ ...form, category: c })}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${form.category === c ? "bg-brand-mint text-brand-onyx" : "bg-white/10 text-white/70 hover:bg-white/15"}`}
               >
-                {CAT_EMOJI[c]} {c}
+                {NOMBRE[c]}
               </button>
             ))}
           </div>
@@ -215,7 +216,7 @@ function Publicacion({ post, misLikes, onLike, onRespuesta }) {
           </div>
         </div>
         <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 text-white/80">
-          {CAT_EMOJI[post.category]} {post.category}
+          {NOMBRE[SECCION[post.category]] || "Otros"}
         </span>
       </div>
 
@@ -312,7 +313,7 @@ export default function Foro() {
   const sumarRespuesta = (id) => setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, replies: Number(p.replies) + 1 } : p)));
 
   const visibles = posts
-    .filter((p) => categoria === "todas" || p.category === categoria)
+    .filter((p) => categoria === "todas" || (SECCION[p.category] || "otro") === categoria)
     .sort((a, b) => (orden === "votados" ? Number(b.likes) - Number(a.likes) : 0) || new Date(b.created_date) - new Date(a.created_date));
 
   const pastilla = (activa) =>
@@ -322,7 +323,7 @@ export default function Foro() {
     <div className="pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">💬 Comunidad</span>
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">Comunidad</span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
             El <span className="font-serif italic normal-case text-brand-mint">foro</span>
           </h1>
@@ -333,10 +334,10 @@ export default function Foro() {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setCategoria("todas")} className={pastilla(categoria === "todas")}>🌐 Todas</button>
+            <button onClick={() => setCategoria("todas")} className={pastilla(categoria === "todas")}>Todas</button>
             {CATEGORIAS.map((c) => (
               <button key={c} onClick={() => setCategoria(c)} className={pastilla(categoria === c)}>
-                {CAT_EMOJI[c]} {c}
+                {NOMBRE[c]}
               </button>
             ))}
           </div>
@@ -369,7 +370,6 @@ export default function Foro() {
           <p className="text-center py-20 text-[#FF5C7A]">{error}</p>
         ) : visibles.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-5xl mb-4">🌱</p>
             <h3 className="font-sora text-xl font-bold mb-2">¡Sé el primero!</h3>
             <p className="text-white/60">Aún no hay publicaciones aquí. Empieza la conversación.</p>
           </div>

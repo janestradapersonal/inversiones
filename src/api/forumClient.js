@@ -39,6 +39,28 @@ async function pedir(url, opciones = {}) {
   return res.json();
 }
 
+// Aviso por correo de cada publicación o respuesta nueva (FormSubmit, sin cuenta).
+// Vacío = desactivado. La primera vez, FormSubmit manda un correo para activar el aviso.
+const CORREO_AVISOS = '';
+
+function avisar(tipo, d) {
+  if (!CORREO_AVISOS) return;
+  fetch(`https://formsubmit.co/ajax/${CORREO_AVISOS}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      _subject: tipo === 'post' ? `Foro: nueva publicación «${d.title}»` : 'Foro: nueva respuesta',
+      _template: 'table',
+      _captcha: 'false',
+      Tipo: tipo === 'post' ? 'Publicación' : 'Respuesta',
+      Autor: d.author_name || 'Anónimo',
+      ...(d.title ? { Título: d.title } : {}),
+      Mensaje: d.content,
+      Enlace: 'https://inversionesfacil.es/foro',
+    }),
+  }).catch(() => {});
+}
+
 const rest = (ruta) => `${SUPA}/rest/v1/${ruta}`;
 const devolver = { headers: { Prefer: 'return=representation' } };
 const json = (metodo, cuerpo, extra = {}) => ({ method: metodo, body: JSON.stringify(cuerpo), ...extra });
@@ -46,11 +68,19 @@ const json = (metodo, cuerpo, extra = {}) => ({ method: metodo, body: JSON.strin
 const supabase = {
   posts: {
     list: () => pedir(rest('forum_posts_v?select=*&order=created_date.desc&limit=100')),
-    create: async (d) => ({ ...(await pedir(rest('forum_posts'), json('POST', d, devolver)))[0], likes: 0, replies: 0 }),
+    create: async (d) => {
+      const fila = (await pedir(rest('forum_posts'), json('POST', d, devolver)))[0];
+      avisar('post', d);
+      return { ...fila, likes: 0, replies: 0 };
+    },
   },
   replies: {
     list: (postId) => pedir(rest(`forum_replies_v?select=*&post_id=eq.${Number(postId)}&order=created_date.asc`)),
-    create: async (d) => ({ ...(await pedir(rest('forum_replies'), json('POST', d, devolver)))[0], likes: 0 }),
+    create: async (d) => {
+      const fila = (await pedir(rest('forum_replies'), json('POST', d, devolver)))[0];
+      avisar('respuesta', d);
+      return { ...fila, likes: 0 };
+    },
   },
   likes: {
     toggle: (target) => pedir(rest('rpc/alternar_like'), json('POST', { p_target: target, p_client: clienteId() })),
