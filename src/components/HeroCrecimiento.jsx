@@ -16,7 +16,7 @@ const LINEAS = [25000, 50000, 75000, 100000, 125000];
 const euros = (n) => `${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €`;
 
 
-const ventajas = ["Explicado desde cero", "Sin jerga", "Desde 1€", "100% gratis"];
+const ventajas = ["Explicado desde cero", "Con datos reales", "Desde 1€", "100% gratis"];
 
 // Visibilidad (0→1) de un texto entre dos puntos del recorrido, con fundido corto
 const tramo = (x, entra, sale) => {
@@ -176,18 +176,16 @@ export default function HeroCrecimiento() {
               className="max-w-2xl"
             >
               <span className="hidden md:inline-block px-4 py-1.5 rounded-full border border-brand-mint/40 text-brand-mint font-semibold text-sm mb-6">
-                Educación financiera para todos
+                Inversiones para todos
               </span>
-              <h1 className="font-display uppercase text-white text-[2.9rem] sm:text-7xl md:text-[7.5rem] leading-[0.88] tracking-tight">
-                Tu dinero
-                <br />
-                puede crecer
-                <span className="block font-serif italic normal-case text-brand-mint text-[2.3rem] sm:text-6xl md:text-8xl leading-[1] mt-1 md:mt-2">
-                  mientras duermes
+              <h1 className="font-display uppercase text-white text-[3.6rem] sm:text-8xl md:text-[8.5rem] leading-[0.88] tracking-tight">
+                Economía
+                <span className="block font-serif italic normal-case text-brand-mint text-[2.6rem] sm:text-6xl md:text-8xl leading-[1] mt-1 md:mt-2">
+                  sin tecnicismos
                 </span>
               </h1>
               <p className="hidden md:block mt-6 max-w-xl text-lg leading-relaxed text-white/75">
-                Guardar el dinero en el banco hace que pierda valor cada año. Invertir es más fácil de lo que crees, y te lo explicamos desde cero.
+                El dinero, la inflación y la inversión explicados con palabras normales. Desde cero y sin jerga.
               </p>
               <div className="mt-5 md:mt-8 flex flex-row gap-3 items-center">
                 <Link
@@ -252,13 +250,13 @@ export default function HeroCrecimiento() {
               <span className="block font-serif italic normal-case text-brand-mint">habiendo puesto 36.000 €</span>
             </h2>
             <p className="mt-3 md:mt-4 max-w-md text-white/70 text-base md:text-lg">
-              Más de 3 veces lo que has puesto. Eso es el interés compuesto.
+              Más de 3 veces lo que has puesto. Eso es el interés compuesto. Tú eliges dónde está tu dinero.
             </p>
             <Link
-              to="/aprende"
+              to="/por-que-invertir"
               className="mt-6 inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-mint text-brand-onyx font-bold hover:scale-105 transition-transform"
             >
-              Entiende cómo funciona <ArrowRight className="w-5 h-5" />
+              ¿Por qué invertir? <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>

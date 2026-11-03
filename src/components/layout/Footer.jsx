@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export default function Footer() {
   return (
@@ -8,9 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-xl bg-brand-mint flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-brand-onyx" />
-              </div>
+              <img src={logo} alt="Inversiones Fáciles" className="w-10 h-10" />
               <span className="font-sora font-bold text-lg text-white">
                 inversionesfacil<span className="text-brand-orange">.es</span>
               </span>

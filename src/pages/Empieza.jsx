@@ -1,173 +1,275 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Gift, Star, CheckCircle, ArrowRight, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Banknote,
+  CalendarSync,
+  CheckCircle,
+  Coins,
+  ExternalLink,
+  Gift,
+  GraduationCap,
+  LifeBuoy,
+  MessageCircle,
+  MousePointerClick,
+  PieChart,
+  ShieldCheck,
+  Smartphone,
+  Timer,
+} from "lucide-react";
 
-const steps = [
-{ num: "1", title: "Elige una plataforma", desc: "MyInvestor o Trade Republic. Las dos son gratuitas, seguras y reguladas." },
-{ num: "2", title: "Regístrate en 10 minutos", desc: "Solo necesitas DNI, email y un selfie. Todo online, sin ir a ninguna oficina." },
-{ num: "3", title: "Ingresa dinero", desc: "Desde 1€. Puedes hacer una transferencia gratuita desde tu banco habitual y empezar a ivertir." },
-{ num: "4", title: "Elige tu inversión", desc: "Busca un ETF global (por ejemplo MSCI World o S&P 500) y compra tu primera participación." },
-{ num: "5", title: "Activa aportaciones mensuales", desc: "Programa una inversión automática mensual. Así inviertes sin pensar y aprovechas el DCA." }];
+// Condiciones consultadas en noviembre de 2026 (webs oficiales y bases de los planes amigo)
+const FECHA = "noviembre de 2026";
 
+const pasos = [
+  {
+    icon: <MousePointerClick className="w-6 h-6" />,
+    titulo: "Elige una plataforma",
+    texto: "Abajo tienes las dos que uso yo. Las dos son gratis de abrir y están reguladas.",
+  },
+  {
+    icon: <Smartphone className="w-6 h-6" />,
+    titulo: "Regístrate en 10 minutos",
+    texto: "Desde el móvil: DNI, unos datos y un selfie. Sin ir a ninguna oficina.",
+  },
+  {
+    icon: <Banknote className="w-6 h-6" />,
+    titulo: "Ingresa dinero",
+    texto: "Una transferencia desde tu banco de siempre. Empieza con poco: lo importante es empezar.",
+  },
+  {
+    icon: <PieChart className="w-6 h-6" />,
+    titulo: "Elige tu inversión",
+    texto: "Una cartera como las que hemos visto, un fondo indexado mundial… o una empresa que te guste, sabiendo que es más arriesgado.",
+    enlace: { to: "/aprende?s=carteras", t: "Ver carteras y hacer el test" },
+  },
+  {
+    icon: <CalendarSync className="w-6 h-6" />,
+    titulo: "Pon aportaciones mensuales",
+    texto: "Una cantidad fija cada mes, automática. Así no tienes que adivinar el momento y lo haces sin pensar.",
+    destacado: "Mi recomendación",
+  },
+];
 
-const myinvestor = {
-  name: "MyInvestor",
-  emoji: "🇪🇸",
-  color: "from-blue-600 to-blue-800",
-  bg: "bg-brand-surface border-white/10",
-  badge_color: "bg-blue-100 text-blue-700",
-  referralUrl: "https://newapp.myinvestor.es/do/signup?promotionalCode=IYZED",
-  reward: "25€ de regalo",
-  reward_condition: "si traes 1.000€, contratas un depósito o inviertes 100€",
-  features: [
-  "Fondos indexados sin comisión de custodia",
-  "Planes de pensiones y carteras indexadas",
-  "Interfaz en español muy intuitiva",
-  "Regulado por CNMV (España)",
-  "Ideal para fondos de inversión y planes de pensiones"],
+const razones = [
+  { icon: <Coins className="w-6 h-6" />, t: "No hace falta tener dinero", x: "Se puede empezar con muy poco. Ya irás poniendo más cuando le cojas el truco." },
+  { icon: <GraduationCap className="w-6 h-6" />, t: "Cuanto antes, antes aprendes", x: "Se aprende con práctica. Y cuanto antes empieces, más tiempo tendrá tu dinero para crecer." },
+  { icon: <LifeBuoy className="w-6 h-6" />, t: "Si te equivocas ahora, no pasa nada", x: "Mejor equivocarte con 10 € que con 10.000 €. Que todo sea por aprender." },
+  { icon: <Timer className="w-6 h-6" />, t: "Solo necesitas 10 minutos", x: "Para darte de alta y poner tus primeros euros. A partir de ahí, se aprende haciendo." },
+];
 
-  best_for: "Fondos indexados y planes de pensiones"
-};
+const plataformas = [
+  {
+    nombre: "MyInvestor",
+    pais: "Española",
+    uso: "Aquí tengo mis inversiones, repartidas en varias carteras indexadas.",
+    enlace: "https://newapp.myinvestor.es/do/signup?promotionalCode=IYZED",
+    codigo: "IYZED",
+    regalo: "25 € de regalo",
+    regaloDetalle: "Abriendo tu cuenta con este enlace (o el código IYZED), te dan 25 € brutos (unos 20 € netos) cuando tengas 100 € invertidos.",
+    condiciones:
+      "Tienes 3 meses desde que abres la cuenta para invertir 100 € (o tener 1.000 € en la cuenta, o un depósito). El código se pone al abrir la cuenta: después no se puede añadir.",
+    puntos: [
+      "Banco español supervisado por el Banco de España y la CNMV",
+      "Más de un millón de clientes",
+      "Carteras indexadas ya hechas desde 150 €",
+      "Fondos indexados y planes de pensiones con comisiones muy bajas",
+      "App en español, muy fácil de usar",
+    ],
+    color: "#6CB4FF",
+  },
+  {
+    nombre: "Trade Republic",
+    pais: "Alemana, con IBAN español",
+    uso: "Mi cuenta del día a día: el dinero que tengo ahí, en vez de no darme nada, me da intereses.",
+    enlace: "https://refnocode.trade.re/znw9qk74",
+    regalo: "Acción de regalo",
+    regaloDetalle: "Abriendo tu cuenta con este enlace, te regalan una acción o un ETF de entre 5 € y 200 €.",
+    condiciones: "En los 21 días siguientes a darte de alta tienes que ingresar 100 € y hacer 3 inversiones (los planes de inversión no cuentan).",
+    puntos: [
+      "Paga intereses por el dinero de la cuenta, en torno al tipo del BCE (2,50 % ahora mismo)",
+      "IBAN español: sirve para domiciliar la nómina y los recibos",
+      "Banco alemán con sucursal en España, registrada en el Banco de España y la CNMV",
+      "Más de un millón de clientes en España",
+      "Acciones y ETF desde 1 € y planes de inversión mensuales",
+    ],
+    color: "#88F9C0",
+  },
+];
 
-const traderepublic = {
-  name: "Trade Republic",
-  emoji: "🇩🇪",
-  color: "from-emerald-500 to-teal-600",
-  bg: "bg-brand-surface border-white/10",
-  badge_color: "bg-emerald-100 text-emerald-700",
-  referralUrl: "https://refnocode.trade.re/znw9qk74",
-  reward: "Recompensa de bienvenida",
-  reward_condition: "al abrir cuenta con mi enlace de invitación",
-  features: [
-  "Compra de acciones y ETFs desde 1€",
-  "Cuenta de ahorro remunerada al 2-3%",
-  "Sin comisiones por compraventa",
-  "App minimalista y muy fácil de usar",
-  "Regulado por BaFin (Alemania)"],
-
-  best_for: "ETFs, acciones y ahorro remunerado"
-};
-
-function PlatformCard({ platform }) {
+function Plataforma({ p, i }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: i * 0.1 }}
       viewport={{ once: true }}
-      className={`rounded-3xl border-2 ${platform.bg} p-8 relative overflow-hidden`}>
-      
-      {/* Reward badge */}
-      <div className="absolute top-4 right-4">
-        <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${platform.badge_color}`}>
-          <Gift className="w-3.5 h-3.5" />
-          {platform.reward}
-        </span>
+      className="flex flex-col rounded-3xl bg-brand-surface border border-white/10 p-6 md:p-8"
+      style={{ borderTopColor: p.color, borderTopWidth: 4 }}
+    >
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <h3 className="font-display uppercase text-4xl leading-none">{p.nombre}</h3>
+        <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-semibold whitespace-nowrap">{p.pais}</span>
       </div>
-
-      <div className="flex items-center gap-3 mb-5">
-        <span className="text-4xl">{platform.emoji}</span>
-        <h3 className="font-sora text-2xl font-extrabold">{platform.name}</h3>
-      </div>
-
-      <p className="text-white mb-5 text-sm leading-relaxed">
-        🎁 <strong>¡Recompensa exclusiva!</strong> {platform.reward} {platform.reward_condition} si te registras con mi enlace. Me ayudas a mantener esta web gratuita.
-      </p>
+      <p className="text-white/75 mb-5">{p.uso}</p>
 
       <ul className="space-y-2.5 mb-6">
-        {platform.features.map((f, i) =>
-        <li key={i} className="flex items-start gap-2.5 text-sm">
-            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-            <span>{f}</span>
+        {p.puntos.map((x) => (
+          <li key={x} className="flex items-start gap-2.5 text-sm text-white/90">
+            <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: p.color }} />
+            {x}
           </li>
-        )}
+        ))}
       </ul>
 
-      <div className="mb-6 p-3 rounded-2xl bg-white/10">
-        <p className="text-white text-xs">👆 Ideal para:</p>
-        <p className="font-semibold text-sm">{platform.best_for}</p>
+      <div className="mt-auto rounded-2xl bg-brand-onyx/60 border border-white/10 p-4 mb-4">
+        <p className="flex items-center gap-2 font-bold text-white mb-1">
+          <Gift className="w-4 h-4 text-[#F5C542]" /> {p.regalo}
+        </p>
+        <p className="text-sm text-white/85">{p.regaloDetalle}</p>
+        <p className="text-xs text-white/50 mt-2">{p.condiciones}</p>
       </div>
 
       <a
-        href={platform.referralUrl}
+        href={p.enlace}
         target="_blank"
         rel="noopener noreferrer"
-        className={`flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-gradient-to-r ${platform.color} text-white font-bold text-base hover:scale-105 hover:shadow-xl transition-all duration-200`}>
-        
-        Abrir cuenta en {platform.name} <ExternalLink className="w-4 h-4" />
+        className="flex items-center justify-center gap-2 w-full py-4 rounded-full font-bold text-brand-onyx hover:scale-[1.02] transition-transform"
+        style={{ background: p.color }}
+      >
+        Abrir cuenta en {p.nombre} <ExternalLink className="w-4 h-4" />
       </a>
-      <p className="text-white mt-3 text-xs text-center">⭐ Enlace de referido — te llevas tu recompensa y me apoyas
-
-      </p>
-    </motion.div>);
-
+      <p className="text-[11px] text-white/45 text-center mt-2">Enlace de invitación (plan amigo){p.codigo ? ` · código ${p.codigo}` : ""}</p>
+    </motion.div>
+  );
 }
 
 export default function Empieza() {
   return (
     <div className="pt-28 pb-20">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16">
-          
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
-            🚀 ¡Acción!
-          </span>
-          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
-            Empieza a invertir{" "}
-            <span className="font-serif italic normal-case text-brand-mint">
-              hoy mismo
-            </span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Cabecera */}
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">Paso 3 · Empieza ya</span>
+          <h1 className="font-display uppercase text-5xl md:text-8xl leading-[0.9] tracking-tight mb-6">
+            Nunca fue tan <span className="font-serif italic normal-case text-brand-mint">fácil</span>
           </h1>
-          <p className="text-white/85 mx-auto text-xl leading-relaxed max-w-2xl">El mejor momento para empezar era hace 10 años. El segundo mejor momento es ahora. Te recomiendo dos plataformas que uso personalmente.
-
-
+          <p className="text-white/85 mx-auto text-lg md:text-xl leading-relaxed max-w-2xl">
+            Antes invertir era difícil: hacía falta mucho dinero, ir al banco y pagar comisiones altísimas. Hoy es extremadamente fácil.
+            <strong className="text-white"> Lo importante es empezar.</strong>
           </p>
         </motion.div>
 
-        {/* Steps */}
-        <div className="mb-16">
-          <h2 className="font-display uppercase text-4xl text-center mb-8">📋 Cómo empezar en 5 pasos</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-            {steps.map((s, i) =>
+        {/* Por qué ya */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-20">
+          {razones.map((r, i) => (
             <motion.div
-              key={i}
+              key={r.t}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.08 }}
               viewport={{ once: true }}
-              className="text-center">
-              
-                <div className="w-12 h-12 rounded-2xl bg-brand-mint text-brand-onyx font-sora font-extrabold text-xl flex items-center justify-center mx-auto mb-3 shadow-md">
-                  {s.num}
-                </div>
-                <h3 className="font-bold text-sm mb-1">{s.title}</h3>
-                <p className="text-white text-xs">{s.desc}</p>
-              </motion.div>
-            )}
+              className="rounded-3xl bg-brand-surface border border-white/10 p-4 md:p-6"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-brand-indigo text-white flex items-center justify-center mb-3">{r.icon}</div>
+              <h3 className="font-sora font-bold text-base md:text-lg leading-snug mb-1.5">{r.t}</h3>
+              <p className="text-xs md:text-sm text-white/70 leading-relaxed">{r.x}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Los 5 pasos */}
+        <section className="mb-20">
+          <h2 className="font-display uppercase text-4xl md:text-6xl text-center leading-none mb-3">
+            5 pasos y <span className="font-serif italic normal-case text-brand-mint">listo</span>
+          </h2>
+          <p className="text-center text-white/60 mb-10">Menos de lo que tardas en pedir comida a domicilio.</p>
+          <div className="relative">
+            {/* Línea que une los pasos */}
+            <div className="hidden lg:block absolute top-8 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-brand-indigo via-brand-mint to-brand-indigo" />
+            <div className="grid lg:grid-cols-5 gap-4">
+              {pasos.map((p, i) => (
+                <motion.div
+                  key={p.titulo}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.12 }}
+                  viewport={{ once: true }}
+                  className="relative flex lg:flex-col items-start lg:items-center gap-4 lg:text-center"
+                >
+                  <div className="relative z-10 shrink-0 w-16 h-16 rounded-2xl bg-brand-mint text-brand-onyx flex items-center justify-center shadow-[0_0_30px_rgba(136,249,192,0.35)]">
+                    {p.icon}
+                    <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-brand-indigo text-white font-display text-base flex items-center justify-center border-2 border-brand-onyx">
+                      {i + 1}
+                    </span>
+                  </div>
+                  <div className="flex-1 rounded-2xl bg-brand-surface border border-white/10 p-4 lg:w-full">
+                    {p.destacado && (
+                      <span className="inline-block mb-2 px-2.5 py-0.5 rounded-full bg-[#F5C542] text-brand-onyx text-[10px] font-bold uppercase tracking-wider">
+                        {p.destacado}
+                      </span>
+                    )}
+                    <h3 className="font-sora font-bold text-white mb-1">{p.titulo}</h3>
+                    <p className="text-sm text-white/70 leading-snug">{p.texto}</p>
+                    {p.enlace && (
+                      <Link to={p.enlace.to} className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-mint">
+                        {p.enlace.t} <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Platforms */}
-        <div className="mb-12">
-          <h2 className="font-display uppercase text-4xl text-center mb-4">🏆 Mis plataformas recomendadas</h2>
-          <p className="text-white mb-8 text-center">Si usas mis enlaces de referido, obtienes una recompensa y me ayudas a mantener esta web educativa gratuita. ¡Win-win!
-
+        {/* Lo que uso yo */}
+        <section className="mb-12">
+          <h2 className="font-display uppercase text-4xl md:text-6xl text-center leading-none mb-3">
+            Lo que uso <span className="font-serif italic normal-case text-brand-mint">yo</span>
+          </h2>
+          <p className="text-center text-white/70 max-w-2xl mx-auto mb-10">
+            Me gusta tener dos bancos: uno para el dinero del día a día, que me da intereses en vez de nada, y otro para las inversiones.
+            Los dos tienen muy pocas comisiones (nada que ver con los bancos de siempre) y son muy fáciles de usar.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <PlatformCard platform={myinvestor} />
-            <PlatformCard platform={traderepublic} />
+          <div className="grid md:grid-cols-2 gap-6">
+            {plataformas.map((p, i) => (
+              <Plataforma key={p.nombre} p={p} i={i} />
+            ))}
           </div>
+        </section>
+
+        {/* Con cabeza + foro */}
+        <div className="grid md:grid-cols-2 gap-4 mb-10">
+          <div className="flex gap-4 rounded-3xl bg-brand-surface border border-white/10 p-6">
+            <ShieldCheck className="w-8 h-8 text-brand-mint shrink-0" />
+            <div>
+              <h3 className="font-sora font-bold text-lg mb-1">Hazlo con cabeza</h3>
+              <p className="text-sm text-white/70 leading-relaxed">
+                Primero tu colchón de emergencia. Invierte solo dinero que no vayas a necesitar pronto, reparte (no todo en una empresa) y no
+                vendas por miedo cuando la bolsa caiga.
+              </p>
+            </div>
+          </div>
+          <Link to="/foro" className="group flex gap-4 rounded-3xl bg-brand-indigo p-6">
+            <MessageCircle className="w-8 h-8 text-brand-mint shrink-0" />
+            <div>
+              <h3 className="font-sora font-bold text-lg mb-1">¿Alguna duda?</h3>
+              <p className="text-sm text-white/85 leading-relaxed">
+                Pregunta en el foro: no hay preguntas tontas.{" "}
+                <span className="inline-flex items-center gap-1 font-semibold text-brand-mint">
+                  Ir al foro <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </p>
+            </div>
+          </Link>
         </div>
 
-        {/* Disclaimer */}
-        <div className="bg-brand-surface border border-white/10 p-6 text-center rounded-2xl">
-          <p className="text-sm text-muted-foreground">
-            ⚠️ <strong>Aviso:</strong> Los enlaces de arriba son de referido. Si los usas, obtienes la recompensa indicada y yo una pequeña comisión que me ayuda a mantener esta web. Esto no afecta a tu experiencia ni a las condiciones del producto. Siempre investiga por tu cuenta antes de invertir.
-          </p>
-        </div>
+        <p className="text-center text-xs text-white/45 max-w-3xl mx-auto">
+          Condiciones, regalos e intereses consultados en {FECHA} en las webs de cada entidad; pueden cambiar, compruébalos antes de abrir la
+          cuenta. El regalo de bienvenida tributa. Contenido educativo: esto no es asesoramiento financiero. Toda inversión tiene riesgo.
+        </p>
       </div>
-    </div>);
-
+    </div>
+  );
 }

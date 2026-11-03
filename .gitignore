@@ -29,3 +29,6 @@ dist-ssr
 
 .env
 .vite
+
+# Base de datos local del foro
+server/foro.db*

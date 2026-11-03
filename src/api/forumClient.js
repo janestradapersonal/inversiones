@@ -1,83 +1,72 @@
-const BASE = import.meta.env.VITE_API_URL || '/api/forum';
+// Cliente del foro. Con VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY usa Supabase (la web publicada es estática);
+// sin ellas, la API local de server/index.js (npm run dev).
+const SUPA = import.meta.env.VITE_SUPABASE_URL;
+const CLAVE = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const LOCAL = '/api/forum';
 
-export const forumApi = {
+// Identificador aleatorio de este navegador: sirve para que cada uno dé un solo "me gusta"
+export function clienteId() {
+  try {
+    let id = window.localStorage.getItem('foro_cliente');
+    if (!id) {
+      id = crypto.randomUUID();
+      window.localStorage.setItem('foro_cliente', id);
+    }
+    return id;
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
+async function pedir(url, opciones = {}) {
+  const cabeceras = { 'Content-Type': 'application/json', ...(opciones.headers || {}) };
+  if (SUPA) Object.assign(cabeceras, { apikey: CLAVE, Authorization: `Bearer ${CLAVE}` });
+  const res = await fetch(url, { ...opciones, headers: cabeceras });
+  if (!res.ok) {
+    let msg = 'Error del foro';
+    try {
+      const j = await res.json();
+      msg = j.error || j.message || msg;
+    } catch {
+      // sin cuerpo
+    }
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
+const rest = (ruta) => `${SUPA}/rest/v1/${ruta}`;
+const devolver = { headers: { Prefer: 'return=representation' } };
+const json = (metodo, cuerpo, extra = {}) => ({ method: metodo, body: JSON.stringify(cuerpo), ...extra });
+
+const supabase = {
   posts: {
-    list: async () => {
-      const res = await fetch(`${BASE}/posts`);
-      if (!res.ok) throw new Error('Failed to fetch posts');
-      return res.json();
-    },
-    create: async (data) => {
-      const res = await fetch(`${BASE}/posts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error('Failed to create post');
-      return res.json();
-    },
-    update: async (id, data) => {
-      const res = await fetch(`${BASE}/posts/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error('Failed to update post');
-      return res.json();
-    },
-    like: async (id) => {
-      const res = await fetch(`${BASE}/posts/${id}/like`, {
-        method: 'POST',
-      });
-
-      if (!res.ok) {
-        let payload = null;
-        try {
-          payload = await res.json();
-        } catch {
-          payload = null;
-        }
-        const err = new Error(payload?.error || 'Failed to like post');
-        err.status = res.status;
-        throw err;
-      }
-
-      return res.json();
-    },
-    unlike: async (id) => {
-      const res = await fetch(`${BASE}/posts/${id}/like`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        let payload = null;
-        try {
-          payload = await res.json();
-        } catch {
-          payload = null;
-        }
-        const err = new Error(payload?.error || 'Failed to unlike post');
-        err.status = res.status;
-        throw err;
-      }
-
-      return res.json();
-    },
+    list: () => pedir(rest('forum_posts_v?select=*&order=created_date.desc&limit=100')),
+    create: async (d) => ({ ...(await pedir(rest('forum_posts'), json('POST', d, devolver)))[0], likes: 0, replies: 0 }),
   },
   replies: {
-    list: async (postId) => {
-      const res = await fetch(`${BASE}/posts/${postId}/replies`);
-      if (!res.ok) throw new Error('Failed to fetch replies');
-      return res.json();
-    },
-    create: async (data) => {
-      const res = await fetch(`${BASE}/replies`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error('Failed to create reply');
-      return res.json();
-    },
+    list: (postId) => pedir(rest(`forum_replies_v?select=*&post_id=eq.${Number(postId)}&order=created_date.asc`)),
+    create: async (d) => ({ ...(await pedir(rest('forum_replies'), json('POST', d, devolver)))[0], likes: 0 }),
+  },
+  likes: {
+    toggle: (target) => pedir(rest('rpc/alternar_like'), json('POST', { p_target: target, p_client: clienteId() })),
+    mine: async () => (await pedir(rest('rpc/mis_likes'), json('POST', { p_client: clienteId() }))).map((f) => f.target ?? f),
   },
 };
+
+const local = {
+  posts: {
+    list: () => pedir(`${LOCAL}/posts`),
+    create: (d) => pedir(`${LOCAL}/posts`, json('POST', d)),
+  },
+  replies: {
+    list: (postId) => pedir(`${LOCAL}/posts/${postId}/replies`),
+    create: (d) => pedir(`${LOCAL}/replies`, json('POST', d)),
+  },
+  likes: {
+    toggle: (target) => pedir(`${LOCAL}/likes`, json('POST', { target, client_id: clienteId() })),
+    mine: () => pedir(`${LOCAL}/likes?client_id=${encodeURIComponent(clienteId())}`),
+  },
+};
+
+export const forumApi = SUPA && CLAVE ? supabase : local;

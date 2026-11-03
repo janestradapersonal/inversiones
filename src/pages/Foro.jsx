@@ -1,474 +1,393 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { forumApi } from "@/api/forumClient";
-import { MessageCircle, Plus, ThumbsUp, ChevronDown, ChevronUp, Send, X, User } from "lucide-react";
-import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronUp, Heart, MessageCircle, Plus, Send, User, X } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import { forumApi } from "@/api/forumClient";
 
-const CATEGORIES = ["pregunta", "experiencia", "duda", "consejo", "otro"];
-const CAT_COLORS = {
-  pregunta: "bg-blue-100 text-blue-700",
-  experiencia: "bg-green-100 text-green-700",
-  duda: "bg-blue-100 text-blue-700",
-  consejo: "bg-purple-100 text-purple-700",
-  otro: "bg-gray-100 text-gray-600"
-};
+const CATEGORIAS = ["pregunta", "experiencia", "duda", "consejo", "otro"];
 const CAT_EMOJI = { pregunta: "❓", experiencia: "💪", duda: "🤔", consejo: "💡", otro: "💬" };
+const campo =
+  "w-full px-4 py-2.5 rounded-xl border border-white/15 bg-brand-onyx/60 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-mint/50 text-sm disabled:opacity-50";
 
-function NewPostModal({ onClose, onCreated }) {
-  const [form, setForm] = useState({ title: "", content: "", category: "pregunta", author_name: "", is_anonymous: false });
-  const [loading, setLoading] = useState(false);
+const hace = (fecha) => formatDistanceToNow(new Date(fecha), { addSuffix: true, locale: es });
+const autor = (nombre) => nombre.trim().slice(0, 40) || "Anónimo";
 
-  const handleSubmit = async (e) => {
+function BotonLike({ target, likes, liked, onToggle }) {
+  return (
+    <button
+      onClick={() => onToggle(target)}
+      title={liked ? "Quitar me gusta" : "Me gusta"}
+      className={`flex items-center gap-1.5 text-sm transition-colors ${liked ? "text-[#FF5C7A]" : "text-white/60 hover:text-[#FF5C7A]"}`}
+    >
+      <Heart className={`w-4 h-4 ${liked ? "fill-current" : ""}`} />
+      <span className="tabular-nums">{likes}</span>
+    </button>
+  );
+}
+
+function AvisoError({ texto }) {
+  return texto ? <p className="text-sm text-[#FF5C7A]">{texto}</p> : null;
+}
+
+function NuevaPublicacion({ onClose, onCreated }) {
+  const [form, setForm] = useState({ title: "", content: "", category: "pregunta", author_name: "" });
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
+
+  const enviar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    await forumApi.posts.create({
-      ...form,
-      author_name: form.is_anonymous ? "Anónimo" : form.author_name || "Anónimo"
-    });
-    setLoading(false);
-    onCreated();
-    onClose();
+    setEnviando(true);
+    setError("");
+    try {
+      const post = await forumApi.posts.create({
+        title: form.title.trim(),
+        content: form.content.trim(),
+        category: form.category,
+        author_name: autor(form.author_name),
+      });
+      onCreated(post);
+      onClose();
+    } catch {
+      setError("No se ha podido publicar. Inténtalo de nuevo en un momento.");
+    }
+    setEnviando(false);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-brand-surface text-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden">
-        
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="font-sora text-xl font-bold">Nueva publicación</h2>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-muted transition-colors">
+        onClick={(e) => e.stopPropagation()}
+        className="bg-brand-surface text-white rounded-3xl w-full max-w-xl border border-white/10 shadow-2xl overflow-hidden"
+      >
+        <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <h2 className="font-display uppercase text-2xl">Nueva publicación</h2>
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/10 transition-colors" aria-label="Cerrar">
             <X className="w-5 h-5" />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Categoría</label>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((c) =>
+        <form onSubmit={enviar} className="p-6 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIAS.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setForm({ ...form, category: c })}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${form.category === c ? CAT_COLORS[c] + " ring-2 ring-offset-1 ring-current" : "bg-muted text-muted-foreground"}`}>
-                
-                  {CAT_EMOJI[c]} {c}
-                </button>
-              )}
-            </div>
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${form.category === c ? "bg-brand-mint text-brand-onyx" : "bg-white/10 text-white/70 hover:bg-white/15"}`}
+              >
+                {CAT_EMOJI[c]} {c}
+              </button>
+            ))}
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Título *</label>
-            <input
-              required
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="¿Cuál es tu pregunta o tema?"
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm" />
-            
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Mensaje *</label>
-            <textarea
-              required
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Escribe tu mensaje aquí..."
-              rows={4}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm resize-none" />
-            
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium mb-1.5">Tu nombre</label>
-              <input
-                value={form.author_name}
-                onChange={(e) => setForm({ ...form, author_name: e.target.value })}
-                placeholder="Opcional"
-                disabled={form.is_anonymous}
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm disabled:opacity-50" />
-              
-            </div>
-            <div className="flex items-center gap-2 mt-5">
-              <input
-                type="checkbox"
-                id="anon"
-                checked={form.is_anonymous}
-                onChange={(e) => setForm({ ...form, is_anonymous: e.target.checked })}
-                className="w-4 h-4 accent-brand-orange" />
-              
-              <label htmlFor="anon" className="text-sm text-muted-foreground">Anónimo</label>
-            </div>
-          </div>
+          <input
+            required
+            minLength={3}
+            maxLength={120}
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+            placeholder="Título: ¿cuál es tu pregunta o tema?"
+            className={campo}
+          />
+          <textarea
+            required
+            maxLength={3000}
+            rows={5}
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            placeholder="Escribe tu mensaje…"
+            className={`${campo} resize-none`}
+          />
+          <input
+            maxLength={40}
+            value={form.author_name}
+            onChange={(e) => setForm({ ...form, author_name: e.target.value })}
+            placeholder="Tu nombre (opcional; si lo dejas vacío, saldrás como Anónimo)"
+            className={campo}
+          />
+          <AvisoError texto={error} />
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-2xl bg-brand-mint text-brand-onyx font-bold hover:scale-105 transition-all disabled:opacity-60">
-            
-            {loading ? "Publicando..." : "Publicar"}
+            disabled={enviando}
+            className="w-full py-3 rounded-2xl bg-brand-mint text-brand-onyx font-bold hover:scale-[1.02] transition-transform disabled:opacity-60"
+          >
+            {enviando ? "Publicando…" : "Publicar"}
           </button>
+          <p className="text-[11px] text-white/45 text-center">
+            Sé respetuoso. No compartas datos personales ni pidas ni des contraseñas. Lo que publiques es visible para todos.
+          </p>
         </form>
       </motion.div>
-    </div>);
-
+    </div>
+  );
 }
 
-function ReplyForm({ postId, onReplied }) {
-  const [form, setForm] = useState({ content: "", author_name: "", is_anonymous: false });
-  const [loading, setLoading] = useState(false);
+function FormRespuesta({ postId, onRespondido }) {
+  const [texto, setTexto] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const enviar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    await forumApi.replies.create({
-      post_id: postId,
-      content: form.content,
-      author_name: form.is_anonymous ? "Anónimo" : form.author_name || "Anónimo",
-      is_anonymous: form.is_anonymous
-    });
-    setForm({ content: "", author_name: "", is_anonymous: false });
-    setLoading(false);
-    onReplied();
+    setEnviando(true);
+    setError("");
+    try {
+      const r = await forumApi.replies.create({ post_id: postId, content: texto.trim(), author_name: autor(nombre) });
+      setTexto("");
+      onRespondido(r);
+    } catch {
+      setError("No se ha podido enviar la respuesta.");
+    }
+    setEnviando(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 pt-4 border-t border-border space-y-3">
+    <form onSubmit={enviar} className="mt-4 pt-4 border-t border-white/10 space-y-3">
       <textarea
         required
-        value={form.content}
-        onChange={(e) => setForm({ ...form, content: e.target.value })}
-        placeholder="Escribe tu respuesta..."
+        maxLength={2000}
         rows={2}
-        className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm resize-none" />
-      
-      <div className="flex items-center gap-3">
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Escribe tu respuesta…"
+        className={`${campo} resize-none`}
+      />
+      <div className="flex flex-col sm:flex-row gap-3">
         <input
-          value={form.author_name}
-          onChange={(e) => setForm({ ...form, author_name: e.target.value })}
+          maxLength={40}
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
           placeholder="Tu nombre (opcional)"
-          disabled={form.is_anonymous}
-          className="flex-1 px-4 py-2 rounded-xl border border-border bg-muted/30 focus:outline-none text-sm disabled:opacity-50" />
-        
-        <label className="flex items-center gap-1.5 text-sm text-muted-foreground cursor-pointer">
-          <input
-            type="checkbox"
-            checked={form.is_anonymous}
-            onChange={(e) => setForm({ ...form, is_anonymous: e.target.checked })}
-            className="accent-brand-orange" />
-          
-          Anónimo
-        </label>
+          className={`${campo} sm:flex-1`}
+        />
         <button
           type="submit"
-          disabled={loading}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-mint text-brand-onyx font-medium text-sm hover:bg-orange-600 transition-colors disabled:opacity-60">
-          
-          <Send className="w-4 h-4" /> Responder
+          disabled={enviando}
+          className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-brand-mint text-brand-onyx font-bold text-sm hover:scale-105 transition-transform disabled:opacity-60"
+        >
+          <Send className="w-4 h-4" /> {enviando ? "Enviando…" : "Responder"}
         </button>
       </div>
-    </form>);
-
+      <AvisoError texto={error} />
+    </form>
+  );
 }
 
-function PostCard({ post, onLike }) {
-  const [expanded, setExpanded] = useState(false);
-  const [replies, setReplies] = useState([]);
-  const [replyCount, setReplyCount] = useState(0);
+function Publicacion({ post, misLikes, onLike, onRespuesta }) {
+  const [abierta, setAbierta] = useState(false);
+  const [respuestas, setRespuestas] = useState(null);
 
-  useEffect(() => {
-    const fetchReplyCount = async () => {
-      const r = await forumApi.replies.list(post.id);
-      setReplyCount(r.length);
-    };
-    fetchReplyCount();
-  }, [post.id]);
-
-  const loadReplies = async () => {
-    const r = await forumApi.replies.list(post.id);
-    setReplies(r);
-    setReplyCount(r.length);
+  const alternar = async () => {
+    if (!abierta && respuestas === null) {
+      try {
+        setRespuestas(await forumApi.replies.list(post.id));
+      } catch {
+        setRespuestas([]);
+      }
+    }
+    setAbierta(!abierta);
   };
 
-  const handleExpand = async () => {
-    if (!expanded) await loadReplies();
-    setExpanded(!expanded);
+  const likeRespuesta = async (target) => {
+    const r = await onLike(target);
+    if (r) setRespuestas((prev) => prev.map((x) => (`r:${x.id}` === target ? { ...x, likes: r.likes } : x)));
   };
 
   return (
-    <motion.div
+    <motion.article
+      layout
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-brand-surface rounded-3xl border border-white/10 p-6 hover:shadow-md transition-shadow">
-      
+      className="bg-brand-surface rounded-3xl border border-white/10 p-6"
+    >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-brand-mint flex items-center justify-center">
+          <div className="w-9 h-9 rounded-2xl bg-brand-indigo flex items-center justify-center">
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
             <p className="font-semibold text-sm">{post.author_name || "Anónimo"}</p>
-            <p className="text-xs text-muted-foreground">
-              {format(new Date(post.created_date), "d MMM yyyy, HH:mm", { locale: es })}
-            </p>
+            <p className="text-xs text-white/50">{hace(post.created_date)}</p>
           </div>
         </div>
-        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${CAT_COLORS[post.category]}`}>
+        <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 text-white/80">
           {CAT_EMOJI[post.category]} {post.category}
         </span>
       </div>
 
-      <h3 className="font-sora font-bold text-base mb-2">{post.title}</h3>
-      <p className="text-white mb-4 text-sm leading-relaxed">{post.content}</p>
+      <h3 className="font-sora font-bold text-lg mb-2">{post.title}</h3>
+      <p className="text-white/85 mb-4 text-sm leading-relaxed whitespace-pre-line break-words">{post.content}</p>
 
-      <div className="text-white/70 flex items-center gap-4">
-        <button
-          onClick={() => onLike(post)}
-          title="Me gusta"
-          className={`flex items-center gap-1.5 text-sm transition-colors ${post.liked ? "text-brand-orange" : "text-muted-foreground hover:text-brand-orange"}`}>
-          
-          <ThumbsUp className={`lucide lucide-thumbs-up w-4 h-4 ${post.liked ? "text-brand-orange" : "text-white"}`} />
-          <span className="text-[#ff0000]">{post.likes || 0}</span>
-        </button>
-        <button
-          onClick={handleExpand}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-mint transition-colors">
-
-          <MessageCircle className="text-white lucide lucide-message-circle w-4 h-4" />
-          <span className="text-white">{replyCount} {replyCount === 1 ? 'respuesta' : 'respuestas'}</span>
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      <div className="flex items-center gap-5">
+        <BotonLike target={`p:${post.id}`} likes={Number(post.likes)} liked={misLikes.has(`p:${post.id}`)} onToggle={onLike} />
+        <button onClick={alternar} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-brand-mint transition-colors">
+          <MessageCircle className="w-4 h-4" />
+          {Number(post.replies)} {Number(post.replies) === 1 ? "respuesta" : "respuestas"}
+          {abierta ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
 
       <AnimatePresence>
-        {expanded &&
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="overflow-hidden">
-          
-            {replies.length > 0 &&
-          <div className="mt-4 space-y-3">
-                {replies.map((reply) =>
-            <div key={reply.id} className="flex gap-3 bg-muted/40 rounded-2xl p-4">
-                    <div className="bg-brand-purple/20 text-white rounded-xl w-7 h-7 flex items-center justify-center flex-shrink-0">
+        {abierta && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+            {respuestas?.length > 0 && (
+              <div className="mt-4 space-y-3">
+                {respuestas.map((r) => (
+                  <div key={r.id} className="flex gap-3 bg-brand-onyx/50 rounded-2xl p-4">
+                    <div className="bg-white/10 rounded-xl w-7 h-7 flex items-center justify-center flex-shrink-0">
                       <User className="w-3.5 h-3.5 text-brand-mint" />
                     </div>
-                    <div>
-                      <p className="font-semibold text-xs mb-1">{reply.author_name || "Anónimo"}</p>
-                      <p className="text-white text-sm">{reply.content}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs mb-1">
+                        <span className="font-semibold">{r.author_name || "Anónimo"}</span>
+                        <span className="text-white/45"> · {hace(r.created_date)}</span>
+                      </p>
+                      <p className="text-white/85 text-sm whitespace-pre-line break-words">{r.content}</p>
+                      <div className="mt-2">
+                        <BotonLike target={`r:${r.id}`} likes={Number(r.likes)} liked={misLikes.has(`r:${r.id}`)} onToggle={likeRespuesta} />
+                      </div>
                     </div>
                   </div>
-            )}
+                ))}
               </div>
-          }
-            <ReplyForm postId={post.id} onReplied={loadReplies} />
+            )}
+            <FormRespuesta
+              postId={post.id}
+              onRespondido={(r) => {
+                setRespuestas((prev) => [...(prev || []), r]);
+                onRespuesta(post.id);
+              }}
+            />
           </motion.div>
-        }
+        )}
       </AnimatePresence>
-    </motion.div>);
-
+    </motion.article>
+  );
 }
 
 export default function Foro() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [likedByPostId, setLikedByPostId] = useState({});
+  const [misLikes, setMisLikes] = useState(new Set());
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+  const [modal, setModal] = useState(false);
+  const [categoria, setCategoria] = useState("todas");
+  const [orden, setOrden] = useState("recientes");
 
-  const LIKES_STORAGE_KEY = "forum_likes_v1";
+  useEffect(() => {
+    (async () => {
+      try {
+        const [lista, mios] = await Promise.all([forumApi.posts.list(), forumApi.likes.mine().catch(() => [])]);
+        setPosts(lista);
+        setMisLikes(new Set(mios));
+      } catch {
+        setError("No se ha podido cargar el foro. Prueba a recargar la página.");
+      }
+      setCargando(false);
+    })();
+  }, []);
 
-  const loadLikedFromStorage = () => {
+  // Devuelve {liked, likes} para que cada tarjeta actualice su contador
+  const like = async (target) => {
     try {
-      const raw = window.localStorage.getItem(LIKES_STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : {};
-      if (!parsed || typeof parsed !== "object") return {};
-      return parsed;
+      const r = await forumApi.likes.toggle(target);
+      setMisLikes((prev) => {
+        const s = new Set(prev);
+        r.liked ? s.add(target) : s.delete(target);
+        return s;
+      });
+      if (target.startsWith("p:")) {
+        setPosts((prev) => prev.map((p) => (`p:${p.id}` === target ? { ...p, likes: r.likes } : p)));
+      }
+      return r;
     } catch {
-      return {};
+      return null;
     }
   };
 
-  const saveLikedToStorage = (next) => {
-    try {
-      window.localStorage.setItem(LIKES_STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
-  };
+  const sumarRespuesta = (id) => setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, replies: Number(p.replies) + 1 } : p)));
 
-  const loadPosts = async () => {
-    setLoading(true);
-    const data = await forumApi.posts.list();
-    const likedMap = loadLikedFromStorage();
-    setLikedByPostId(likedMap);
-    setPosts(
-      (data || []).map((p) => ({
-        ...p,
-        liked: Boolean(likedMap?.[p.id]),
-      }))
-    );
-    setLoading(false);
-  };
+  const visibles = posts
+    .filter((p) => categoria === "todas" || p.category === categoria)
+    .sort((a, b) => (orden === "votados" ? Number(b.likes) - Number(a.likes) : 0) || new Date(b.created_date) - new Date(a.created_date));
 
-  useEffect(() => { loadPosts(); }, []);
-
-  const handleLike = async (post) => {
-    const wasLiked = Boolean(likedByPostId?.[post.id]);
-    const originalLikes = Number(post.likes || 0);
-
-    // Optimista (sin notificaciones)
-    const prevLikedMap = likedByPostId;
-    const nextLikedMap = { ...prevLikedMap };
-    if (wasLiked) {
-      delete nextLikedMap[post.id];
-    } else {
-      nextLikedMap[post.id] = true;
-    }
-
-    setLikedByPostId(nextLikedMap);
-    saveLikedToStorage(nextLikedMap);
-
-    setPosts((prev) =>
-      prev.map((p) =>
-        p.id === post.id
-          ? {
-              ...p,
-              liked: !wasLiked,
-              likes: Math.max(0, originalLikes + (wasLiked ? -1 : 1)),
-            }
-          : p
-      )
-    );
-
-    try {
-      const updated = wasLiked ? await forumApi.posts.unlike(post.id) : await forumApi.posts.like(post.id);
-
-      setPosts((prev) =>
-        prev.map((p) =>
-          p.id === post.id
-            ? {
-                ...p,
-                likes: updated?.likes,
-                liked: Boolean(updated?.liked),
-              }
-            : p
-        )
-      );
-
-      const fixedLikedMap = { ...nextLikedMap };
-      if (!updated?.liked) delete fixedLikedMap[post.id];
-      setLikedByPostId(fixedLikedMap);
-      saveLikedToStorage(fixedLikedMap);
-    } catch {
-      // Revertir silenciosamente al estado original
-      setLikedByPostId(prevLikedMap);
-      saveLikedToStorage(prevLikedMap);
-      setPosts((prev) =>
-        prev.map((p) =>
-          p.id === post.id
-            ? {
-                ...p,
-                liked: wasLiked,
-                likes: originalLikes,
-              }
-            : p
-        )
-      );
-    }
-  };
-
-  const filtered = activeCategory === "all" ? posts : posts.filter((p) => p.category === activeCategory);
+  const pastilla = (activa) =>
+    `px-4 py-2 text-sm font-medium rounded-full transition-colors ${activa ? "bg-brand-mint text-brand-onyx" : "bg-brand-surface text-white/70 hover:text-white border border-white/10"}`;
 
   return (
     <div className="pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12">
-          
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">
-            💬 Comunidad
-          </span>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">💬 Comunidad</span>
           <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
-            El{" "}
-            <span className="font-serif italic normal-case text-brand-mint">
-              foro
-            </span>{" "}
-            de la comunidad
+            El <span className="font-serif italic normal-case text-brand-mint">foro</span>
           </h1>
-          <p className="text-white/85 mx-auto text-xl max-w-xl">Pregunta, comparte tu experiencia, ayuda a otros. No hay preguntas tontas, todos empezamos desde cero.
-
+          <p className="text-white/85 mx-auto text-xl max-w-xl">
+            Pregunta, comparte tu experiencia y ayuda a otros. No hay preguntas tontas: todos empezamos desde cero.
           </p>
         </motion.div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setActiveCategory("all")} className="bg-brand-surface text-slate-50 px-4 py-2 text-sm font-medium rounded-full transition-all">
-              
-              🌐 Todos
-            </button>
-            {CATEGORIES.map((c) =>
-            <button
-              key={c}
-              onClick={() => setActiveCategory(c)} className="bg-brand-surface text-muted-foreground px-4 py-2 text-sm font-medium rounded-full transition-all hover:bg-muted/80">
-              
+            <button onClick={() => setCategoria("todas")} className={pastilla(categoria === "todas")}>🌐 Todas</button>
+            {CATEGORIAS.map((c) => (
+              <button key={c} onClick={() => setCategoria(c)} className={pastilla(categoria === c)}>
                 {CAT_EMOJI[c]} {c}
               </button>
-            )}
+            ))}
           </div>
           <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-brand-mint text-brand-onyx font-bold text-sm hover:scale-105 hover:shadow-lg transition-all">
-            
+            onClick={() => setModal(true)}
+            className="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-brand-mint text-brand-onyx font-bold text-sm hover:scale-105 transition-transform shrink-0"
+          >
             <Plus className="w-4 h-4" /> Nueva publicación
           </button>
         </div>
+        <div className="flex gap-4 text-sm mb-8">
+          {[["recientes", "Más recientes"], ["votados", "Más votadas"]].map(([k, t]) => (
+            <button key={k} onClick={() => setOrden(k)} className={orden === k ? "text-brand-mint font-semibold" : "text-white/55 hover:text-white"}>
+              {t}
+            </button>
+          ))}
+        </div>
 
-        {loading ?
-        <div className="space-y-4">
-            {[1, 2, 3].map((i) =>
-          <div key={i} className="bg-brand-surface rounded-3xl border border-white/10 p-6 animate-pulse">
-                <div className="flex gap-3 mb-4">
-                  <div className="w-9 h-9 rounded-2xl bg-muted" />
-                  <div className="space-y-2">
-                    <div className="h-3 w-24 bg-muted rounded" />
-                    <div className="h-2 w-16 bg-muted rounded" />
-                  </div>
-                </div>
-                <div className="h-4 w-3/4 bg-muted rounded mb-2" />
-                <div className="h-3 w-full bg-muted rounded mb-1" />
-                <div className="h-3 w-2/3 bg-muted rounded" />
+        {cargando ? (
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-brand-surface rounded-3xl border border-white/10 p-6 animate-pulse">
+                <div className="h-4 w-1/3 bg-white/10 rounded mb-4" />
+                <div className="h-4 w-3/4 bg-white/10 rounded mb-2" />
+                <div className="h-3 w-full bg-white/10 rounded" />
               </div>
-          )}
-          </div> :
-        filtered.length === 0 ?
-        <div className="text-center py-20">
+            ))}
+          </div>
+        ) : error ? (
+          <p className="text-center py-20 text-[#FF5C7A]">{error}</p>
+        ) : visibles.length === 0 ? (
+          <div className="text-center py-20">
             <p className="text-5xl mb-4">🌱</p>
             <h3 className="font-sora text-xl font-bold mb-2">¡Sé el primero!</h3>
-            <p className="text-muted-foreground">Aún no hay publicaciones en esta categoría. Empieza la conversación.</p>
-          </div> :
-
-        <div className="space-y-4">
-            {filtered.map((post) =>
-          <PostCard key={post.id} post={post} onLike={handleLike} />
-          )}
+            <p className="text-white/60">Aún no hay publicaciones aquí. Empieza la conversación.</p>
           </div>
-        }
+        ) : (
+          <div className="space-y-4">
+            {visibles.map((p) => (
+              <Publicacion key={p.id} post={p} misLikes={misLikes} onLike={like} onRespuesta={sumarRespuesta} />
+            ))}
+          </div>
+        )}
       </div>
 
-      <AnimatePresence>
-        {showModal &&
-        <NewPostModal onClose={() => setShowModal(false)} onCreated={loadPosts} />
-        }
-      </AnimatePresence>
-    </div>);
-
+      {createPortal(
+        <AnimatePresence>
+          {modal && <NuevaPublicacion onClose={() => setModal(false)} onCreated={(p) => setPosts((prev) => [p, ...prev])} />}
+        </AnimatePresence>,
+        document.body
+      )}
+    </div>
+  );
 }

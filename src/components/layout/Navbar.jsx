@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, TrendingUp } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -36,9 +37,7 @@ export default function Navbar() {
       <div className="mx-auto px-4 max-w-6xl sm:px-6 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-brand-mint flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-            <TrendingUp className="w-5 h-5 text-brand-onyx" />
-          </div>
+          <img src={logo} alt="Inversiones Fáciles" className="w-10 h-10 md:w-11 md:h-11 group-hover:scale-110 transition-transform" />
           <span className="font-sora font-800 text-xl text-foreground">
             inversionesfacil<span className="text-brand-orange font-bold">.es</span>
           </span>
