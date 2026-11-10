@@ -1,12 +1,15 @@
 import HeroCrecimiento from "@/components/HeroCrecimiento";
 import InicioObjetivos from "@/components/InicioObjetivos";
+import { BarraLectura, SiguientePaso, VerdadMentira } from "@/components/inicio/Ganchos";
 
-// Inicio: objetivos de la web y, debajo, el gráfico de ejemplo. Nada más.
+// Inicio: entrada con contador en vivo, juego de «¿verdad o mentira?», objetivos, gráfico de ejemplo y siguiente paso.
 export default function Home() {
   return (
     <div>
-      <InicioObjetivos />
+      <BarraLectura />
+      <InicioObjetivos trasEntrada={<VerdadMentira />} />
       <HeroCrecimiento />
+      <SiguientePaso />
     </div>
   );
 }

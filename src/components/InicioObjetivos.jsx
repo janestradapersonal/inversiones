@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, ChevronDown, Megaphone, Rocket, Ban } from "lucide-react";
+import { ContadorPerdida } from "@/components/inicio/Ganchos";
 
 // Primera pantalla de la web: qué quiere conseguir y qué no hará.
 // (El fondo con efectos de "sube y baja" se añadirá más adelante.)
@@ -69,7 +70,7 @@ function Objetivo({ n, icon, titulo, resaltado, children, i }) {
   );
 }
 
-export default function InicioObjetivos() {
+export default function InicioObjetivos({ trasEntrada = null }) {
   return (
     <div className="relative bg-brand-onyx overflow-hidden">
       {/* Luz de ambiente */}
@@ -92,11 +93,15 @@ export default function InicioObjetivos() {
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-white/85">
-              El dinero, la inflación y la inversión explicados con palabras normales. Esta web tiene tres objetivos:
+              El dinero, la inflación y la inversión explicados con palabras normales.
             </p>
           </motion.div>
 
-          <ol className="mt-8 grid md:grid-cols-3 gap-3">
+          <ContadorPerdida />
+
+          <p className="mt-10 text-white/85 font-semibold">Esta web tiene tres objetivos:</p>
+
+          <ol className="mt-3 grid md:grid-cols-3 gap-3">
             {["Concienciar de la necesidad de invertir", "Aprender lo básico, desde tu nivel", "Dar el primer paso, aunque sea con poco"].map(
               (t, i) => (
                 <motion.li
@@ -122,6 +127,8 @@ export default function InicioObjetivos() {
           </motion.div>
         </div>
       </section>
+
+      {trasEntrada}
 
       {/* Los tres objetivos */}
       <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-4">
