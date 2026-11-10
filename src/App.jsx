@@ -9,6 +9,7 @@ import Aprende from './pages/Aprende';
 import Empieza from './pages/Empieza';
 import Foro from './pages/Foro';
 import Scroll3D from './pages/Scroll3D';
+import Estilos from './pages/estilos/Estilos';
 
 function NotFound() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ function App() {
         }}
       >
         <Routes>
+          <Route path="/estilos/:n?" element={<Estilos />} />
           <Route path="/scroll-3d" element={<Scroll3D behavior="fixed" scrollVh={800} />} />
           <Route element={<PageLayout />}>
             <Route path="/" element={<Home />} />

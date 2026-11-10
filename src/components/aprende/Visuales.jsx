@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const COLORES = {
-  menta: "#88F9C0",
+  menta: "#9E85FF",
   oro: "#F5C542",
   rojo: "#FF5C7A",
   azul: "#6CB4FF",

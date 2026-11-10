@@ -76,19 +76,22 @@ export default function InicioObjetivos() {
       <div className="absolute -top-40 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/20 blur-[140px] pointer-events-none" />
 
       {/* Pantalla de entrada */}
-      <section className="relative min-h-[100dvh] flex items-center">
+      <section
+        className="relative min-h-[100dvh] flex items-center"
+        style={{ background: "radial-gradient(ellipse at 50% 45%, #7A52FF 0%, #6331FB 35%, #2C129A 75%, #1A0A63 100%)" }}
+      >
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-16">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-4 py-1.5 rounded-full border border-brand-mint/40 text-brand-mint font-semibold text-sm mb-6">
+            <span className="inline-block px-4 py-1.5 rounded-full border border-white/50 text-white font-semibold text-sm mb-6">
               Inversiones para todos
             </span>
             <h1 className="font-display uppercase text-white text-[3.2rem] sm:text-7xl md:text-[7.5rem] leading-[0.88] tracking-tight max-w-5xl">
               Nadie nos lo ha enseñado
-              <span className="block font-serif italic normal-case text-brand-mint text-[2.3rem] sm:text-6xl md:text-8xl leading-[1] mt-2">
+              <span className="block font-serif italic normal-case text-white text-[2.3rem] sm:text-6xl md:text-8xl leading-[1] mt-2">
                 pero nos afecta a todos
               </span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-white/75">
+            <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-white/85">
               El dinero, la inflación y la inversión explicados con palabras normales. Esta web tiene tres objetivos:
             </p>
           </motion.div>
@@ -101,9 +104,9 @@ export default function InicioObjetivos() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 + i * 0.15 }}
-                  className="flex items-start gap-3 rounded-2xl bg-white/[0.04] border border-white/10 px-5 py-4"
+                  className="flex items-start gap-3 rounded-2xl bg-brand-onyx/25 border border-white/20 px-5 py-4"
                 >
-                  <span className="font-display text-3xl text-brand-mint leading-none">{i + 1}</span>
+                  <span className="font-display text-3xl text-white leading-none">{i + 1}</span>
                   <span className="font-semibold text-white/90 leading-snug">{t}</span>
                 </motion.li>
               )
@@ -133,7 +136,7 @@ export default function InicioObjetivos() {
             <p className="text-white/75 text-lg leading-relaxed mb-5">
               Partas de donde partas, formarte lo mínimo para entender qué haces con tu dinero. Tres apartados:
             </p>
-            <Lista items={apartadosAprende} color="#88F9C0" />
+            <Lista items={apartadosAprende} color="#9E85FF" />
             <Enlace to="/aprende">Ir a aprender</Enlace>
           </Objetivo>
           <Objetivo n={3} i={2} icon={<Rocket className="w-5 h-5" />} titulo="Dar el" resaltado="primer paso">

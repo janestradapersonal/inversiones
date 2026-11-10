@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 // Historia de «Por qué invertir» en 3D, controlada por el scroll.
-// Dos flechas (motivo 1: el euro, motivo 2: las pensiones) caen hacia un globo (motivo 3: la deuda).
+// Dos flechas (motivo 1: el euro, motivo 2: las pensiones) entran por los lados y vuelan hacia un globo (motivo 3: la deuda).
 // El tiempo de la historia T va de 0 a 3: cada escena de la página ([data-escena="0|1|2"]) avanza una unidad.
 //   0 → 1   título, la cámara entra en la flecha 1
 //   1 → 2   sale, las flechas se acercan, entra en la flecha 2
@@ -12,7 +12,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 // El reventón va en tiempo real desde que T pasa el momento del pinchazo, como un globo de verdad;
 // si se vuelve a subir, el globo aparece entero otra vez.
 
-export const COLORES = { euro: "#6CB4FF", pensiones: "#F5C542", deuda: "#FF5C7A", fondo: "#01010D" };
+export const COLORES = { euro: "#4DA8FF", pensiones: "#FFC83D", deuda: "#FF4D6D", fondo: "#01010D" };
 
 // --- Almacén mínimo para que los textos de cada escena lean T sin re-renderizar la página entera
 const store = { T: 0, subs: new Set() };
@@ -39,30 +39,43 @@ const suave = (x) => x * x * (3 - 2 * x);
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const V2 = (x, y) => new THREE.Vector2(x, y);
 
-const T_GOLPE = 2.55; // las flechas tocan el globo
+const T_GOLPE = 2.7; // las flechas tocan el globo (con margen tras salir de la flecha 2 para verlas llegar)
 const radioGlobo = (T) => 1.5 + 0.16 * Math.min(T, T_GOLPE); // la deuda no para de crecer
 const ESTIRA = 1.12; // el globo es algo más alto que ancho
+const DURA_RASGO = 0.45; // segundos que tarda el látex en abrirse (antes 0,13: no daba tiempo a verlo)
 
-const SALIDAS = [V(-3.6, 5.6, 0.4), V(3.5, 6.6, -0.8)];
-const DIRS = [V(-0.42, 1, 0.25), V(0.4, 1, 0.1)];
-const metas = DIRS.map((d) => {
+// Las flechas entran por los lados de la pantalla (izquierda y derecha) y vuelan hacia el globo con un ligero arco
+let mediaVista = 11; // media anchura visible del plano general a la altura del globo (se recalcula al cambiar el tamaño)
+const LADOS = [V(-1, 0.2, 0.16), V(1, 0.05, -0.1)];
+const ARCO = [1.4, 0.9];
+const metas = LADOS.map((d) => {
   const n = d.clone().normalize();
   const R = radioGlobo(T_GOLPE);
   return V(n.x * R, n.y * R * ESTIRA, n.z * R);
 });
+const salida = (k) => {
+  const x = Math.max(6.5, mediaVista * 0.9);
+  return k === 0 ? V(-x, 0.1, 0.7) : V(x, -0.2, -0.5);
+};
+function trayecto(k, s) {
+  const p = salida(k).lerp(metas[k], s);
+  p.y += ARCO[k] * Math.sin(Math.PI * s);
+  return p;
+}
 
 function flecha(k, T) {
-  const dir = metas[k].clone().sub(SALIDAS[k]).normalize();
-  const s = Math.pow(clamp(T / T_GOLPE), 1.35);
-  const punta = SALIDAS[k].clone().lerp(metas[k], s);
+  const s = Math.pow(clamp(T / T_GOLPE), 1.2);
+  const s0 = Math.min(s, 0.998);
+  const dir = trayecto(k, s0 + 0.002).sub(trayecto(k, s0)).normalize();
+  const punta = trayecto(k, s);
   if (T > T_GOLPE) punta.addScaledVector(dir, (T - T_GOLPE) * 4);
-  const cabeza = punta.clone().addScaledVector(dir, -0.5);
+  const cabeza = punta.clone().addScaledVector(dir, -0.6);
   return { punta, dir, cabeza };
 }
 
 function planoGeneral(T, zs) {
-  const y = 3.4 - 1.8 * suave(clamp(T / T_GOLPE));
-  return { pos: V(0, y + 1.4, 19 * zs), mira: V(0, y, 0), fov: 38 };
+  const y = 0.5 + 0.4 * (1 - suave(clamp(T / T_GOLPE)));
+  return { pos: V(0, y + 1.5, 19 * zs), mira: V(0, y, 0), fov: 38 };
 }
 
 function dentroDe(k, T, zs) {
@@ -85,11 +98,13 @@ function camara(T, zs) {
   if (T < 1.4) return mezcla(dentroDe(0, T, zs), g, suave(tramo(T, 1, 1.4)));
   if (T < 1.5) return g;
   if (T < 2) return mezcla(g, dentroDe(1, T, zs), suave(tramo(T, 1.5, 2)));
-  const cerca = { pos: V(0, 2.4, 10 * zs), mira: V(0, 1.4, 0), fov: 40 };
-  if (T < 2.35) return mezcla(dentroDe(1, T, zs), cerca, suave(tramo(T, 2, 2.35)));
-  if (T < T_GOLPE) return cerca;
+  // Al salir de la flecha 2: plano amplio con las dos flechas acercándose por los lados y un avance lento hacia el globo
+  const cerca = { pos: V(0, 1.6, 12.5 * zs), mira: V(0, 0.45, 0), fov: 40 };
+  const encima = { pos: V(0, 1.2, 9.5 * zs), mira: V(0, 0.3, 0), fov: 40 };
+  if (T < 2.3) return mezcla(dentroDe(1, T, zs), cerca, suave(tramo(T, 2, 2.3)));
+  if (T < T_GOLPE) return mezcla(cerca, encima, suave(tramo(T, 2.3, T_GOLPE)));
   const dentro = { pos: V(0, 0.4, 2.2), mira: V(0, 0, -2), fov: 60 };
-  return mezcla(cerca, dentro, suave(tramo(T, T_GOLPE + 0.05, 3)));
+  return mezcla(encima, dentro, suave(tramo(T, T_GOLPE + 0.08, 3)));
 }
 
 // Capa de color que llena la pantalla al entrar en una flecha / al reventar el globo
@@ -98,7 +113,7 @@ function capa(T) {
   if (T < 1.5) return { color: COLORES.euro, o: 1 - tramo(T, 1.01, 1.14) };
   if (T < 2) return { color: COLORES.pensiones, o: tramo(T, 1.86, 1.99) };
   if (T < 2.5) return { color: COLORES.pensiones, o: 1 - tramo(T, 2.01, 2.14) };
-  return { color: COLORES.deuda, o: tramo(T, 2.86, 2.99) };
+  return { color: COLORES.deuda, o: tramo(T, 2.9, 2.99) };
 }
 
 // Números pseudoaleatorios repetibles
@@ -136,59 +151,15 @@ function texturaTexto(lineas, { ancho = 512, alto = 256, color = "#fff", tam = 9
   return aTextura(c);
 }
 
-// Veta de madera a lo largo del asta (en el cilindro, v va a lo largo)
-function texturaMadera() {
-  const [c, g] = lienzo(128, 1024);
-  const r = azar(31);
-  g.fillStyle = "#B47F4A";
-  g.fillRect(0, 0, 128, 1024);
-  for (let i = 0; i < 90; i++) {
-    const x = r() * 128;
-    const amp = r() * 4;
-    const claro = r() > 0.5;
-    g.strokeStyle = claro ? `rgba(240,196,138,${0.12 + r() * 0.25})` : `rgba(80,42,16,${0.12 + r() * 0.3})`;
-    g.lineWidth = 0.5 + r() * 2.5;
-    g.beginPath();
-    for (let y = 0; y <= 1024; y += 16) g.lineTo(x + Math.sin(y * 0.006 + i) * amp, y);
-    g.stroke();
-  }
-  return aTextura(c);
-}
-
-// Pluma: barbas que salen del raquis hacia fuera y hacia atrás, con alguna separación en el borde
-function texturaPluma(color, semilla) {
-  const [c, g] = lienzo(512, 128);
-  const r = azar(semilla);
-  g.fillStyle = color;
-  g.fillRect(0, 0, 512, 128);
-  for (let i = 0; i < 240; i++) {
-    const x = -60 + i * 2.5;
-    const a = r();
-    g.strokeStyle = a > 0.5 ? `rgba(255,255,255,${0.06 + a * 0.12})` : `rgba(0,0,0,${0.08 + a * 0.16})`;
-    g.lineWidth = 0.8 + r() * 1.2;
-    g.beginPath();
-    g.moveTo(x, 128);
-    g.quadraticCurveTo(x + 26, 70, x + 64 + r() * 10, 0);
-    g.stroke();
-  }
-  const sombra = g.createLinearGradient(0, 0, 0, 128);
-  sombra.addColorStop(0, "rgba(0,0,0,0.22)");
-  sombra.addColorStop(0.55, "rgba(255,255,255,0.06)");
-  sombra.addColorStop(1, "rgba(0,0,0,0.25)");
-  g.fillStyle = sombra;
-  g.fillRect(0, 0, 512, 128);
-  g.fillStyle = "rgba(255,255,250,0.75)";
-  g.fillRect(0, 116, 512, 6); // raquis
-  g.globalCompositeOperation = "destination-out";
-  for (let i = 0; i < 8; i++) {
-    const x = 50 + r() * 420;
-    g.beginPath();
-    g.moveTo(x, -2);
-    g.lineTo(x + 14 + r() * 14, -2);
-    g.lineTo(x + 30, 26 + r() * 36);
-    g.closePath();
-    g.fill();
-  }
+// Estela de luz detrás de cada flecha: brillante junto a las plumas y se apaga hacia atrás
+function texturaEstela() {
+  const [c, g] = lienzo(8, 256);
+  const d = g.createLinearGradient(0, 0, 0, 256);
+  d.addColorStop(0, "rgba(255,255,255,0)");
+  d.addColorStop(0.7, "rgba(255,255,255,0.35)");
+  d.addColorStop(1, "rgba(255,255,255,0.9)");
+  g.fillStyle = d;
+  g.fillRect(0, 0, 8, 256);
   return aTextura(c);
 }
 
@@ -316,102 +287,79 @@ function texturaNiebla() {
   return aTextura(c);
 }
 
-// --- Flecha de verdad: punta de acero de tres hojas, asta de madera, anillas de color, plumas y culatín.
-// La punta está en el origen y la flecha sube por +Y.
-function geoHoja(L, W) {
+// --- Flecha estilizada: punta facetada de acero, asta gruesa lacada y brillante del color del motivo,
+// plumas grandes en flecha, culatín y una estela de luz. La punta está en el origen y la flecha sube por +Y.
+function geoPluma() {
   const s = new THREE.Shape();
   s.moveTo(0, 0);
-  s.lineTo(L * 0.82, W);
-  s.lineTo(L, W * 0.45);
-  s.lineTo(L, 0);
+  s.quadraticCurveTo(0.12, 0.5, 0.5, 0.55);
+  s.lineTo(1.0, 0.48);
+  s.lineTo(0.92, 0);
   s.closePath();
-  const geo = new THREE.ExtrudeGeometry(s, { depth: 0.006, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.008, bevelSegments: 1 });
-  geo.translate(0, 0, -0.003);
+  const geo = new THREE.ExtrudeGeometry(s, { depth: 0.014, bevelEnabled: true, bevelThickness: 0.006, bevelSize: 0.01, bevelSegments: 2, curveSegments: 16 });
+  geo.translate(0, 0, -0.007);
   geo.rotateZ(Math.PI / 2); // largo → +Y, ancho → -X
+  geo.translate(-0.095, 0, 0); // pegada al asta
   return geo;
 }
 
-function geoPluma(L, H) {
-  const s = new THREE.Shape();
-  s.moveTo(0, 0);
-  for (let i = 1; i <= 24; i++) {
-    const u = i / 24;
-    s.lineTo(u * L, H * Math.pow(u, 0.7) * (1 - Math.pow(u, 9)));
-  }
-  s.lineTo(L, 0);
-  s.closePath();
-  const geo = new THREE.ShapeGeometry(s, 24);
-  const pos = geo.attributes.position;
-  const uv = geo.attributes.uv;
-  for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / L, pos.getY(i) / H);
-  geo.rotateZ(Math.PI / 2);
-  geo.translate(0, -L / 2, 0);
-  geo.rotateX(0.07); // ligera hélice: la flecha gira al caer
-  return geo;
-}
-
-function crearFlecha(color, semilla) {
+function crearFlecha(color) {
   const grupo = new THREE.Group();
-  const acero = new THREE.MeshPhysicalMaterial({ color: "#D3D8DF", metalness: 1, roughness: 0.2, clearcoat: 0.4 });
-  const madera = texturaMadera();
-  const lacada = new THREE.MeshPhysicalMaterial({ color, bumpMap: madera, bumpScale: 0.6, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.08 });
-  const negro = new THREE.MeshPhysicalMaterial({ color: "#16141F", roughness: 0.3, clearcoat: 1 });
-  const pintura = new THREE.MeshPhysicalMaterial({ color, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1 });
-  const blanco = new THREE.MeshPhysicalMaterial({ color: "#F4F1EA", roughness: 0.35, clearcoat: 0.6 });
+  const c = new THREE.Color(color);
+  const acero = new THREE.MeshPhysicalMaterial({ color: "#EEF1F6", metalness: 1, roughness: 0.12, clearcoat: 1, flatShading: true });
+  const lacada = new THREE.MeshPhysicalMaterial({ color, emissive: c, emissiveIntensity: 0.3, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.05 });
+  const oscuro = new THREE.MeshPhysicalMaterial({ color: "#14121E", roughness: 0.25, clearcoat: 1 });
+  const blanco = new THREE.MeshPhysicalMaterial({ color: "#FFFFFF", emissive: "#FFFFFF", emissiveIntensity: 0.12, roughness: 0.3, clearcoat: 0.8 });
 
-  // Casquillo y hojas de la punta
-  const casquillo = new THREE.Mesh(
-    new THREE.LatheGeometry([V2(0, 0), V2(0.018, 0.06), V2(0.032, 0.3), V2(0.045, 0.62), V2(0.056, 0.74), V2(0.056, 0.86)], 32),
-    acero
-  );
-  grupo.add(casquillo);
-  const hoja = geoHoja(0.68, 0.16);
-  for (let i = 0; i < 3; i++) {
-    const h = new THREE.Mesh(hoja, acero);
-    h.position.y = 0.04;
-    h.rotation.y = (i * Math.PI * 2) / 3;
-    grupo.add(h);
-  }
+  // Punta: pirámide de cuatro caras, alargada y afilada
+  const punta = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.95, 4, 1), acero);
+  punta.rotation.x = Math.PI;
+  punta.position.y = 0.475;
+  grupo.add(punta);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.15, 0.18, 24), oscuro);
+  collar.position.y = 1.02;
+  grupo.add(collar);
 
   // Asta
-  // Asta lacada del color del motivo, con la veta de la madera debajo
-  const asta = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 3.6, 24, 1, true), lacada);
-  asta.position.y = 0.84 + 1.8;
+  const asta = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 3.0, 28), lacada);
+  asta.position.y = 1.1 + 1.5;
   grupo.add(asta);
-
-  // Anillas de color (crestado) junto a las plumas
-  const anilla = (r, h, y, m) => {
-    const a = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 24, 1, true), m);
+  [2.95, 3.12].forEach((y) => {
+    const a = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.08, 28), blanco);
     a.position.y = y;
     grupo.add(a);
-  };
-  anilla(0.051, 0.42, 3.0, negro);
-  anilla(0.052, 0.035, 2.76, blanco);
-  anilla(0.052, 0.035, 3.24, blanco);
+  });
 
-  // Plumas: la «guía» en blanco y las otras dos del color del motivo
-  const geo = geoPluma(0.9, 0.2);
-  const plumas = [texturaPluma("#EFEBE2", semilla), texturaPluma(color, semilla + 1)];
-  const matsPluma = plumas.map((map) => new THREE.MeshStandardMaterial({ map, side: THREE.DoubleSide, roughness: 0.9, alphaTest: 0.5 }));
+  // Plumas: la guía en blanco y las otras dos del color del motivo
+  const geo = geoPluma();
+  const matsPluma = [
+    new THREE.MeshPhysicalMaterial({ color: "#FFFFFF", emissive: "#FFFFFF", emissiveIntensity: 0.25, roughness: 0.45, clearcoat: 0.4, side: THREE.DoubleSide }),
+    new THREE.MeshPhysicalMaterial({ color, emissive: c, emissiveIntensity: 0.4, roughness: 0.4, clearcoat: 0.4, side: THREE.DoubleSide }),
+  ];
   for (let i = 0; i < 3; i++) {
     const p = new THREE.Mesh(geo, matsPluma[i === 0 ? 0 : 1]);
     p.rotation.y = (i * Math.PI * 2) / 3;
-    p.position.y = 3.35 + 0.45;
-    p.translateX(-0.046);
+    p.position.y = 3.2;
     grupo.add(p);
   }
 
-  // Culatín con su ranura
-  const culatin = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.056, 0.14, 24), pintura);
-  culatin.position.y = 4.5;
+  // Culatín
+  const culatin = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 0.22, 24), oscuro);
+  culatin.position.y = 4.21;
   grupo.add(culatin);
-  [-1, 1].forEach((s) => {
-    const d = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.12, 0.1), pintura);
-    d.position.set(s * 0.032, 4.62, 0);
-    grupo.add(d);
-  });
 
-  grupo.scale.setScalar(1.25);
+  // Estela de luz (aditiva) y un punto de luz del color de la flecha que la ilumina a ella y al globo
+  const estela = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.03, 0.22, 7, 24, 1, true),
+    new THREE.MeshBasicMaterial({ color, map: texturaEstela(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false })
+  );
+  estela.position.y = 4.3 + 3.5;
+  grupo.add(estela);
+  const luz = new THREE.PointLight(color, 9, 6, 1.6);
+  luz.position.y = 0.6;
+  grupo.add(luz);
+
+  grupo.scale.setScalar(1.3);
   return grupo;
 }
 
@@ -434,18 +382,18 @@ function geoGlobo() {
 
 // Rasga el látex: descarta lo que está a menos de uRasgo radianes del pinchazo, con borde irregular
 function rasgable(mat) {
-  const u = { uDir: { value: V(0, 1, 0) }, uRasgo: { value: 0 } };
+  const u = { uDir: { value: V(0, 1, 0) }, uDir2: { value: V(0, 1, 0) }, uRasgo: { value: 0 } };
   mat.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = "varying vec3 vObj;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvObj = position;");
     sh.fragmentShader =
-      "varying vec3 vObj;\nuniform vec3 uDir;\nuniform float uRasgo;\n" +
+      "varying vec3 vObj;\nuniform vec3 uDir;\nuniform vec3 uDir2;\nuniform float uRasgo;\n" +
       sh.fragmentShader.replace(
         "#include <clipping_planes_fragment>",
         `#include <clipping_planes_fragment>
         if (uRasgo > 0.0) {
           vec3 d = normalize(vObj);
-          float a = acos(clamp(dot(d, uDir), -1.0, 1.0));
+          float a = min(acos(clamp(dot(d, uDir), -1.0, 1.0)), acos(clamp(dot(d, uDir2), -1.0, 1.0)));
           float jag = sin(d.x * 37.0) * sin(d.y * 29.0 + 2.0) * sin(d.z * 41.0 + 1.0) * 0.22
                     + sin(atan(d.z, d.x) * 19.0 + d.y * 9.0) * 0.09;
           if (a < uRasgo + jag * min(1.0, uRasgo * 3.0)) discard;
@@ -498,7 +446,7 @@ export default function HistoriaFlechas() {
 
     const escena = new THREE.Scene();
     escena.background = new THREE.Color(COLORES.fondo);
-    escena.fog = new THREE.Fog(COLORES.fondo, 18, 42);
+    escena.fog = new THREE.Fog("#0C0838", 20, 48);
     // Reflejos de un estudio: el acero, el látex y las monedas brillan de verdad
     const pmrem = new THREE.PMREMGenerator(renderer);
     const entorno = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -506,8 +454,30 @@ export default function HistoriaFlechas() {
     escena.environmentIntensity = 0.55;
     const cam = new THREE.PerspectiveCamera(38, 1, 0.05, 100);
 
+    // Cielo con degradado (índigo arriba, casi negro abajo) y halo rojizo detrás del globo
+    const cielo = new THREE.Mesh(
+      new THREE.SphereGeometry(70, 32, 16),
+      new THREE.ShaderMaterial({
+        side: THREE.BackSide,
+        depthWrite: false,
+        fog: false,
+        uniforms: { arriba: { value: new THREE.Color("#2A1680") }, medio: { value: new THREE.Color("#0C0838") }, abajo: { value: new THREE.Color(COLORES.fondo) } },
+        vertexShader: "varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+        fragmentShader:
+          "uniform vec3 arriba; uniform vec3 medio; uniform vec3 abajo; varying vec3 vP;" +
+          "void main(){ float h = vP.y; vec3 c = h > 0.0 ? mix(medio, arriba, smoothstep(0.0, 0.6, h)) : mix(medio, abajo, smoothstep(0.0, 0.35, -h)); gl_FragColor = vec4(c, 1.0); }",
+      })
+    );
+    escena.add(cielo);
+    const halo = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: texturaNiebla(), color: COLORES.deuda, transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })
+    );
+    halo.scale.set(11, 11, 1);
+    halo.position.set(0, 0.2, -3.5);
+    escena.add(halo);
+
     // Luces
-    escena.add(new THREE.HemisphereLight("#BFC8FF", "#1A1040", 0.5));
+    escena.add(new THREE.HemisphereLight("#C9CFFF", "#1A1040", 0.6));
     const sol = new THREE.DirectionalLight("#ffffff", 2.4);
     sol.position.set(6, 12, 9);
     escena.add(sol);
@@ -533,7 +503,7 @@ export default function HistoriaFlechas() {
 
     // Flechas con su rótulo
     const flechas = [COLORES.euro, COLORES.pensiones].map((c, k) => {
-      const f = crearFlecha(c, 11 + k * 5);
+      const f = crearFlecha(c);
       escena.add(f);
       return f;
     });
@@ -685,6 +655,9 @@ export default function HistoriaFlechas() {
     const abajo = V(0, -1, 0);
     const qInv = new THREE.Quaternion();
     const golpeDir = metas[0].clone().normalize();
+    const golpeDir2 = metas[1].clone().normalize();
+    // la goma que queda se retrae hacia el lado contrario a los dos pinchazos
+    const retrae = golpeDir.clone().add(golpeDir2).normalize();
     const envolver = (y, lo, h) => ((((y - lo) % h) + h) % h) + lo;
 
     // Tamaño
@@ -695,6 +668,7 @@ export default function HistoriaFlechas() {
       renderer.setSize(w, h, false);
       cam.aspect = w / h;
       zs = cam.aspect < 1 ? 1.25 + (1 - cam.aspect) * 1.2 : 1;
+      mediaVista = 19 * zs * Math.tan((19 * Math.PI) / 180) * cam.aspect;
       cam.updateProjectionMatrix();
     };
     ajustar();
@@ -737,35 +711,40 @@ export default function HistoriaFlechas() {
         capaRef.current.style.background = c.color;
         capaRef.current.style.opacity = c.o;
       }
-      if (flashRef.current) flashRef.current.style.opacity = tau >= 0 ? Math.exp(-tau * 14) * 0.8 : 0;
+      if (flashRef.current) flashRef.current.style.opacity = tau >= 0 ? Math.exp(-tau * 6) * 0.55 * clamp(tau * 20) : 0;
       if (!visible) return;
 
       // Flechas
       flechas.forEach((f, k) => {
         const { punta, dir } = flecha(k, T);
-        if (tau > 0) punta.addScaledVector(dir, tau * 9); // atraviesan el globo y siguen
+        if (tau > 0) punta.addScaledVector(dir, tau * 5); // atraviesan el globo y siguen
         f.position.copy(punta);
         f.quaternion.setFromUnitVectors(abajo, dir);
-        f.rotateY(t * 0.6 + k);
+        f.rotateY(t * 0.8 + k);
         const rot = rotulos[k];
-        rot.position.copy(punta).addScaledVector(dir, -1.2).add(V(k === 0 ? -1.5 : 1.5, 0, 0.3));
-        rot.material.opacity = 1 - tramo(T, 2.12, 2.28);
-        f.visible = T < T_GOLPE + 0.1 && tau < 0.6;
+        rot.position.copy(punta).addScaledVector(dir, -1.6).add(V(0, 1.3, 0.3));
+        rot.material.opacity = 1 - tramo(T, 2.4, 2.55);
+        f.visible = T < T_GOLPE + 0.15 && tau < 1.1;
       });
 
-      // Globo: crece, respira, tiembla y se rasga desde el pinchazo
+      // Globo: crece, respira, las flechas lo aprietan por los lados, tiembla y se rasga desde los dos pinchazos
       const R = radioGlobo(T);
-      const tiembla = T > T_GOLPE - 0.08 && T < T_GOLPE ? Math.sin(t * 60) * 0.03 : 0;
-      const rasgado = tau >= 0 ? clamp(tau / 0.13) : 0;
-      globo.rotation.y = Math.sin(t * 0.5) * 0.15;
+      const aprieta = suave(tramo(T, T_GOLPE - 0.1, T_GOLPE));
+      const tiembla = T > T_GOLPE - 0.1 && T < T_GOLPE ? Math.sin(t * 55) * 0.025 * aprieta : 0;
+      const abre = tau >= 0 ? clamp(tau / DURA_RASGO) : 0;
+      const rasgado = 1 - (1 - abre) * (1 - abre); // rápido al principio y frena, como el látex al abrirse
+      globo.rotation.y = Math.sin(t * 0.5) * 0.15 * (1 - aprieta);
       globo.position.set(0, Math.sin(t * 0.9) * 0.05, 0);
-      globo.scale.setScalar(R * (1 + Math.sin(t * 1.4) * 0.012 + tiembla) * (1 - 0.45 * rasgado * rasgado));
-      // la goma que queda se retrae hacia el lado contrario al pinchazo
-      globo.position.addScaledVector(golpeDir, -0.9 * rasgado);
+      const base = R * (1 + Math.sin(t * 1.4) * 0.012 + tiembla) * (1 - 0.4 * rasgado * rasgado);
+      const presion = tau >= 0 ? 1 - abre : aprieta;
+      globo.scale.set(base * (1 - 0.07 * presion), base * (1 + 0.05 * presion), base * (1 + 0.03 * presion));
+      globo.position.addScaledVector(retrae, -0.7 * rasgado);
       qInv.copy(globo.quaternion).invert();
       rasgo.uDir.value.copy(golpeDir).applyQuaternion(qInv);
-      rasgo.uRasgo.value = tau >= 0 ? Math.pow(rasgado, 0.8) * 3.6 : 0;
-      globo.visible = rasgado < 1;
+      rasgo.uDir2.value.copy(golpeDir2).applyQuaternion(qInv);
+      rasgo.uRasgo.value = tau >= 0 ? rasgado * 2.4 : 0;
+      globo.visible = abre < 1;
+      halo.material.opacity = 0.32 * (1 - rasgado) + 0.3 * Math.exp(-Math.max(0, tau) * 2) * (tau >= 0 ? 1 : 0);
 
       // Lo que sale
       if (tau >= 0) {
@@ -795,8 +774,8 @@ export default function HistoriaFlechas() {
 
         datosG.forEach((d, i) => {
           // salen de la piel justo cuando el desgarro pasa por su sitio
-          const a = Math.acos(clamp(d.n.dot(golpeDir), -1, 1));
-          const t0 = (a / 3.6) * 0.13;
+          const a = Math.min(Math.acos(clamp(d.n.dot(golpeDir), -1, 1)), Math.acos(clamp(d.n.dot(golpeDir2), -1, 1)));
+          const t0 = (1 - Math.sqrt(Math.max(0, 1 - a / 2.4))) * DURA_RASGO; // inversa de la curva del rasgado
           const tt = Math.max(0, tau - t0);
           d.p0.set(d.n.x * R0, d.n.y * R0 * ESTIRA, d.n.z * R0);
           vuelo(d, tt, p);

@@ -57,12 +57,12 @@ module.exports = {
   				'5': 'rgb(var(--chart-5) / <alpha-value>)'
   			},
         brand: {
-          // Paleta de estilo_fondo_1: Onyx Black, Electric Indigo, Tropical Mint
+          // Paleta de estilo_fondo_1: Onyx Black y Electric Indigo (estilo 3); «mint» es ahora el lila del estilo 3
           onyx: '#01010D',
           indigo: '#6331FB',
-          mint: '#88F9C0',
+          mint: '#9E85FF',
           surface: '#110D33',
-          orange: '#88F9C0',
+          orange: '#9E85FF',
           purple: '#633CFF',
           yellow: '#0EA5E9',
           green: '#22C55E',

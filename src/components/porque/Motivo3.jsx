@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { GraduationCap, HeartPulse, PiggyBank, Home, Receipt, Printer, Scissors } from "lucide-react";
+import { GraduationCap, HeartPulse, PiggyBank, Home, Receipt, Printer, Scissors, Volume2, VolumeX } from "lucide-react";
 
 // Motivo 3 (lo que había dentro del globo): la deuda.
 // Cifras (comprobar antes de publicar; las mismas que el short-35 y el short-23):
@@ -43,10 +43,10 @@ const partidas = [
   { icon: <Home className="w-5 h-5" />, t: "Vivienda" },
 ];
 
+// Las tres formas de pagar la deuda: dos se notan, la tercera no
 const salidas = [
-  { icon: <Receipt className="w-6 h-6" />, t: "Más impuestos", d: "Te quitan más de lo que ganas para pagar lo que se debe." },
-  { icon: <Scissors className="w-6 h-6" />, t: "Recortes", d: "Menos dinero para sanidad, educación… y pensiones." },
-  { icon: <Printer className="w-6 h-6" />, t: "Imprimir dinero", d: "Inflación: la deuda pesa menos… y tus ahorros también valen menos. Volvemos al motivo 1." },
+  { icon: <Scissors className="w-6 h-6" />, t: "Recortes", d: "Menos dinero para sanidad, educación… y pensiones. Sale en las noticias y hay protestas." },
+  { icon: <Receipt className="w-6 h-6" />, t: "Más impuestos", d: "Te quitan más de lo que ganas para pagar lo que se debe. Lo ves en tu nómina y en tus facturas." },
 ];
 
 export default function Motivo3() {
@@ -128,11 +128,14 @@ export default function Motivo3() {
         </div>
       </section>
 
-      {/* Cómo se paga */}
+      {/* Cómo se paga: dos formas que se notan y una silenciosa */}
       <section className="mb-16">
-        <h3 className="font-display uppercase text-4xl md:text-6xl leading-[0.92] mb-6">
+        <h3 className="font-display uppercase text-4xl md:text-6xl leading-[0.92] mb-4">
           ¿Y cómo se <span className="font-serif italic normal-case text-[#FF5C7A]">paga</span> todo esto?
         </h3>
+        <p className="text-white/80 text-lg leading-relaxed max-w-3xl mb-6">
+          Hay tres formas de pagar la deuda. Y todas las acabas pagando tú.
+        </p>
         <div className="grid md:grid-cols-3 gap-4">
           {salidas.map((x, k) => (
             <motion.div
@@ -143,12 +146,54 @@ export default function Motivo3() {
               transition={{ delay: k * 0.12 }}
               className="rounded-3xl bg-brand-surface border border-white/10 p-6"
             >
-              <div className="w-11 h-11 rounded-2xl bg-[#FF5C7A] text-brand-onyx flex items-center justify-center mb-4">{x.icon}</div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="w-11 h-11 rounded-2xl bg-[#FF5C7A] text-brand-onyx flex items-center justify-center">{x.icon}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                  <Volume2 className="w-3.5 h-3.5" /> Te enteras
+                </span>
+              </div>
               <p className="font-display uppercase text-2xl">{x.t}</p>
               <p className="text-white/70 mt-2 leading-relaxed">{x.d}</p>
             </motion.div>
           ))}
+          {/* La tercera aparece muy despacio, casi sin que la veas */}
+          <motion.div
+            initial={{ opacity: 0.08 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-120px" }}
+            transition={{ delay: 0.6, duration: 3.5, ease: "easeIn" }}
+            className="rounded-3xl border-2 border-dashed border-[#FF5C7A]/60 bg-[#FF5C7A]/[0.06] p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <span className="w-11 h-11 rounded-2xl bg-[#FF5C7A] text-brand-onyx flex items-center justify-center">
+                <Printer className="w-6 h-6" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5C7A]/15 text-[#FF5C7A] px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                <VolumeX className="w-3.5 h-3.5" /> Ni te enteras
+              </span>
+            </div>
+            <p className="font-display uppercase text-2xl">Imprimir dinero</p>
+            <p className="text-white/70 mt-2 leading-relaxed">
+              No sale en tu nómina ni en ninguna factura. Tu cuenta sigue marcando lo mismo… pero cada euro compra un poco menos.
+              La deuda pesa menos, y tus ahorros también. Volvemos al motivo 1.
+            </p>
+          </motion.div>
         </div>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="mt-10 font-display uppercase text-3xl md:text-5xl leading-[0.95] max-w-4xl"
+        >
+          Te afecta igual,{" "}
+          <span className="font-serif italic normal-case text-[#FF5C7A]">pero en silencio.</span>
+          <span className="block text-white/60 text-xl md:text-2xl mt-2">Te quitan valor sin que te des cuenta.</span>
+        </motion.p>
+        <p className="mt-6 text-lg leading-relaxed max-w-3xl rounded-2xl border-l-4 border-[#FF5C7A] bg-[#FF5C7A]/10 px-5 py-4 text-white">
+          De los recortes y los impuestos no te puedes librar. Pero contra la tercera <strong>sí puedes hacer algo tú</strong>:
+          no dejar tus ahorros quietos en euros. Por eso, invertir.
+        </p>
       </section>
 
       {/* La crisis */}

@@ -30,7 +30,7 @@ function Nivel({ n }) {
   );
 }
 
-const CAT_COLOR = { fija: "#6CB4FF", variable: "#88F9C0" };
+const CAT_COLOR = { fija: "#6CB4FF", variable: "#9E85FF" };
 
 function Categoria({ id }) {
   return (

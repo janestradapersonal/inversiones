@@ -2,7 +2,7 @@
 // Los ejemplos con precios inventados lo dicen ("Ejemplo"). Cifras oficiales comprobadas a 11/2026.
 
 export const NIVELES = {
-  1: { nombre: "Básico", color: "#88F9C0" },
+  1: { nombre: "Básico", color: "#9E85FF" },
   2: { nombre: "Intermedio", color: "#F5C542" },
   3: { nombre: "Avanzado", color: "#FF5C7A" },
 };
@@ -106,7 +106,7 @@ export const PRODUCTOS = [
   {
     id: "bolsa-mundial", cat: "variable", rent: "≈ 6-9 % de media a largo plazo, con caídas de hasta ≈ 50 %", nivel: 1, e: "🌍", titulo: "Bolsa de todo el mundo",
     resumen: "Ser dueño de un trocito de miles de empresas de muchos países a la vez.",
-    texto: "Es lo que compras con un fondo indexado o un ETF mundial (por ejemplo, del MSCI World, unas 1.300 empresas de 23 países desarrollados, o de índices que también incluyen emergentes). Es renta variable: no sabes lo que ganarás cada año y habrá caídas fuertes, pero a largo plazo ha sido de lo que más ha crecido.",
+    texto: "Es lo que compras con un fondo indexado o un ETF mundial (por ejemplo, del MSCI World, unas 1.250 empresas de 23 países desarrollados, o de índices que también incluyen emergentes). Es renta variable: no sabes lo que ganarás cada año y habrá caídas fuertes, pero a largo plazo ha sido de lo que más ha crecido.",
     ejemplo: "En 2008 las bolsas mundiales llegaron a caer alrededor de la mitad; quien aguantó sin vender se recuperó en los años siguientes.",
     visual: { tipo: "riesgo", nivel: 4, texto: "mucha volatilidad, mucho crecimiento a largo plazo" },
     tags: ["bolsa", "renta variable", "msci world", "indexado", "mundial"],
@@ -255,9 +255,9 @@ export const CONCEPTOS = [
   {
     id: "indice", nivel: 1, e: "📊", titulo: "Índice bursátil",
     resumen: "Una lista de empresas que sirve para medir cómo va un mercado.",
-    texto: "El IBEX 35 son las 35 empresas más negociadas de la bolsa española. El S&P 500, unas 500 grandes empresas de EE. UU. El MSCI World, unas 1.300 de 23 países desarrollados. Un fondo indexado copia uno de estos índices.",
+    texto: "El IBEX 35 son las 35 empresas más negociadas de la bolsa española. El S&P 500, unas 500 grandes empresas de EE. UU. El MSCI World, unas 1.250 de 23 países desarrollados. Un fondo indexado copia uno de estos índices.",
     ejemplo: "Decir «la bolsa ha subido hoy un 1 %» suele significar que ha subido su índice principal.",
-    visual: { tipo: "barras", filas: [{ t: "IBEX 35", v: 35, rotulo: "35 empresas", color: "rojo" }, { t: "S&P 500", v: 500, rotulo: "≈500 empresas", color: "azul" }, { t: "MSCI World", v: 1300, rotulo: "≈1.300 empresas", color: "menta" }] },
+    visual: { tipo: "barras", filas: [{ t: "IBEX 35", v: 35, rotulo: "35 empresas", color: "rojo" }, { t: "S&P 500", v: 500, rotulo: "≈500 empresas", color: "azul" }, { t: "MSCI World", v: 1250, rotulo: "≈1.250 empresas", color: "menta" }] },
     tags: ["índice", "ibex", "s&p 500", "msci world"],
   },
   {
@@ -288,7 +288,7 @@ export const CONCEPTOS = [
     id: "fondo-indexado", nivel: 1, e: "📈", titulo: "Fondo indexado",
     resumen: "Un fondo que copia un índice entero en vez de intentar elegir ganadores.",
     texto: "En lugar de pagar a un equipo para que elija acciones, el fondo compra todas las de un índice (por ejemplo, las del MSCI World). Como no hay que «adivinar», cobra comisiones muy bajas, y a largo plazo la mayoría de fondos que intentan batir al índice no lo consiguen.",
-    ejemplo: "Un indexado al MSCI World tiene unas 1.300 empresas de 23 países desarrollados.",
+    ejemplo: "Un indexado al MSCI World tiene unas 1.250 empresas de 23 países desarrollados.",
     visual: { tipo: "comparar", a: { e: "🧑‍💼", t: "Fondo activo", color: "gris", puntos: ["Un gestor elige", "Comisión ~1,5 %", "Suele quedarse por detrás"] }, b: { e: "📈", t: "Indexado", color: "menta", puntos: ["Copia el índice", "Comisión ~0,1-0,3 %", "Hace lo mismo que el mercado"] } },
     tags: ["indexado", "índice", "pasivo", "comisiones", "msci world"],
   },

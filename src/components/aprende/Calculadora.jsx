@@ -50,7 +50,7 @@ function Compuesto() {
       <Deslizador etiqueta="Cada mes" valor={mes} min={10} max={1000} paso={10} formato={eur} onChange={setMes} />
       <Deslizador etiqueta="Años" valor={anos} min={1} max={40} formato={(v) => `${v} años`} onChange={setAnos} />
       <Deslizador etiqueta="Rentabilidad anual (supuesta)" valor={r} min={0} max={10} paso={0.5} formato={pct} onChange={setR} />
-      <Resultado filas={[["Has puesto", eur(puesto), "#F5C542"], ["Tendrías", eur(total), "#88F9C0"]]} />
+      <Resultado filas={[["Has puesto", eur(puesto), "#F5C542"], ["Tendrías", eur(total), "#9E85FF"]]} />
       <p className="text-[11px] text-white/45">Simulación con una rentabilidad fija, sin comisiones ni impuestos. Ninguna inversión la garantiza.</p>
     </div>
   );
@@ -81,7 +81,7 @@ function Comisiones() {
     <div className="space-y-3">
       <Deslizador etiqueta="Comisión anual de tu fondo" valor={com} min={0.1} max={2.5} paso={0.1} formato={(v) => pct(v)} onChange={setCom} />
       <Deslizador etiqueta="Años" valor={anos} min={5} max={40} formato={(v) => `${v} años`} onChange={setAnos} />
-      <Resultado filas={[["Indexado al 0,2 %", eur(barato), "#88F9C0"], [`Tu fondo al ${pct(com)}`, eur(tuyo), "#F5C542"]]} />
+      <Resultado filas={[["Indexado al 0,2 %", eur(barato), "#9E85FF"], [`Tu fondo al ${pct(com)}`, eur(tuyo), "#F5C542"]]} />
       <p className="text-xs text-white/70">Te cuesta <strong className="text-[#FF5C7A]">{eur(Math.max(0, barato - tuyo))}</strong> en {anos} años.</p>
       <p className="text-[11px] text-white/45">10.000 € con una rentabilidad bruta supuesta del 7 % anual.</p>
     </div>
@@ -94,7 +94,7 @@ function Regla72() {
   return (
     <div className="space-y-3">
       <Deslizador etiqueta="Rentabilidad (o inflación) anual" valor={r} min={1} max={12} paso={0.5} formato={pct} onChange={setR} />
-      <Resultado filas={[["Regla del 72", `${(72 / r).toLocaleString("es-ES", { maximumFractionDigits: 1 })} años`, "#88F9C0"], ["Cálculo exacto", `${exacto.toLocaleString("es-ES", { maximumFractionDigits: 1 })} años`]]} />
+      <Resultado filas={[["Regla del 72", `${(72 / r).toLocaleString("es-ES", { maximumFractionDigits: 1 })} años`, "#9E85FF"], ["Cálculo exacto", `${exacto.toLocaleString("es-ES", { maximumFractionDigits: 1 })} años`]]} />
     </div>
   );
 }
@@ -107,7 +107,7 @@ function Apalancamiento() {
     <div className="space-y-3">
       <Deslizador etiqueta="Apalancamiento" valor={x} min={1} max={20} formato={(v) => `x${v}`} onChange={setX} />
       <Deslizador etiqueta="Lo que se mueve el precio" valor={mov} min={-30} max={30} formato={(v) => (v > 0 ? "+" : "") + pct(v, 0)} onChange={setMov} />
-      <Resultado filas={[["Sin apalancar", (mov > 0 ? "+" : "") + pct(mov, 0)], ["Con x" + x, (res > 0 ? "+" : "") + pct(res, 0), res < 0 ? "#FF5C7A" : "#88F9C0"]]} />
+      <Resultado filas={[["Sin apalancar", (mov > 0 ? "+" : "") + pct(mov, 0)], ["Con x" + x, (res > 0 ? "+" : "") + pct(res, 0), res < 0 ? "#FF5C7A" : "#9E85FF"]]} />
       {res <= -100 && <p className="text-xs text-[#FF5C7A] font-semibold">Has perdido todo lo que pusiste.</p>}
     </div>
   );

@@ -227,7 +227,7 @@ export default function HeroCrecimiento() {
                     className="relative rounded-t-[3px] bg-brand-mint"
                     style={{
                       height: alto(tot - pue),
-                      boxShadow: enCurso ? "0 0 18px rgba(136,249,192,0.8)" : undefined,
+                      boxShadow: enCurso ? "0 0 18px rgba(158,133,255,0.8)" : undefined,
                     }}
                   />
                   {/* Dorado = lo que pones (como las monedas); línea oscura que separa de lo ganado */}

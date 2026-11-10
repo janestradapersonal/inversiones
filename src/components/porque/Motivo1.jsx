@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Landmark, Printer } from "lucide-react";
+import { AlertTriangle, ArrowRight, Banknote, Landmark, Printer, TrendingDown } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import datos from "@/data/porque_invertir.json";
 import grafico from "@/data/mercados.json";
@@ -201,7 +201,132 @@ function GraficoDinero() {
   );
 }
 
-// Motivo 1 (dentro de la primera flecha): el euro y el dinero fiat pierden valor
+// Encabezado de cada capítulo del motivo
+function Capitulo({ letra, titulo }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      className="flex items-start gap-4 md:gap-6 mb-8"
+    >
+      <span className="shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[#3D8BFF] text-brand-onyx font-display text-3xl md:text-4xl flex items-center justify-center">
+        {letra}
+      </span>
+      <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.92]">{titulo}</h2>
+    </motion.div>
+  );
+}
+
+// Boleto de apuesta: guardar euros es apostar a que el euro mantiene su valor
+function Boleto({ compran }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, rotate: 4, y: 30 }}
+      whileInView={{ opacity: 1, rotate: -1.5, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ type: "spring", stiffness: 90, damping: 14 }}
+      className="relative rounded-2xl bg-[#F4F0E6] text-brand-onyx p-6 md:p-7 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]"
+    >
+      <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-brand-onyx" />
+      <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-brand-onyx" />
+      <div className="flex items-center justify-between border-b-2 border-dashed border-brand-onyx/25 pb-3 mb-4">
+        <p className="font-display uppercase text-2xl tracking-wide">Boleto de apuesta</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-brand-onyx/50">Desde 1999</p>
+      </div>
+      <dl className="space-y-3 text-sm md:text-base">
+        <div className="flex justify-between gap-4">
+          <dt className="text-brand-onyx/60">Apuesta</dt>
+          <dd className="font-bold text-right">El euro mantendrá su valor</dd>
+        </div>
+        <div className="flex justify-between gap-4">
+          <dt className="text-brand-onyx/60">Jugador</dt>
+          <dd className="font-bold text-right">Tú, si guardas tus ahorros en euros</dd>
+        </div>
+        <div className="flex justify-between gap-4">
+          <dt className="text-brand-onyx/60">Importe</dt>
+          <dd className="font-bold text-right tabular-nums">10.000&nbsp;€ a finales de 1999</dd>
+        </div>
+      </dl>
+      <div className="mt-5 pt-4 border-t-2 border-dashed border-brand-onyx/25">
+        <p className="text-xs font-bold uppercase tracking-widest text-brand-onyx/60">Resultado hoy</p>
+        <p className="font-display text-4xl md:text-5xl text-[#E0304F] tabular-nums mt-1">{euros(compran)}</p>
+        <p className="text-sm text-brand-onyx/70">es lo que compran hoy esos 10.000&nbsp;€, descontada la inflación</p>
+      </div>
+      <motion.div
+        initial={{ opacity: 0, scale: 2.2 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.6, type: "spring", stiffness: 300, damping: 15 }}
+        className="absolute right-5 bottom-8 rotate-[-12deg] border-4 border-[#E0304F] text-[#E0304F] rounded-lg px-3 py-1 font-display text-3xl md:text-4xl uppercase tracking-wider bg-[#F4F0E6]/70"
+      >
+        Perdida
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Cadena: por qué el euro pierde valor, paso a paso
+const PASOS = [
+  { icon: <AlertTriangle className="w-6 h-6" />, titulo: "Llega una crisis", texto: "O ni eso: se imprime constantemente." },
+  { icon: <Printer className="w-6 h-6" />, titulo: "El BCE imprime", texto: "Fabrica e inyecta más euros para superarla." },
+  { icon: <Banknote className="w-6 h-6" />, titulo: "Hay más euros", texto: "Persiguiendo las mismas cosas: oferta y demanda." },
+  { icon: <TrendingDown className="w-6 h-6" />, titulo: "Cada euro compra menos", texto: "Tu cuenta marca lo mismo. Eso es la inflación." },
+];
+function Cadena() {
+  return (
+    <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {PASOS.map((p, i) => {
+        const fin = i === PASOS.length - 1;
+        return (
+          <motion.li
+            key={p.titulo}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ delay: i * 0.18 }}
+            className={`relative rounded-3xl p-6 border ${fin ? "bg-[#FF5C7A] border-[#FF5C7A] text-brand-onyx" : "bg-brand-surface border-white/10"}`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <span className={`w-11 h-11 rounded-2xl flex items-center justify-center ${fin ? "bg-brand-onyx text-[#FF5C7A]" : "bg-[#3D8BFF] text-brand-onyx"}`}>
+                {p.icon}
+              </span>
+              <span className={`font-display text-3xl ${fin ? "text-brand-onyx/40" : "text-white/20"}`}>{i + 1}</span>
+            </div>
+            <p className="font-display uppercase text-2xl leading-none">{p.titulo}</p>
+            <p className={`mt-2 text-sm leading-snug ${fin ? "text-brand-onyx/80" : "text-white/65"}`}>{p.texto}</p>
+            {!fin && (
+              <ArrowRight className="hidden lg:block absolute -right-[15px] top-1/2 -translate-y-1/2 z-10 w-7 h-7 p-1.5 rounded-full bg-brand-onyx text-white border border-white/15" />
+            )}
+          </motion.li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function Cifra({ grande, texto }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="rounded-3xl bg-brand-surface border border-white/10 p-6"
+    >
+      <p className="font-display text-5xl md:text-6xl text-[#3D8BFF] leading-none tabular-nums">{grande}</p>
+      <p className="mt-3 text-sm text-white/70 leading-snug">{texto}</p>
+    </motion.div>
+  );
+}
+
+// Lo que compran hoy 10.000 € de finales de 1999 (para el boleto, sea cual sea la vista del gráfico)
+const finAños = (() => {
+  const f = valores(grafico.años);
+  return f[f.length - 1];
+})();
+
+// Motivo 1 (cartel azul): el euro y el dinero fiat pierden valor.
+// Primero las dos ideas clave (ya estás invertido; el dinero lo controla el Estado), después la prueba y la bolsa pinchada.
 export default function Motivo1() {
   const [vista, setVista] = useState("años");
   const [verCrisis, setVerCrisis] = useState(false);
@@ -219,10 +344,55 @@ export default function Motivo1() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6">
-      <p className="mb-8 text-white/85 text-lg md:text-xl leading-relaxed max-w-2xl">
-        «Yo no invierto», dice mucha gente. Pero si tienes euros, ya estás invertido: en euros. La pregunta no es si
-        invertir, sino <strong className="text-white">en qué</strong>.
-      </p>
+      {/* A · Ya estás invertido */}
+      <Capitulo letra="A" titulo={razones[0].titulo} />
+      <section className="grid md:grid-cols-[1fr,1.05fr] gap-10 md:gap-12 items-center mb-24">
+        <div>
+          <p className="font-serif italic text-2xl md:text-3xl text-white/90 leading-snug mb-5">«Yo no invierto», dice mucha gente.</p>
+          <p className="text-white/80 text-lg leading-relaxed">
+            Pero si tienes euros, ya estás invertido: en euros. La pregunta no es si invertir, sino{" "}
+            <strong className="text-white">en qué</strong>.
+          </p>
+          <p className="text-white/80 text-lg leading-relaxed mt-4">{razones[0].texto}</p>
+        </div>
+        <Boleto compran={finAños.euro} />
+      </section>
+
+      {/* B · Tu dinero lo controla el Estado */}
+      <Capitulo letra="B" titulo={razones[1].titulo} />
+      <p className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-white/50 mb-4">Por qué el euro pierde valor, paso a paso</p>
+      <Cadena />
+      <p className="text-white/80 text-lg leading-relaxed max-w-3xl mt-8">{razones[1].texto}</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-10">
+        <Cifra
+          grande={`×${veces}`}
+          texto={`Euros en circulación en la zona euro: de ${billones(m3["1999-12"])} billones en diciembre de 1999 a ${billones(m3.ultimo[1])} billones en ${fechaM3}.`}
+        />
+        <Cifra grande={`+${covid} %`} texto="Euros nuevos en menos de dos años de COVID, de febrero de 2020 a diciembre de 2021." />
+        <Cifra grande={"2 %"} texto="El objetivo del BCE es que los precios suban un 2 % cada año: el euro está diseñado para comprar un poco menos cada año." />
+      </div>
+      <div className="grid md:grid-cols-[1fr,1.1fr] gap-6 items-center mt-6 mb-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-3xl bg-brand-indigo p-7 md:p-9 relative overflow-hidden"
+        >
+          <div className="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-white/10 blur-[50px] pointer-events-none" />
+          <h3 className="relative font-display uppercase text-2xl md:text-3xl leading-tight mb-3">Ejemplo: la COVID</h3>
+          <p className="relative text-white/85 text-lg leading-relaxed">
+            De febrero de 2020 a diciembre de 2021, los euros en circulación pasaron de {billones(m3["2020-02"])} a{" "}
+            {billones(m3["2021-12"])} billones: un {covid} % más en menos de dos años. Tu cuenta seguía marcando lo
+            mismo y parecía que no habías perdido nada. Pero había muchos más euros persiguiendo las mismas cosas, y
+            en 2022 los precios en España subieron más de un 8 %.
+          </p>
+        </motion.div>
+        <GraficoDinero />
+      </div>
+
+      {/* C · La prueba */}
+      <Capitulo letra="C" titulo="La prueba: 10.000 € guardados" />
         {/* Gráfico principal */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -328,49 +498,8 @@ export default function Motivo1() {
           </p>
         </motion.section>
 
-        {/* Más euros = euros que valen menos */}
-        <section className="grid md:grid-cols-2 gap-6 items-center my-20">
-          <div>
-            <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.92] mb-5">
-              El euro está hecho para{" "}
-              <span className="font-serif italic normal-case text-[#FF5C7A]">perder valor</span>
-            </h2>
-            <p className="text-white/80 text-lg leading-relaxed mb-4">
-              El Banco Central Europeo tiene como objetivo que los precios suban un 2 % cada año. Es decir: está diseñado
-              para que tu euro compre un poco menos cada año.
-            </p>
-            <p className="text-white/80 text-lg leading-relaxed">
-              Y cada año hay más euros. En diciembre de 1999 había {billones(m3["1999-12"])} billones de euros en la zona
-              euro; en {fechaM3}, {billones(m3.ultimo[1])} billones. <strong className="text-white">{veces} veces más.</strong>
-            </p>
-          </div>
-          <GraficoDinero />
-        </section>
-
-        {/* Covid */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="rounded-3xl bg-brand-indigo p-8 md:p-12 mb-20 relative overflow-hidden"
-        >
-          <div className="absolute -right-20 -top-20 w-72 h-72 rounded-full bg-white/10 blur-[60px] pointer-events-none" />
-          <div className="relative grid md:grid-cols-[auto,1fr] gap-6 md:gap-10 items-center">
-            <p className="font-display text-7xl md:text-9xl text-brand-mint leading-none">+{covid}%</p>
-            <div>
-              <h3 className="font-display uppercase text-2xl md:text-4xl leading-tight mb-3">Ejemplo: la COVID</h3>
-              <p className="text-white/85 text-lg leading-relaxed">
-                De febrero de 2020 a diciembre de 2021, los euros en circulación pasaron de {billones(m3["2020-02"])} a{" "}
-                {billones(m3["2021-12"])} billones: un {covid} % más en menos de dos años. Tu cuenta seguía marcando lo
-                mismo y parecía que no habías perdido nada. Pero había muchos más euros persiguiendo las mismas cosas, y
-                en 2022 los precios en España subieron más de un 8 %.
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Bolsa pinchada */}
-        <section className="grid md:grid-cols-[auto,1fr] gap-8 md:gap-12 items-center mb-20">
+        {/* D · Bolsa pinchada */}
+        <section className="grid md:grid-cols-[auto,1fr] gap-8 md:gap-12 items-center mt-24 mb-4">
           <div className="flex justify-center">
             <BolsaPinchada />
           </div>
@@ -384,32 +513,6 @@ export default function Motivo1() {
               de <strong className="text-white">tapar el agujero</strong> y que lo que te ha costado ganar no se vaya
               perdiendo.
             </p>
-          </div>
-        </section>
-
-        {/* Razones */}
-        <section className="mb-4">
-          <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.92] mb-8 text-center">
-            Y dos cosas que <span className="font-serif italic normal-case text-brand-mint">casi nadie te cuenta</span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {razones.map((r, i) => (
-              <motion.div
-                key={r.titulo}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                viewport={{ once: true }}
-                className="rounded-3xl bg-brand-surface border border-white/10 p-7"
-              >
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-mint flex items-center justify-center text-brand-onyx">{r.icon}</div>
-                  <span className="font-display text-3xl text-white/20">0{i + 1}</span>
-                </div>
-                <h3 className="font-sora text-xl font-bold mb-2">{r.titulo}</h3>
-                <p className="text-white/75 leading-relaxed">{r.texto}</p>
-              </motion.div>
-            ))}
           </div>
         </section>
 
