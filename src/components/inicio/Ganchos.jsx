@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { ArrowRight, Check, X } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import mercados from "@/data/mercados.json";
 
-// Ganchos de la portada: contador en vivo, «¿verdad o mentira?», barra de lectura y siguiente paso.
+// Ganchos de la portada: contador en vivo, barra de lectura y siguiente paso.
 // Todas las cifras salen de src/data/mercados.json (Eurostat y S&P 500), que se actualiza solo.
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -100,113 +100,6 @@ export function ContadorPerdida() {
         (Eurostat, hasta {fechaLarga(INFLACION.mes)}).
       </p>
     </motion.div>
-  );
-}
-
-/* ---------- 2. ¿Verdad o mentira? ---------- */
-const crisis = Object.fromEntries(mercados.crisis.map((c) => [c.id, c]));
-const PREGUNTAS = [
-  {
-    frase: "El dinero quieto en la cuenta mantiene su valor",
-    verdad: false,
-    explica: `1.000 € guardados en un cajón desde diciembre de 1999 hoy compran lo mismo que ${eur(1000 * INFLACION.desde1999)} entonces. El billete es el mismo; lo que compra, no.`,
-    enlace: ["Por qué pasa esto", "/por-que-invertir"],
-  },
-  {
-    frase: "Después de una gran caída, la bolsa no se recupera",
-    verdad: false,
-    explica: crisis["2008"]
-      ? `En 2008 el S&P 500 cayó un ${Math.abs(crisis["2008"].caida).toLocaleString("es-ES")} %. El ${fechaLarga(crisis["2008"].recuperado)} ya había recuperado su máximo. Tardó, pero volvió.`
-      : "Las grandes caídas del pasado se acabaron recuperando, aunque a veces tardaron años.",
-    enlace: ["Aprende sobre caídas", "/aprende"],
-  },
-  {
-    frase: "Se puede empezar a invertir con 10 €",
-    verdad: true,
-    explica: "Muchos fondos indexados y plataformas permiten aportaciones pequeñas. Lo difícil no es el dinero: es dar el primer paso.",
-    enlace: ["Cómo empezar", "/empieza"],
-  },
-];
-
-export function VerdadMentira() {
-  const [resp, setResp] = useState({});
-  const hechas = Object.keys(resp).length;
-  const aciertos = PREGUNTAS.filter((p, i) => resp[i] === p.verdad).length;
-
-  return (
-    <section className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-      <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-mint">Juego rápido · 3 preguntas</p>
-      <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.95] mt-3">
-        ¿Verdad <span className="font-serif italic normal-case text-brand-mint">o mentira?</span>
-      </h2>
-      <p className="text-white/70 text-lg mt-3 max-w-xl">Tres frases que se oyen mucho. ¿Cuántas aciertas?</p>
-
-      <div className="mt-8 grid md:grid-cols-3 gap-4">
-        {PREGUNTAS.map((p, i) => {
-          const r = resp[i];
-          const respondida = r !== undefined;
-          const acierta = r === p.verdad;
-          return (
-            <motion.div
-              key={p.frase}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ delay: i * 0.12 }}
-              className={`rounded-3xl border-2 p-6 flex flex-col transition-colors ${
-                !respondida ? "bg-brand-surface border-white/10" : acierta ? "bg-[#22C55E]/10 border-[#22C55E]/60" : "bg-[#FF5C7A]/10 border-[#FF5C7A]/60"
-              }`}
-            >
-              <span className="font-display text-4xl text-brand-mint leading-none">0{i + 1}</span>
-              <p className="mt-3 text-xl md:text-2xl font-bold leading-snug">«{p.frase}»</p>
-              {!respondida ? (
-                <div className="mt-auto pt-6 grid grid-cols-2 gap-2">
-                  {[["Verdad", true], ["Mentira", false]].map(([t, v]) => (
-                    <button
-                      key={t}
-                      onClick={() => setResp((s) => ({ ...s, [i]: v }))}
-                      className="rounded-2xl py-3 font-bold bg-white/10 hover:bg-brand-mint hover:text-brand-onyx transition"
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <AnimatePresence>
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4">
-                    <p className={`flex items-center gap-2 font-bold text-lg ${acierta ? "text-[#22C55E]" : "text-[#FF5C7A]"}`}>
-                      {acierta ? <Check className="w-5 h-5" /> : <X className="w-5 h-5" />}
-                      {acierta ? "¡Bien!" : "¡Casi!"} Es {p.verdad ? "verdad" : "mentira"}.
-                    </p>
-                    <p className="mt-2 text-white/80 leading-relaxed">{p.explica}</p>
-                    <Link to={p.enlace[1]} className="mt-4 inline-flex items-center gap-2 font-bold text-brand-mint group">
-                      {p.enlace[0]} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </motion.div>
-                </AnimatePresence>
-              )}
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <AnimatePresence>
-        {hechas === PREGUNTAS.length && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-6 rounded-3xl bg-brand-indigo p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between"
-          >
-            <p className="font-display uppercase text-3xl md:text-4xl leading-none">
-              {aciertos} de 3 <span className="font-serif italic normal-case">{aciertos === 3 ? "¡vas sobrado!" : "y ahora ya sabes por qué"}</span>
-            </p>
-            <Link to="/por-que-invertir" className="inline-flex items-center gap-2 rounded-full bg-white text-brand-onyx px-6 py-3 font-bold">
-              Sigue: los 3 motivos <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
   );
 }
 
