@@ -103,7 +103,7 @@ function Ficha({ p, i }) {
   return (
     <motion.div
       style={{ opacity: o, y, bottom: `${i * 4.1}%`, left: `${50 + Math.sin(i * 1.7) * 3}%` }}
-      className="absolute -translate-x-1/2 w-[58%] h-[7%] rounded-[50%] bg-brand-onyx border-[3px] border-white/80 shadow-[0_6px_0_#01010D]"
+      className="absolute -translate-x-1/2 w-[58%] h-[7%] rounded-[50%] bg-brand-onyx border-[3px] border-white/80 shadow-[0_6px_0_rgb(var(--p-fondo))]"
     />
   );
 }
@@ -132,7 +132,7 @@ function Motivo({ m, children }) {
     <section id={m.id} className="relative">
       <div className="sticky top-0 h-[100svh] overflow-hidden" style={{ background: m.color }}>
         {/* trama de puntos */}
-        <div aria-hidden className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "radial-gradient(#01010D 1.2px, transparent 1.2px)", backgroundSize: "22px 22px" }} />
+        <div aria-hidden className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "radial-gradient(rgb(var(--p-fondo)) 1.2px, transparent 1.2px)", backgroundSize: "22px 22px" }} />
         {/* número gigante */}
         <motion.span
           aria-hidden
@@ -235,7 +235,7 @@ export default function PorQueInvertir() {
         </div>
 
         <div className="mt-auto pt-12 pb-6">
-          <Cinta textos={MOTIVOS.map((m) => `${m.titulo} ${m.resalto}`)} fondo="#9E85FF" color="#01010D" />
+          <Cinta textos={MOTIVOS.map((m) => `${m.titulo} ${m.resalto}`)} fondo="rgb(var(--p-acento))" color="rgb(var(--p-fondo))" />
         </div>
       </section>
 
@@ -251,11 +251,11 @@ export default function PorQueInvertir() {
 
       {/* Final */}
       <section className="relative overflow-hidden bg-brand-mint text-brand-onyx">
-        <Cinta textos={["Empieza con 1 €", "Aprende sobre la marcha", "Protege lo que tienes"]} fondo="#01010D" color="#9E85FF" giro={0} lento />
+        <Cinta textos={["Empieza con 1 €", "Aprende sobre la marcha", "Protege lo que tienes"]} fondo="rgb(var(--p-fondo))" color="rgb(var(--p-acento))" giro={0} lento />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 md:py-28">
           <h2 className="font-display uppercase leading-[0.85] tracking-tight text-[15vw] md:text-[9rem]">
             Y ahora es
-            <span className="block font-serif italic normal-case text-white [text-shadow:0_4px_0_#01010D]">facilísimo</span>
+            <span className="block font-serif italic normal-case text-white [text-shadow:0_4px_0_rgb(var(--p-fondo))]">facilísimo</span>
           </h2>
           <p className="mt-8 text-lg md:text-2xl font-medium leading-snug max-w-3xl">
             Antes necesitabas mucho dinero y un banco que te cobrara comisiones altísimas. Hoy hay brokers con los que empiezas

@@ -30,7 +30,7 @@ function Nivel({ n }) {
   );
 }
 
-const CAT_COLOR = { fija: "#6CB4FF", variable: "#9E85FF" };
+const CAT_COLOR = { fija: "#6CB4FF", variable: "rgb(var(--p-acento))" };
 
 function Categoria({ id }) {
   return (
@@ -224,7 +224,7 @@ function IntroProductos() {
     <div className="mb-12">
       <div className="grid md:grid-cols-2 gap-4">
         {lados.map((l) => (
-          <div key={l.id} className="rounded-3xl bg-brand-surface border-2 p-6 md:p-8" style={{ borderColor: `${CAT_COLOR[l.id]}66` }}>
+          <div key={l.id} className="rounded-3xl bg-brand-surface border-2 p-6 md:p-8" style={{ borderColor: `color-mix(in srgb, ${CAT_COLOR[l.id]} 40%, transparent)` }}>
             <h2 className="font-display uppercase text-5xl md:text-6xl leading-none" style={{ color: CAT_COLOR[l.id] }}>{l.titulo}</h2>
             <p className="font-serif italic text-2xl md:text-3xl text-white mt-1">{l.frase}</p>
             <MiniLinea y={l.linea} color={CAT_COLOR[l.id]} />

@@ -25,7 +25,7 @@ function Lista({ items, color = "#FF5C7A" }) {
         >
           <span
             className="shrink-0 w-8 h-8 rounded-full font-bold flex items-center justify-center"
-            style={{ color, backgroundColor: `${color}26` }}
+            style={{ color, backgroundColor: `color-mix(in srgb, ${color} 15%, transparent)` }}
           >
             {k + 1}
           </span>
@@ -78,7 +78,7 @@ export default function InicioObjetivos() {
       {/* Pantalla de entrada */}
       <section
         className="relative min-h-[100dvh] flex items-center"
-        style={{ background: "radial-gradient(ellipse at 50% 45%, #7A52FF 0%, #6331FB 35%, #2C129A 75%, #1A0A63 100%)" }}
+        style={{ background: "radial-gradient(ellipse at 50% 45%, rgb(var(--p-fuerte-claro)) 0%, rgb(var(--p-fuerte)) 35%, rgb(var(--p-hondo1)) 75%, rgb(var(--p-hondo2)) 100%)" }}
       >
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-16">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
@@ -136,7 +136,7 @@ export default function InicioObjetivos() {
             <p className="text-white/75 text-lg leading-relaxed mb-5">
               Partas de donde partas, formarte lo mínimo para entender qué haces con tu dinero. Tres apartados:
             </p>
-            <Lista items={apartadosAprende} color="#9E85FF" />
+            <Lista items={apartadosAprende} color="rgb(var(--p-acento))" />
             <Enlace to="/aprende">Ir a aprender</Enlace>
           </Objetivo>
           <Objetivo n={3} i={2} icon={<Rocket className="w-5 h-5" />} titulo="Dar el" resaltado="primer paso">

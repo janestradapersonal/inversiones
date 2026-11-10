@@ -2,7 +2,7 @@
 // Los ejemplos con precios inventados lo dicen ("Ejemplo"). Cifras oficiales comprobadas a 11/2026.
 
 export const NIVELES = {
-  1: { nombre: "Básico", color: "#9E85FF" },
+  1: { nombre: "Básico", color: "rgb(var(--p-acento))" },
   2: { nombre: "Intermedio", color: "#F5C542" },
   3: { nombre: "Avanzado", color: "#FF5C7A" },
 };

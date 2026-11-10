@@ -93,7 +93,7 @@ const plataformas = [
       "Más de un millón de clientes en España",
       "Acciones y ETF desde 1 € y planes de inversión mensuales",
     ],
-    color: "#9E85FF",
+    color: "rgb(var(--p-acento))",
   },
 ];
 

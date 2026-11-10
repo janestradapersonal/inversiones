@@ -1,60 +1,162 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&family=Anton&family=Instrument+Serif:ital@0;1&display=swap');
 
+/* Paletas de color de toda la web (fondo, color fuerte y acento). Se elige con data-paleta en <html>. */
+@layer base {
+  :root, [data-paleta="indigo-lila"] {
+    --p-fondo: 1 1 13;
+    --p-sup: 17 13 51;
+    --p-fuerte: 99 49 251;
+    --p-fuerte-claro: 122 82 255;
+    --p-hondo1: 44 18 154;
+    --p-hondo2: 26 10 99;
+    --p-acento: 158 133 255;
+    --p-claro: 183 156 255;
+    --p-brillo: 59 31 176;
+    --p-borde: 45 38 100;
+    --p-muted: 26 21 66;
+    --p-mutedfg: 200 195 235;
+  }
+  [data-paleta="indigo-menta"] {
+    --p-fondo: 1 1 13;
+    --p-sup: 14 12 44;
+    --p-fuerte: 99 49 251;
+    --p-fuerte-claro: 122 82 255;
+    --p-hondo1: 44 18 154;
+    --p-hondo2: 26 10 99;
+    --p-acento: 136 249 192;
+    --p-claro: 184 255 219;
+    --p-brillo: 59 31 176;
+    --p-borde: 45 38 100;
+    --p-muted: 26 21 66;
+    --p-mutedfg: 200 195 235;
+  }
+  [data-paleta="cobalto-lima"] {
+    --p-fondo: 3 7 22;
+    --p-sup: 10 20 52;
+    --p-fuerte: 37 99 255;
+    --p-fuerte-claro: 86 140 255;
+    --p-hondo1: 18 52 160;
+    --p-hondo2: 9 26 92;
+    --p-acento: 198 255 61;
+    --p-claro: 222 255 140;
+    --p-brillo: 20 60 170;
+    --p-borde: 30 50 105;
+    --p-muted: 16 28 66;
+    --p-mutedfg: 190 205 235;
+  }
+  [data-paleta="esmeralda-oro"] {
+    --p-fondo: 2 14 11;
+    --p-sup: 7 34 27;
+    --p-fuerte: 5 150 105;
+    --p-fuerte-claro: 40 190 140;
+    --p-hondo1: 4 92 66;
+    --p-hondo2: 3 52 38;
+    --p-acento: 245 197 66;
+    --p-claro: 255 222 130;
+    --p-brillo: 6 95 70;
+    --p-borde: 25 70 55;
+    --p-muted: 12 45 36;
+    --p-mutedfg: 190 225 210;
+  }
+  [data-paleta="carbon-coral"] {
+    --p-fondo: 12 11 11;
+    --p-sup: 30 26 25;
+    --p-fuerte: 255 90 54;
+    --p-fuerte-claro: 255 130 95;
+    --p-hondo1: 176 52 26;
+    --p-hondo2: 96 28 14;
+    --p-acento: 255 214 170;
+    --p-claro: 255 232 205;
+    --p-brillo: 160 50 25;
+    --p-borde: 70 58 54;
+    --p-muted: 40 34 32;
+    --p-mutedfg: 225 210 200;
+  }
+  [data-paleta="ciruela-melocoton"] {
+    --p-fondo: 16 4 22;
+    --p-sup: 38 12 48;
+    --p-fuerte: 214 36 127;
+    --p-fuerte-claro: 236 84 160;
+    --p-hondo1: 130 18 80;
+    --p-hondo2: 70 8 46;
+    --p-acento: 255 179 138;
+    --p-claro: 255 210 185;
+    --p-brillo: 130 20 90;
+    --p-borde: 80 35 90;
+    --p-muted: 48 18 58;
+    --p-mutedfg: 230 200 225;
+  }
+  [data-paleta="petroleo-sol"] {
+    --p-fondo: 2 18 22;
+    --p-sup: 6 40 46;
+    --p-fuerte: 14 150 155;
+    --p-fuerte-claro: 50 188 190;
+    --p-hondo1: 6 92 98;
+    --p-hondo2: 3 50 56;
+    --p-acento: 255 209 102;
+    --p-claro: 255 228 160;
+    --p-brillo: 8 100 110;
+    --p-borde: 25 75 82;
+    --p-muted: 10 50 56;
+    --p-mutedfg: 190 225 225;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 1 1 13;
+    --background: var(--p-fondo);
     --foreground: 255 255 255;
-    --card: 17 13 51;
+    --card: var(--p-sup);
     --card-foreground: 255 255 255;
-    --popover: 1 1 13;
+    --popover: var(--p-fondo);
     --popover-foreground: 255 255 255;
-    --primary: 158 133 255;
-    --primary-foreground: 1 1 13;
-    --secondary: 1 1 13;
+    --primary: var(--p-acento);
+    --primary-foreground: var(--p-fondo);
+    --secondary: var(--p-fondo);
     --secondary-foreground: 255 255 255;
-    --muted: 26 21 66;
-    --muted-foreground: 200 195 235;
-    --accent: 158 133 255;
-    --accent-foreground: 1 1 13;
+    --muted: var(--p-muted);
+    --muted-foreground: var(--p-mutedfg);
+    --accent: var(--p-acento);
+    --accent-foreground: var(--p-fondo);
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-    --border: 45 38 100;
-    --input: 45 38 100;
-    --ring: 158 133 255;
+    --border: var(--p-borde);
+    --input: var(--p-borde);
+    --ring: var(--p-acento);
     --radius: 1rem;
 
     /* Custom brand tokens */
-    --brand-orange: 158 133 255;
-    --brand-purple: 99 60 255;
+    --brand-orange: var(--p-acento);
+    --brand-purple: var(--p-fuerte);
     --brand-yellow: 14 165 233;
     --brand-green: 34 197 94;
     --brand-pink: 236 72 153;
   }
 
   .dark {
-    --background: 1 1 13;
+    --background: var(--p-fondo);
     --foreground: 255 255 255;
-    --card: 17 13 51;
+    --card: var(--p-sup);
     --card-foreground: 255 255 255;
-    --popover: 1 1 13;
+    --popover: var(--p-fondo);
     --popover-foreground: 255 255 255;
-    --primary: 158 133 255;
-    --primary-foreground: 1 1 13;
-    --secondary: 1 1 13;
+    --primary: var(--p-acento);
+    --primary-foreground: var(--p-fondo);
+    --secondary: var(--p-fondo);
     --secondary-foreground: 255 255 255;
-    --muted: 26 21 66;
-    --muted-foreground: 200 195 235;
-    --accent: 158 133 255;
-    --accent-foreground: 1 1 13;
+    --muted: var(--p-muted);
+    --muted-foreground: var(--p-mutedfg);
+    --accent: var(--p-acento);
+    --accent-foreground: var(--p-fondo);
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-    --border: 45 38 100;
-    --input: 45 38 100;
-    --ring: 158 133 255;
+    --border: var(--p-borde);
+    --input: var(--p-borde);
+    --ring: var(--p-acento);
   }
 }
 
@@ -64,7 +166,8 @@
   }
   html, body {
     @apply text-foreground font-inter;
-    background-color: #01010D;
+    background-color: rgb(var(--p-fondo));
+    transition: background-color .4s;
     margin: 0;
     padding: 0;
     overflow-x: clip;
