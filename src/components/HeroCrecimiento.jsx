@@ -150,7 +150,7 @@ export default function HeroCrecimiento() {
   const kilos = (l) => `${l / 1000}k €`;
 
   return (
-    <section ref={ref} className="relative h-[380vh]">
+    <section ref={ref} className="relative h-[260vh]">
       {/* Fondo fijo mientras dura la sección */}
       <div className="sticky top-0 h-[100dvh] overflow-hidden bg-brand-onyx">
         <div className="absolute -top-1/3 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/25 blur-[140px]" />

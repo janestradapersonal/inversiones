@@ -46,10 +46,10 @@ function Enlace({ to, children }) {
 }
 
 const aparece = (i = 0) => ({
-  initial: { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
-  transition: { delay: i * 0.1, duration: 0.6 },
-  viewport: { once: true, margin: "-60px" },
+  transition: { delay: i * 0.05, duration: 0.4 },
+  viewport: { once: true, amount: 0.1 },
 });
 
 function Objetivo({ n, icon, titulo, resaltado, children, i }) {
@@ -81,14 +81,15 @@ export default function InicioObjetivos({ trasEntrada = null }) {
         className="relative min-h-[100dvh] flex items-center"
         style={{ background: "radial-gradient(ellipse at 50% 45%, rgb(var(--p-fuerte-claro)) 0%, rgb(var(--p-fuerte)) 35%, rgb(var(--p-hondo1)) 75%, rgb(var(--p-hondo2)) 100%)" }}
       >
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-16">
+        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-12">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="inline-block px-4 py-1.5 rounded-full border border-white/50 text-white font-semibold text-sm mb-6">
               Inversiones para todos
             </span>
-            <h1 className="font-display uppercase text-white text-[3.2rem] sm:text-7xl md:text-[7.5rem] leading-[0.88] tracking-tight max-w-5xl">
+            <h1 className="font-display uppercase text-white text-[3.2rem] sm:text-7xl lg:text-[6.2rem] leading-[0.88] tracking-tight max-w-5xl">
               Nadie nos lo ha enseñado
-              <span className="block font-serif italic normal-case text-white text-[2.3rem] sm:text-6xl md:text-8xl leading-[1] mt-2">
+              <span className="block font-serif italic normal-case text-white text-[2.3rem] sm:text-6xl lg:text-7xl leading-[1] mt-2">
                 pero nos afecta a todos
               </span>
             </h1>
@@ -98,6 +99,7 @@ export default function InicioObjetivos({ trasEntrada = null }) {
           </motion.div>
 
           <ContadorPerdida />
+          </div>
 
           <p className="mt-10 text-white/85 font-semibold">Esta web tiene tres objetivos:</p>
 
@@ -123,7 +125,7 @@ export default function InicioObjetivos({ trasEntrada = null }) {
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           >
-            Desliza <ChevronDown className="w-5 h-5" />
+            Sigue bajando: te enseñamos por qué <ChevronDown className="w-5 h-5" />
           </motion.div>
         </div>
       </section>
@@ -131,14 +133,14 @@ export default function InicioObjetivos({ trasEntrada = null }) {
       {trasEntrada}
 
       {/* Los tres objetivos */}
-      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-4">
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-16 space-y-4">
         <Objetivo n={1} i={0} icon={<Megaphone className="w-5 h-5" />} titulo="Concienciar de la" resaltado="necesidad de invertir">
           <p className="text-white/70 text-lg mb-5">Tres motivos:</p>
           <Lista items={motivos} />
           <Enlace to="/por-que-invertir">Ver por qué invertir</Enlace>
         </Objetivo>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4 items-start">
           <Objetivo n={2} i={1} icon={<BookOpen className="w-5 h-5" />} titulo="Aprender" resaltado="desde tu nivel">
             <p className="text-white/75 text-lg leading-relaxed mb-5">
               Partas de donde partas, formarte lo mínimo para entender qué haces con tu dinero. Tres apartados:

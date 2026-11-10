@@ -56,7 +56,7 @@ export function ContadorPerdida() {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.7 }}
-      className="mt-8 max-w-2xl rounded-3xl bg-brand-onyx/55 border border-white/20 backdrop-blur p-5 md:p-7 shadow-2xl"
+      className="w-full max-w-2xl rounded-3xl bg-brand-onyx/55 border border-white/20 backdrop-blur p-5 md:p-7 shadow-2xl"
     >
       <p className="text-white/80 text-sm font-semibold">Si tienes ahorrados…</p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -121,7 +121,7 @@ export function SiguientePaso() {
     []
   );
   return (
-    <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-24">
+    <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-16">
       <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-mint">¿Por dónde sigo?</p>
       <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.95] mt-3 mb-8">
         Tu camino, <span className="font-serif italic normal-case text-brand-mint">en 3 pasos</span>
