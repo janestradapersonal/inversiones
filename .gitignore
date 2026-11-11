@@ -32,3 +32,6 @@ dist-ssr
 
 # Base de datos local del foro
 server/foro.db*
+
+test-results/
+playwright-report/
