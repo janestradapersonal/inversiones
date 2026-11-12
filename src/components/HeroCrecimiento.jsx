@@ -153,7 +153,6 @@ export default function HeroCrecimiento() {
     <section ref={ref} className="relative h-[260vh]">
       {/* Fondo fijo mientras dura la sección */}
       <div className="sticky top-0 h-[100dvh] overflow-hidden bg-brand-onyx">
-        <div className="absolute -top-1/3 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/25 blur-[140px]" />
 
         {/* Cabecera fija: aviso y selector de ejemplo */}
         <div className="absolute z-20 top-20 md:top-24 left-0 right-0 flex flex-col items-center gap-3 px-4">

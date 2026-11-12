@@ -11,7 +11,7 @@ module.exports = {
   		},
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
-        sora: ['Sora', 'sans-serif'],
+        sora: ['"Inter Tight"', 'Inter', 'sans-serif'],
         display: ['Anton', 'Impact', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
       },

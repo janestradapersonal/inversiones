@@ -1,104 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&family=Anton&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&family=Anton&family=Instrument+Serif:ital@0;1&display=swap');
 
-/* Paletas de color de toda la web (fondo, color fuerte y acento). Se elige con data-paleta en <html>. */
+/* Paleta «Noche y lima» (ver DESIGN.md): lienzo negro, acento lima, verde bosque para lo destacado. */
 @layer base {
-  :root, [data-paleta="indigo-lila"] {
-    --p-fondo: 1 1 13;
-    --p-sup: 17 13 51;
-    --p-fuerte: 99 49 251;
-    --p-fuerte-claro: 122 82 255;
-    --p-hondo1: 44 18 154;
-    --p-hondo2: 26 10 99;
-    --p-acento: 158 133 255;
-    --p-claro: 183 156 255;
-    --p-brillo: 59 31 176;
-    --p-borde: 45 38 100;
-    --p-muted: 26 21 66;
-    --p-mutedfg: 200 195 235;
-  }
-  [data-paleta="indigo-menta"] {
-    --p-fondo: 1 1 13;
-    --p-sup: 14 12 44;
-    --p-fuerte: 99 49 251;
-    --p-fuerte-claro: 122 82 255;
-    --p-hondo1: 44 18 154;
-    --p-hondo2: 26 10 99;
-    --p-acento: 136 249 192;
-    --p-claro: 184 255 219;
-    --p-brillo: 59 31 176;
-    --p-borde: 45 38 100;
-    --p-muted: 26 21 66;
-    --p-mutedfg: 200 195 235;
-  }
-  [data-paleta="cobalto-lima"] {
-    --p-fondo: 3 7 22;
-    --p-sup: 10 20 52;
-    --p-fuerte: 37 99 255;
-    --p-fuerte-claro: 86 140 255;
-    --p-hondo1: 18 52 160;
-    --p-hondo2: 9 26 92;
-    --p-acento: 198 255 61;
-    --p-claro: 222 255 140;
-    --p-brillo: 20 60 170;
-    --p-borde: 30 50 105;
-    --p-muted: 16 28 66;
-    --p-mutedfg: 190 205 235;
-  }
-  [data-paleta="esmeralda-oro"] {
-    --p-fondo: 2 14 11;
-    --p-sup: 7 34 27;
-    --p-fuerte: 5 150 105;
-    --p-fuerte-claro: 40 190 140;
-    --p-hondo1: 4 92 66;
-    --p-hondo2: 3 52 38;
-    --p-acento: 245 197 66;
-    --p-claro: 255 222 130;
-    --p-brillo: 6 95 70;
-    --p-borde: 25 70 55;
-    --p-muted: 12 45 36;
-    --p-mutedfg: 190 225 210;
-  }
-  [data-paleta="carbon-coral"] {
-    --p-fondo: 12 11 11;
-    --p-sup: 30 26 25;
-    --p-fuerte: 255 90 54;
-    --p-fuerte-claro: 255 130 95;
-    --p-hondo1: 176 52 26;
-    --p-hondo2: 96 28 14;
-    --p-acento: 255 214 170;
-    --p-claro: 255 232 205;
-    --p-brillo: 160 50 25;
-    --p-borde: 70 58 54;
-    --p-muted: 40 34 32;
-    --p-mutedfg: 225 210 200;
-  }
-  [data-paleta="ciruela-melocoton"] {
-    --p-fondo: 16 4 22;
-    --p-sup: 38 12 48;
-    --p-fuerte: 214 36 127;
-    --p-fuerte-claro: 236 84 160;
-    --p-hondo1: 130 18 80;
-    --p-hondo2: 70 8 46;
-    --p-acento: 255 179 138;
-    --p-claro: 255 210 185;
-    --p-brillo: 130 20 90;
-    --p-borde: 80 35 90;
-    --p-muted: 48 18 58;
-    --p-mutedfg: 230 200 225;
-  }
-  [data-paleta="petroleo-sol"] {
-    --p-fondo: 2 18 22;
-    --p-sup: 6 40 46;
-    --p-fuerte: 14 150 155;
-    --p-fuerte-claro: 50 188 190;
-    --p-hondo1: 6 92 98;
-    --p-hondo2: 3 50 56;
-    --p-acento: 255 209 102;
-    --p-claro: 255 228 160;
-    --p-brillo: 8 100 110;
-    --p-borde: 25 75 82;
-    --p-muted: 10 50 56;
-    --p-mutedfg: 190 225 225;
+  :root {
+    --p-fondo: 10 11 10;
+    --p-sup: 21 23 21;
+    --p-fuerte: 22 51 0;
+    --p-fuerte-claro: 40 82 12;
+    --p-hondo1: 14 34 0;
+    --p-hondo2: 8 20 0;
+    --p-acento: 159 232 112;
+    --p-claro: 205 255 173;
+    --p-brillo: 30 62 10;
+    --p-borde: 38 42 38;
+    --p-muted: 28 31 28;
+    --p-mutedfg: 168 176 166;
   }
 }
 
@@ -177,7 +93,8 @@
     min-height: 100vh;
   }
   h1, h2, h3 {
-    font-family: 'Sora', sans-serif;
+    font-family: 'Inter Tight', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -196,6 +113,47 @@
 /* Las tarjetas negras se iluminan cerca del ratón (menta si sube, rojo si baja) (coordenadas de CursorGlow) */
 .cursor-activo .bg-brand-surface.rounded-3xl,
 .cursor-activo .bg-brand-surface.rounded-2xl {
-  background-image: radial-gradient(420px circle at var(--x) var(--y), rgba(var(--brillo, 158, 133, 255), 0.13), transparent 60%);
+  background-image: radial-gradient(420px circle at var(--x) var(--y), rgba(var(--brillo, 159, 232, 112), 0.07), transparent 60%);
   background-attachment: fixed;
+}
+
+/* ---------- Texturas y bandas (DESIGN.md: «las zonas oscuras no van lisas») ---------- */
+@layer components {
+  /* Grano de papel muy fino encima de una banda */
+  .grano { position: relative; isolation: isolate; }
+  .grano::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.09;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Rejilla lima que se desvanece hacia abajo */
+  .rejilla {
+    background-image:
+      linear-gradient(rgb(var(--p-acento) / 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--p-acento) / 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 80%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 80%);
+  }
+  .rejilla-negra {
+    background-image:
+      linear-gradient(rgb(10 11 10 / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(10 11 10 / 0.09) 1px, transparent 1px);
+  }
+  /* Texto hueco gigante de fondo */
+  .hueco { -webkit-text-fill-color: transparent; -webkit-text-stroke: 2px currentColor; }
+  .cinta-anim { animation: cinta-mov 45s linear infinite; }
+  @keyframes cinta-mov { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  @media (prefers-reduced-motion: reduce) { .cinta-anim { animation: none } }
+}
+
+/* Tarjetas oscuras: un filo de luz arriba para que no queden planas */
+.bg-brand-surface.rounded-3xl,
+.bg-brand-surface.rounded-2xl {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 45%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }

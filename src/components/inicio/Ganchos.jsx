@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import mercados from "@/data/mercados.json";
 
-// Ganchos de la portada: contador en vivo, barra de lectura y siguiente paso.
+// Ganchos de la portada: contador en vivo, cinta de cifras y barra de lectura.
 // Todas las cifras salen de src/data/mercados.json (Eurostat y S&P 500), que se actualiza solo.
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -56,7 +54,7 @@ export function ContadorPerdida() {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.7 }}
-      className="w-full max-w-2xl rounded-3xl bg-brand-onyx/55 border border-white/20 backdrop-blur p-5 md:p-7 shadow-2xl"
+      className="w-full max-w-2xl rounded-3xl bg-brand-onyx text-white p-5 md:p-7 shadow-[0_30px_60px_-20px_rgba(10,11,10,0.55)]"
     >
       <p className="text-white/80 text-sm font-semibold">Si tienes ahorrados…</p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -103,57 +101,51 @@ export function ContadorPerdida() {
   );
 }
 
+/* ---------- 2. Cinta de cifras (todas de mercados.json) ---------- */
+const coma = (n, d = 1) => n.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+const CIFRAS = (() => {
+  const a = mercados.años;
+  const [, oro0, sp0] = a[0];
+  const [, oro1, sp1] = a.at(-1);
+  const m3 = mercados.dinero;
+  const crisis08 = mercados.crisis.find((c) => c.id === "2008");
+  return [
+    ["Inflación en España, último año", `${coma(INFLACION.anual * 100)} %`, "rojo"],
+    ["1 € de 1999 compra hoy", `${coma(INFLACION.desde1999, 2)} €`, "rojo"],
+    ["Euros en circulación desde 1999", `×${coma(m3.at(-1)[1] / m3[0][1])}`, "rojo"],
+    ["S&P 500 desde 1999", `×${coma(sp1 / sp0)}`, "lima"],
+    ["Oro desde 1999", `×${coma(oro1 / oro0)}`, "oro"],
+    ["Caída de la bolsa en 2008", `${coma(crisis08.caida)} %`, "rojo"],
+    ["Recuperada en", crisis08.recuperado.slice(0, 4), "lima"],
+  ];
+})();
+const COLOR_CIFRA = { rojo: "text-[#FF5C7A]", lima: "text-brand-mint", oro: "text-[#F5C542]" };
+
+export function CintaCifras() {
+  const fila = (clave) =>
+    CIFRAS.map(([t, v, c]) => (
+      <span key={clave + t} className="flex items-center gap-3 px-6 whitespace-nowrap">
+        <span className="text-white/60 text-sm font-semibold uppercase tracking-wider">{t}</span>
+        <span className={`font-display text-2xl md:text-3xl leading-none tabular-nums ${COLOR_CIFRA[c]}`}>{v}</span>
+        <span className="text-brand-mint/40 pl-3">✦</span>
+      </span>
+    ));
+  return (
+    <div className="relative bg-brand-onyx border-y border-white/[0.07] py-4 overflow-hidden" aria-label="Cifras reales">
+      <div className="cinta-anim flex w-max">
+        {fila("a")}
+        {fila("b")}
+      </div>
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-brand-onyx to-transparent" />
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-brand-onyx to-transparent" />
+      <p className="sr-only">Fuentes: Eurostat, BCE y cotizaciones históricas; actualizado {mercados.actualizado}.</p>
+    </div>
+  );
+}
+
 /* ---------- 3. Barra de lectura ---------- */
 export function BarraLectura() {
   const { scrollYProgress } = useScroll();
   const x = useSpring(scrollYProgress, { stiffness: 120, damping: 25 });
   return <motion.div aria-hidden className="fixed top-0 left-0 right-0 h-1 z-[60] origin-left bg-brand-mint" style={{ scaleX: x }} />;
-}
-
-/* ---------- 4. Siguiente paso ---------- */
-export function SiguientePaso() {
-  const pasos = useMemo(
-    () => [
-      ["1", "Por qué invertir", "Tres motivos que casi nadie te cuenta", "/por-que-invertir", "el primero"],
-      ["2", "Aprende", "Lo básico, con dibujos y cifras reales", "/aprende", "a tu ritmo"],
-      ["3", "Empieza", "Tu primer paso, aunque sea con poco", "/empieza", "cuando quieras"],
-    ],
-    []
-  );
-  return (
-    <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-16">
-      <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-mint">¿Por dónde sigo?</p>
-      <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.95] mt-3 mb-8">
-        Tu camino, <span className="font-serif italic normal-case text-brand-mint">en 3 pasos</span>
-      </h2>
-      <div className="grid md:grid-cols-3 gap-4">
-        {pasos.map(([n, t, d, to, min], i) => (
-          <motion.div
-            key={to}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <Link
-              to={to}
-              className={`group block h-full rounded-3xl p-6 md:p-8 border-2 transition hover:-translate-y-1 ${
-                i === 0 ? "bg-brand-mint text-brand-onyx border-brand-mint" : "bg-brand-surface border-white/10 hover:border-brand-mint/60"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display text-5xl leading-none">0{n}</span>
-                <span className={`text-xs font-bold rounded-full px-3 py-1 ${i === 0 ? "bg-brand-onyx/15" : "bg-white/10"}`}>{min}</span>
-              </div>
-              <p className="mt-6 font-display uppercase text-3xl leading-none">{t}</p>
-              <p className={`mt-2 ${i === 0 ? "text-brand-onyx/75" : "text-white/70"}`}>{d}</p>
-              <span className="mt-6 inline-flex items-center gap-2 font-bold">
-                {i === 0 ? "Empieza por aquí" : "Ir"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
 }

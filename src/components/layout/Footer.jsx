@@ -4,14 +4,14 @@ import logo from "@/assets/logo.png";
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 bg-brand-onyx text-white py-12 mt-20 border-t border-white/10">
+    <footer className="relative z-10 bg-brand-onyx text-white py-12 mt-20 border-t border-white/[0.07]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src={logo} alt="Inversiones Fáciles" className="w-10 h-10" />
               <span className="font-sora font-bold text-lg text-white">
-                inversionesfacil<span className="text-brand-orange">.es</span>
+                inversionesfacil<span className="text-brand-mint">.es</span>
               </span>
             </div>
             <p className="text-white/60 text-sm leading-relaxed">
@@ -35,7 +35,7 @@ export default function Footer() {
             </p>
           </div>
         </div>
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="border-t border-white/[0.07] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/40 text-sm">© 2026 InversionesFáciles. Todos los derechos reservados.</p>
           <p className="text-white/40 text-sm flex items-center gap-1">
             Hecho con <Heart className="w-3 h-3 text-brand-orange" /> para tu libertad financiera

@@ -1,49 +1,15 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, ChevronDown, Megaphone, Rocket, Ban } from "lucide-react";
-import { ContadorPerdida } from "@/components/inicio/Ganchos";
+import { ArrowUpRight, ChevronDown, Ban } from "lucide-react";
+import { ContadorPerdida, CintaCifras } from "@/components/inicio/Ganchos";
 
-// Primera pantalla de la web: qué quiere conseguir y qué no hará.
-// (El fondo con efectos de "sube y baja" se añadirá más adelante.)
+// Primera pantalla de la web: qué quiere conseguir (con acceso directo a cada parte) y qué no hará.
 
-const motivos = [
-  "El euro y el dólar (dinero fiat) son la peor forma de guardar valor a futuro",
-  "Las pensiones pintan cada vez peor: la pirámide de población se ha invertido",
-  "Los gobiernos gastan más de lo que tienen: la deuda y sus intereses no paran de crecer",
+const objetivos = [
+  ["Concienciar de la necesidad de invertir", "Por qué invertir", "/por-que-invertir"],
+  ["Aprender lo básico, desde tu nivel", "Aprende", "/aprende"],
+  ["Dar el primer paso, aunque sea con poco", "Empieza", "/empieza"],
 ];
-
-const apartadosAprende = ["Conceptos básicos", "Productos financieros", "Carteras"];
-
-// Lista numerada dentro de un objetivo (motivos, apartados…)
-function Lista({ items, color = "#FF5C7A" }) {
-  return (
-    <ul className="space-y-3">
-      {items.map((m, k) => (
-        <motion.li
-          key={m}
-          {...aparece(k + 1)}
-          className="flex items-start gap-4 rounded-2xl bg-brand-onyx/70 border border-white/10 px-5 py-4"
-        >
-          <span
-            className="shrink-0 w-8 h-8 rounded-full font-bold flex items-center justify-center"
-            style={{ color, backgroundColor: `color-mix(in srgb, ${color} 15%, transparent)` }}
-          >
-            {k + 1}
-          </span>
-          <span className="text-white text-lg md:text-xl font-semibold leading-snug">{m}</span>
-        </motion.li>
-      ))}
-    </ul>
-  );
-}
-
-function Enlace({ to, children }) {
-  return (
-    <Link to={to} className="mt-6 inline-flex items-center gap-2 font-bold text-brand-mint group">
-      {children} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-    </Link>
-  );
-}
 
 const aparece = (i = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -52,48 +18,30 @@ const aparece = (i = 0) => ({
   viewport: { once: true, amount: 0.1 },
 });
 
-function Objetivo({ n, icon, titulo, resaltado, children, i }) {
-  return (
-    <motion.div
-      {...aparece(i)}
-      className="rounded-3xl bg-brand-surface border border-white/10 p-6 md:p-10"
-    >
-      <div className="flex items-center gap-4 mb-5">
-        <span className="font-display text-5xl md:text-6xl text-brand-mint leading-none">0{n}</span>
-        <span className="w-11 h-11 rounded-2xl bg-brand-indigo flex items-center justify-center text-white">{icon}</span>
-      </div>
-      <h3 className="font-display uppercase text-3xl md:text-5xl leading-[0.95] mb-5">
-        {titulo} <span className="font-serif italic normal-case text-brand-mint">{resaltado}</span>
-      </h3>
-      {children}
-    </motion.div>
-  );
-}
-
 export default function InicioObjetivos({ trasEntrada = null }) {
   return (
     <div className="relative bg-brand-onyx overflow-hidden">
-      {/* Luz de ambiente */}
-      <div className="absolute -top-40 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/20 blur-[140px] pointer-events-none" />
-
-      {/* Pantalla de entrada */}
-      <section
-        className="relative min-h-[100dvh] flex items-center"
-        style={{ background: "radial-gradient(ellipse at 50% 45%, rgb(var(--p-fuerte-claro)) 0%, rgb(var(--p-fuerte)) 35%, rgb(var(--p-hondo1)) 75%, rgb(var(--p-hondo2)) 100%)" }}
-      >
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-12">
+      {/* Pantalla de entrada: banda lima a sangre, texto negro (DESIGN.md) */}
+      <section className="relative min-h-[100dvh] flex items-center bg-brand-mint text-brand-onyx overflow-hidden">
+        {/* Rejilla muy suave, como papel milimetrado */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.08] pointer-events-none"
+          style={{ backgroundImage: "linear-gradient(#0A0B0A 1px, transparent 1px), linear-gradient(90deg, #0A0B0A 1px, transparent 1px)", backgroundSize: "56px 56px" }}
+        />
+        <div className="relative max-w-6xl w-full mx-auto px-4 sm:px-6 pt-28 pb-12">
           <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-4 py-1.5 rounded-full border border-white/50 text-white font-semibold text-sm mb-6">
-              Inversiones para todos
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-onyx text-brand-mint font-bold text-sm mb-6">
+              <span className="w-2 h-2 rounded-full bg-brand-mint animate-pulse" /> Inversiones para todos
             </span>
-            <h1 className="font-display uppercase text-white text-[3.2rem] sm:text-7xl lg:text-[6.2rem] leading-[0.88] tracking-tight max-w-5xl">
+            <h1 className="font-display uppercase text-brand-onyx text-[3.4rem] sm:text-7xl lg:text-[6.6rem] leading-[0.86] tracking-tight max-w-5xl">
               Nadie nos lo ha enseñado
-              <span className="block font-serif italic normal-case text-white text-[2.3rem] sm:text-6xl lg:text-7xl leading-[1] mt-2">
+              <span className="block font-serif italic normal-case text-[2.4rem] sm:text-6xl lg:text-7xl leading-[1] mt-3">
                 pero nos afecta a todos
               </span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-white/85">
+            <p className="mt-6 max-w-xl text-lg md:text-xl leading-relaxed text-brand-onyx/75 font-medium">
               El dinero, la inflación y la inversión explicados con palabras normales.
             </p>
           </motion.div>
@@ -101,27 +49,34 @@ export default function InicioObjetivos({ trasEntrada = null }) {
           <ContadorPerdida />
           </div>
 
-          <p className="mt-10 text-white/85 font-semibold">Esta web tiene tres objetivos:</p>
-
-          <ol className="mt-3 grid md:grid-cols-3 gap-3">
-            {["Concienciar de la necesidad de invertir", "Aprender lo básico, desde tu nivel", "Dar el primer paso, aunque sea con poco"].map(
-              (t, i) => (
-                <motion.li
-                  key={t}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 + i * 0.15 }}
-                  className="flex items-start gap-3 rounded-2xl bg-brand-onyx/25 border border-white/20 px-5 py-4"
+          {/* Lo que puedes hacer aquí: cada objetivo lleva a su página */}
+          <ol className="mt-12 grid md:grid-cols-3 border-t-2 border-brand-onyx/80">
+            {objetivos.map(([t, pagina, to], i) => (
+              <motion.li
+                key={to}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.15 }}
+                className={i ? "border-t md:border-t-0 md:border-l border-brand-onyx/25" : ""}
+              >
+                <Link
+                  to={to}
+                  className="group flex items-start gap-3 h-full py-5 md:px-5 rounded-b-2xl transition-colors hover:bg-brand-onyx/[0.07] focus-visible:bg-brand-onyx/[0.07] outline-none"
                 >
-                  <span className="font-display text-3xl text-white leading-none">{i + 1}</span>
-                  <span className="font-semibold text-white/90 leading-snug">{t}</span>
-                </motion.li>
-              )
-            )}
+                  <span className="font-display text-4xl text-brand-onyx leading-none">0{i + 1}</span>
+                  <span className="flex-1">
+                    <span className="block font-semibold text-brand-onyx/85 leading-snug">{t}</span>
+                    <span className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-brand-onyx underline decoration-2 underline-offset-4 decoration-brand-onyx/30 group-hover:decoration-brand-onyx">
+                      {pagina} <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </span>
+                  </span>
+                </Link>
+              </motion.li>
+            ))}
           </ol>
 
           <motion.div
-            className="mt-10 flex items-center gap-2 text-white/70 text-sm font-semibold"
+            className="mt-6 flex items-center gap-2 text-brand-onyx/60 text-sm font-semibold"
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -130,43 +85,15 @@ export default function InicioObjetivos({ trasEntrada = null }) {
         </div>
       </section>
 
+      <CintaCifras />
+
       {trasEntrada}
 
-      {/* Los tres objetivos */}
-      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-16 space-y-4">
-        <Objetivo n={1} i={0} icon={<Megaphone className="w-5 h-5" />} titulo="Concienciar de la" resaltado="necesidad de invertir">
-          <p className="text-white/70 text-lg mb-5">Tres motivos:</p>
-          <Lista items={motivos} />
-          <Enlace to="/por-que-invertir">Ver por qué invertir</Enlace>
-        </Objetivo>
-
-        <div className="grid md:grid-cols-2 gap-4 items-start">
-          <Objetivo n={2} i={1} icon={<BookOpen className="w-5 h-5" />} titulo="Aprender" resaltado="desde tu nivel">
-            <p className="text-white/75 text-lg leading-relaxed mb-5">
-              Partas de donde partas, formarte lo mínimo para entender qué haces con tu dinero. Tres apartados:
-            </p>
-            <Lista items={apartadosAprende} color="rgb(var(--p-acento))" />
-            <Enlace to="/aprende">Ir a aprender</Enlace>
-          </Objetivo>
-          <Objetivo n={3} i={2} icon={<Rocket className="w-5 h-5" />} titulo="Dar el" resaltado="primer paso">
-            <p className="text-white/75 text-lg leading-relaxed">
-              Cuando entiendas por qué y tengas confianza, empezar. Lo importante es entrar en este mundo, aunque sea con poco:
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {["10 €", "100 €", "1.000 €", "lo que sea"].map((c) => (
-                <span key={c} className="px-4 py-2 rounded-full bg-[#F5C542]/15 text-[#F5C542] font-display text-2xl leading-none">
-                  {c}
-                </span>
-              ))}
-            </div>
-            <Enlace to="/empieza">Ver cómo empezar</Enlace>
-          </Objetivo>
-        </div>
-
-        {/* Lo que esta web no hará */}
+      {/* Lo que esta web no hará */}
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-4">
         <motion.div
           {...aparece()}
-          className="rounded-3xl border-2 border-[#FF5C7A]/50 bg-[#FF5C7A]/[0.06] p-6 md:p-10"
+          className="rounded-3xl border-2 border-[#FF5C7A]/60 bg-brand-onyx p-6 md:p-10"
         >
           <div className="flex items-center gap-3 mb-4">
             <Ban className="w-8 h-8 text-[#FF5C7A]" />

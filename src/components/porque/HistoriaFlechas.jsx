@@ -12,7 +12,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 // El reventón va en tiempo real desde que T pasa el momento del pinchazo, como un globo de verdad;
 // si se vuelve a subir, el globo aparece entero otra vez.
 
-export const COLORES = { euro: "#4DA8FF", pensiones: "#FFC83D", deuda: "#FF4D6D", fondo: "#01010D" };
+export const COLORES = { euro: "#4DA8FF", pensiones: "#FFC83D", deuda: "#FF4D6D", fondo: "#0A0B0A" };
 
 // --- Almacén mínimo para que los textos de cada escena lean T sin re-renderizar la página entera
 const store = { T: 0, subs: new Set() };
@@ -446,7 +446,7 @@ export default function HistoriaFlechas() {
 
     const escena = new THREE.Scene();
     escena.background = new THREE.Color(COLORES.fondo);
-    escena.fog = new THREE.Fog("#0C0838", 20, 48);
+    escena.fog = new THREE.Fog("#0B1608", 20, 48);
     // Reflejos de un estudio: el acero, el látex y las monedas brillan de verdad
     const pmrem = new THREE.PMREMGenerator(renderer);
     const entorno = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -461,7 +461,7 @@ export default function HistoriaFlechas() {
         side: THREE.BackSide,
         depthWrite: false,
         fog: false,
-        uniforms: { arriba: { value: new THREE.Color("#2A1680") }, medio: { value: new THREE.Color("#0C0838") }, abajo: { value: new THREE.Color(COLORES.fondo) } },
+        uniforms: { arriba: { value: new THREE.Color("#163300") }, medio: { value: new THREE.Color("#0B1608") }, abajo: { value: new THREE.Color(COLORES.fondo) } },
         vertexShader: "varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
         fragmentShader:
           "uniform vec3 arriba; uniform vec3 medio; uniform vec3 abajo; varying vec3 vP;" +
@@ -481,7 +481,7 @@ export default function HistoriaFlechas() {
     const sol = new THREE.DirectionalLight("#ffffff", 2.4);
     sol.position.set(6, 12, 9);
     escena.add(sol);
-    const contra = new THREE.PointLight("#6331FB", 60, 30);
+    const contra = new THREE.PointLight("#9FE870", 60, 30);
     contra.position.set(-4, 3, -6);
     escena.add(contra);
     const calida = new THREE.PointLight("#FF5C7A", 22, 20);

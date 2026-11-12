@@ -1,3 +1,4 @@
+import { CabeceraPagina } from "@/components/layout/Banda";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -315,7 +316,6 @@ function Resultado({ res, onRepetir }) {
   const perfil = perfilDe(res.puntos);
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl bg-brand-indigo p-6 md:p-10 relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/15 blur-[70px] pointer-events-none" />
       <div className="relative grid md:grid-cols-[auto,1fr] gap-8 items-center">
         <div className="text-center">
           <p className="text-xs uppercase tracking-wider text-white/70">Tu perfil inversor</p>
@@ -520,17 +520,14 @@ export default function Aprende() {
   };
 
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">Paso 2 · Aprende</span>
-          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-5">
-            Aprende <span className="font-serif italic normal-case text-brand-mint">a tu ritmo</span>
-          </h1>
-          <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
-            De lo más fácil a lo más avanzado, con ejemplos y dibujos. Busca lo que quieras o empieza por el nivel básico.
-          </p>
-        </motion.div>
+    <div className="pb-20">
+      <CabeceraPagina
+        etiqueta="Paso 2 · Aprende"
+        titulo="Aprende"
+        resalto="a tu ritmo"
+        texto="De lo más fácil a lo más avanzado, con ejemplos y dibujos. Busca lo que quieras o empieza por el nivel básico."
+      />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 md:pt-16">
 
         {/* Las tres secciones, visibles desde el principio */}
         <div className="grid grid-cols-3 gap-2 md:gap-3 mb-8">

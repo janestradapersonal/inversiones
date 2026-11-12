@@ -31,15 +31,15 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-brand-onyx/80 backdrop-blur-md border-b border-white/10" : "bg-transparent"}`
+      scrolled ? "bg-brand-onyx/90 backdrop-blur-md border-b border-white/[0.07]" : "bg-brand-onyx/70 backdrop-blur-md border-b border-transparent"}`
       }>
       
       <div className="mx-auto px-4 max-w-6xl sm:px-6 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
           <img src={logo} alt="Inversiones Fáciles" className="w-10 h-10 md:w-11 md:h-11 group-hover:scale-110 transition-transform" />
-          <span className="font-sora font-800 text-xl text-foreground">
-            inversionesfacil<span className="text-brand-orange font-bold">.es</span>
+          <span className="font-sora font-extrabold tracking-tight text-xl text-foreground">
+            inversionesfacil<span className="text-brand-mint font-bold">.es</span>
           </span>
         </Link>
 
@@ -51,7 +51,7 @@ export default function Navbar() {
             to={link.path}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
             location.pathname === link.path ?
-            "bg-brand-mint text-brand-onyx shadow-md" :
+            "bg-white/10 text-white" :
             "text-white/75 hover:text-white hover:bg-white/10"}`
             }>
             
@@ -63,7 +63,7 @@ export default function Navbar() {
         {/* CTA desktop */}
         <Link
           to="/empieza"
-          className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-mint text-brand-onyx text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-mint text-brand-onyx text-sm font-bold hover:bg-[rgb(var(--p-claro))] transition-colors duration-200">
           
           ¡Empieza gratis!
         </Link>

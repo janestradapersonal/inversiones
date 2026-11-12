@@ -8,7 +8,7 @@ import grafico from "@/data/mercados.json";
 // Cada activo con su color; el euro va más grueso porque es el protagonista
 const activos = [
   { id: "oro", nombre: "Oro", color: "#F5C542" },
-  { id: "sp500", nombre: "S&P 500", color: "#88F9C0" },
+  { id: "sp500", nombre: "S&P 500", color: "#9FE870" },
   { id: "casa", nombre: "Vivienda en España", color: "#6CB4FF" },
   { id: "euro", nombre: "Euros guardados", color: "#FF5C7A" },
 ];
@@ -78,7 +78,7 @@ function Leyenda({ crisis }) {
             Caída del S&P 500
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm bg-[#88F9C0]/30" />
+            <span className="w-4 h-3 rounded-sm bg-[#9FE870]/30" />
             Subida hasta recuperarlo
           </li>
         </>
@@ -94,7 +94,7 @@ function RotuloCrisis({ viewBox, crisis }) {
     <text x={x} y={viewBox.y - 34 + fila * 15} textAnchor={lado} fontSize={11} fontWeight={700} fill="#FF9DB0"
       stroke="rgb(var(--p-sup))" strokeWidth={3} paintOrder="stroke">
       {texto} −{coma(Math.abs(crisis.caida), 0)} %
-      <tspan fill="#88F9C0"> +{coma(crisis.subida, 0)} %</tspan>
+      <tspan fill="#9FE870"> +{coma(crisis.subida, 0)} %</tspan>
     </text>
   );
 }
@@ -379,7 +379,6 @@ export default function Motivo1() {
           viewport={{ once: true }}
           className="rounded-3xl bg-brand-indigo p-7 md:p-9 relative overflow-hidden"
         >
-          <div className="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-white/10 blur-[50px] pointer-events-none" />
           <h3 className="relative font-display uppercase text-2xl md:text-3xl leading-tight mb-3">Ejemplo: la COVID</h3>
           <p className="relative text-white/85 text-lg leading-relaxed">
             De febrero de 2020 a diciembre de 2021, los euros en circulación pasaron de {billones(m3["2020-02"])} a{" "}
@@ -443,7 +442,7 @@ export default function Motivo1() {
                 {bandas.flatMap((c) => [
                   <ReferenceArea key={`${c.id}-baja`} x1={fila(c.inicio)} x2={fila(c.fondo)} fill="#FF5C7A" fillOpacity={0.25}
                     stroke="none" label={<RotuloCrisis crisis={c} />} />,
-                  <ReferenceArea key={`${c.id}-sube`} x1={fila(c.fondo)} x2={fila(c.recuperado)} fill="#88F9C0" fillOpacity={0.16} stroke="none" />,
+                  <ReferenceArea key={`${c.id}-sube`} x1={fila(c.fondo)} x2={fila(c.recuperado)} fill="#9FE870" fillOpacity={0.16} stroke="none" />,
                 ])}
                 {activos.map((a) => (
                   <Line key={a.id} type="linear" dataKey={a.id} stroke={a.color} dot={false}

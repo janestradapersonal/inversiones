@@ -1,3 +1,4 @@
+import { CabeceraPagina } from "@/components/layout/Banda";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -146,19 +147,15 @@ function Plataforma({ p, i }) {
 
 export default function Empieza() {
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Cabecera */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">Paso 3 · Empieza ya</span>
-          <h1 className="font-display uppercase text-5xl md:text-8xl leading-[0.9] tracking-tight mb-6">
-            Nunca fue tan <span className="font-serif italic normal-case text-brand-mint">fácil</span>
-          </h1>
-          <p className="text-white/85 mx-auto text-lg md:text-xl leading-relaxed max-w-2xl">
-            Antes invertir era difícil: hacía falta mucho dinero, ir al banco y pagar comisiones altísimas. Hoy es extremadamente fácil.
-            <strong className="text-white"> Lo importante es empezar.</strong>
-          </p>
-        </motion.div>
+    <div className="pb-20">
+      <CabeceraPagina
+        fondo="lima"
+        etiqueta="Paso 3 · Empieza ya"
+        titulo="Nunca fue tan"
+        resalto="fácil"
+        texto={<>Antes invertir era difícil: hacía falta mucho dinero, ir al banco y pagar comisiones altísimas. Hoy es extremadamente fácil. <strong className="text-brand-onyx">Lo importante es empezar.</strong></>}
+      />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 md:pt-16">
 
         {/* Por qué ya */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-20">
@@ -171,7 +168,7 @@ export default function Empieza() {
               viewport={{ once: true }}
               className="rounded-3xl bg-brand-surface border border-white/10 p-4 md:p-6"
             >
-              <div className="w-11 h-11 rounded-2xl bg-brand-indigo text-white flex items-center justify-center mb-3">{r.icon}</div>
+              <div className="w-11 h-11 rounded-full bg-brand-indigo text-brand-mint flex items-center justify-center mb-3">{r.icon}</div>
               <h3 className="font-sora font-bold text-base md:text-lg leading-snug mb-1.5">{r.t}</h3>
               <p className="text-xs md:text-sm text-white/70 leading-relaxed">{r.x}</p>
             </motion.div>
@@ -199,7 +196,7 @@ export default function Empieza() {
                 >
                   <div className="relative z-10 shrink-0 w-16 h-16 rounded-2xl bg-brand-mint text-brand-onyx flex items-center justify-center shadow-[0_0_30px_rgba(136,249,192,0.35)]">
                     {p.icon}
-                    <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-brand-indigo text-white font-display text-base flex items-center justify-center border-2 border-brand-onyx">
+                    <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-brand-mint text-brand-onyx font-display text-base flex items-center justify-center border-2 border-brand-onyx">
                       {i + 1}
                     </span>
                   </div>

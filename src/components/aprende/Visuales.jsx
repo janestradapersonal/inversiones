@@ -206,7 +206,7 @@ function Lineas({ series, x }) {
 
 // Medidor de riesgo de 1 a 5 (riesgo) y de liquidez/rentabilidad si se dan
 export function Riesgo({ nivel, texto }) {
-  const tonos = ["#88F9C0", "#C6F27A", "#F5C542", "#FF9E5C", "#FF5C7A"];
+  const tonos = ["#9FE870", "#C6F27A", "#F5C542", "#FF9E5C", "#FF5C7A"];
   return (
     <div>
       <div className="flex gap-1">
