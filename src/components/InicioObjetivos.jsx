@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ChevronDown, Ban } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Check, X } from "lucide-react";
 import { ContadorPerdida, CintaCifras } from "@/components/inicio/Ganchos";
 
 // Primera pantalla de la web: qué quiere conseguir (con acceso directo a cada parte) y qué no hará.
@@ -89,43 +89,36 @@ export default function InicioObjetivos({ trasEntrada = null }) {
 
       {trasEntrada}
 
-      {/* Lo que esta web no hará */}
+      {/* Qué hay y qué no hay en esta web */}
       <section className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-4">
-        <motion.div
-          {...aparece()}
-          className="rounded-3xl border-2 border-[#FF5C7A]/60 bg-brand-onyx p-6 md:p-10"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <Ban className="w-8 h-8 text-[#FF5C7A]" />
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#FF5C7A]">Lo que esta web no hará</p>
-          </div>
-          <ul className="font-display uppercase text-3xl md:text-5xl leading-[1] mb-6 space-y-1">
-            <li>
-              Decirte <span className="font-serif italic normal-case text-[#FF5C7A]">dónde invertir</span>
-            </li>
-            <li>
-              Venderte <span className="font-serif italic normal-case text-[#FF5C7A]">humo</span>
-            </li>
-            <li>
-              Hablarte de <span className="font-serif italic normal-case text-[#FF5C7A]">productos ganadores</span>
-            </li>
-          </ul>
-          <div className="space-y-4 text-white/80 text-lg leading-relaxed max-w-3xl">
-            <p>
-              Es una web completamente educativa. Soy una persona apasionada por este tema y he aprendido mucho, pero nadie
-              sabe el futuro: todo lo que se cuenta se basa en estadísticas de lo que ha pasado en la historia.
-            </p>
-            <p>
-              Aquí te explico los hechos. Si quieres buscar productos concretos, hoy en día hay muchísima información en
-              internet, o puedes contactar con gente que sabe de verdad y te puede asesorar, porque cada persona es un mundo
-              y tiene más o menos tolerancia al riesgo. Yo no doy ese asesoramiento, pero hay quien lo da.
-            </p>
-            <p className="text-white font-semibold">
-              Mi intención no es venderte nada. Lo que hago es puramente vocacional.
-            </p>
-          </div>
-          <p className="mt-6 text-xs text-white/45">Esto no es asesoramiento financiero.</p>
-        </motion.div>
+        <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-mint">Para que no haya dudas</p>
+        <h2 className="font-display uppercase text-4xl md:text-6xl leading-[0.95] mt-3 mb-8">
+          Qué vas a <span className="font-serif italic normal-case text-brand-mint">encontrar</span>
+        </h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {[
+            ["Aquí sí", Check, "text-brand-mint", "bg-brand-mint/15", "border-brand-mint/40", ["Datos reales de la historia", "Conceptos explicados fácil", "Tu primer paso"]],
+            ["Aquí no", X, "text-[#FF5C7A]", "bg-[#FF5C7A]/15", "border-[#FF5C7A]/40", ["Predicciones del futuro", "Decirte dónde invertir", "Productos «ganadores»"]],
+          ].map(([titulo, Icono, color, fondo, borde, items], i) => (
+            <motion.div key={titulo} {...aparece(i)} className={`rounded-3xl border-2 ${borde} bg-brand-surface p-6 md:p-8`}>
+              <p className={`font-display uppercase text-3xl md:text-4xl leading-none mb-6 ${color}`}>{titulo}</p>
+              <ul className="space-y-4">
+                {items.map((t) => (
+                  <li key={t} className="flex items-center gap-4">
+                    <span className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center ${fondo} ${color}`}>
+                      <Icono className="w-5 h-5" strokeWidth={3} />
+                    </span>
+                    <span className="text-white text-lg md:text-xl font-semibold leading-snug">{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+        <p className="mt-6 text-white/70 text-lg">
+          Para lo personal, un asesor. <span className="text-white font-semibold">Esto es solo para aprender.</span>
+        </p>
+        <p className="mt-2 text-xs text-white/45">Esto no es asesoramiento financiero.</p>
       </section>
     </div>
   );
