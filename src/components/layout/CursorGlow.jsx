@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 // Fondo interactivo: el ratón deja una línea como la de un gráfico de bolsa y suelta flechas.
 // Si sube, flechas menta que suben; si baja, flechas rojas que bajan.
-const MENTA = [136, 249, 192];
+const MENTA = [159, 232, 112];
 const ROJO = [255, 92, 122];
 const VIDA_LINEA = 650; // ms que dura cada tramo de la línea
 const VIDA_FLECHA = 1100; // ms que dura cada flecha
@@ -131,7 +131,7 @@ export default function CursorGlow() {
           if (flechas.length > 40) flechas.shift();
         }
         // El brillo toma el color de la tendencia
-        raiz.style.setProperty("--brillo", tendencia >= 0 ? "136, 249, 192" : "255, 92, 122");
+        raiz.style.setProperty("--brillo", tendencia >= 0 ? "159, 232, 112" : "255, 92, 122");
       }
       ultimo = { x, y };
       puntos.push({ x, y, t: ahora });
@@ -164,7 +164,7 @@ export default function CursorGlow() {
         className="absolute inset-0 opacity-0 transition-opacity duration-500"
         style={{
           background:
-            "radial-gradient(600px circle at var(--x) var(--y), rgba(var(--brillo, 136, 249, 192), 0.22), rgba(var(--brillo, 136, 249, 192), 0.06) 35%, transparent 65%)",
+            "radial-gradient(600px circle at var(--x) var(--y), rgba(var(--brillo, 159, 232, 112), 0.22), rgba(var(--brillo, 159, 232, 112), 0.06) 35%, transparent 65%)",
         }}
       />
       <canvas ref={canvasRef} className="fixed inset-0 z-40" />

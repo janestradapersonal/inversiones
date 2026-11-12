@@ -1,3 +1,4 @@
+import { CabeceraPagina } from "@/components/layout/Banda";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -207,7 +208,7 @@ function Publicacion({ post, misLikes, onLike, onRespuesta }) {
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-brand-indigo flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-brand-indigo text-brand-mint flex items-center justify-center">
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -320,17 +321,14 @@ export default function Foro() {
     `px-4 py-2 text-sm font-medium rounded-full transition-colors ${activa ? "bg-brand-mint text-brand-onyx" : "bg-brand-surface text-white/70 hover:text-white border border-white/10"}`;
 
   return (
-    <div className="pt-28 pb-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-surface text-brand-mint font-semibold text-sm mb-5">Comunidad</span>
-          <h1 className="font-display uppercase text-5xl md:text-7xl leading-[0.92] tracking-tight mb-6">
-            El <span className="font-serif italic normal-case text-brand-mint">foro</span>
-          </h1>
-          <p className="text-white/85 mx-auto text-xl max-w-xl">
-            Pregunta, comparte tu experiencia y ayuda a otros. No hay preguntas tontas: todos empezamos desde cero.
-          </p>
-        </motion.div>
+    <div className="pb-20">
+      <CabeceraPagina
+        etiqueta="Comunidad"
+        titulo="El"
+        resalto="foro"
+        texto="Pregunta, comparte tu experiencia y ayuda a otros. No hay preguntas tontas: todos empezamos desde cero."
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 md:pt-16">
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex flex-wrap gap-2">

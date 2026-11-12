@@ -150,10 +150,9 @@ export default function HeroCrecimiento() {
   const kilos = (l) => `${l / 1000}k €`;
 
   return (
-    <section ref={ref} className="relative h-[380vh]">
+    <section ref={ref} className="relative h-[260vh]">
       {/* Fondo fijo mientras dura la sección */}
       <div className="sticky top-0 h-[100dvh] overflow-hidden bg-brand-onyx">
-        <div className="absolute -top-1/3 left-1/4 w-[70vw] h-[70vw] rounded-full bg-brand-indigo/25 blur-[140px]" />
 
         {/* Cabecera fija: aviso y selector de ejemplo */}
         <div className="absolute z-20 top-20 md:top-24 left-0 right-0 flex flex-col items-center gap-3 px-4">
@@ -227,7 +226,7 @@ export default function HeroCrecimiento() {
                     className="relative rounded-t-[3px] bg-brand-mint"
                     style={{
                       height: alto(tot - pue),
-                      boxShadow: enCurso ? "0 0 18px rgba(158,133,255,0.8)" : undefined,
+                      boxShadow: enCurso ? "0 0 18px rgb(var(--p-acento) / 0.8)" : undefined,
                     }}
                   />
                   {/* Dorado = lo que pones (como las monedas); línea oscura que separa de lo ganado */}

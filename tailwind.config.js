@@ -11,7 +11,7 @@ module.exports = {
   		},
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
-        sora: ['Sora', 'sans-serif'],
+        sora: ['"Inter Tight"', 'Inter', 'sans-serif'],
         display: ['Anton', 'Impact', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
       },
@@ -58,12 +58,13 @@ module.exports = {
   			},
         brand: {
           // Paleta de estilo_fondo_1: Onyx Black y Electric Indigo (estilo 3); «mint» es ahora el lila del estilo 3
-          onyx: '#01010D',
-          indigo: '#6331FB',
-          mint: '#9E85FF',
-          surface: '#110D33',
-          orange: '#9E85FF',
-          purple: '#633CFF',
+          onyx: 'rgb(var(--p-fondo) / <alpha-value>)',
+          indigo: 'rgb(var(--p-fuerte) / <alpha-value>)',
+          mint: 'rgb(var(--p-acento) / <alpha-value>)',
+          surface: 'rgb(var(--p-sup) / <alpha-value>)',
+          glow: 'rgb(var(--p-brillo) / <alpha-value>)',
+          orange: 'rgb(var(--p-acento) / <alpha-value>)',
+          purple: 'rgb(var(--p-fuerte) / <alpha-value>)',
           yellow: '#0EA5E9',
           green: '#22C55E',
           pink: '#EC4899',

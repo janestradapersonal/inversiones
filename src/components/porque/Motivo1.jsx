@@ -8,7 +8,7 @@ import grafico from "@/data/mercados.json";
 // Cada activo con su color; el euro va más grueso porque es el protagonista
 const activos = [
   { id: "oro", nombre: "Oro", color: "#F5C542" },
-  { id: "sp500", nombre: "S&P 500", color: "#88F9C0" },
+  { id: "sp500", nombre: "S&P 500", color: "#9FE870" },
   { id: "casa", nombre: "Vivienda en España", color: "#6CB4FF" },
   { id: "euro", nombre: "Euros guardados", color: "#FF5C7A" },
 ];
@@ -78,7 +78,7 @@ function Leyenda({ crisis }) {
             Caída del S&P 500
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm bg-[#88F9C0]/30" />
+            <span className="w-4 h-3 rounded-sm bg-[#9FE870]/30" />
             Subida hasta recuperarlo
           </li>
         </>
@@ -92,9 +92,9 @@ function RotuloCrisis({ viewBox, crisis }) {
   const x = lado === "end" ? viewBox.x + viewBox.width : viewBox.x + viewBox.width / 2;
   return (
     <text x={x} y={viewBox.y - 34 + fila * 15} textAnchor={lado} fontSize={11} fontWeight={700} fill="#FF9DB0"
-      stroke="#110D33" strokeWidth={3} paintOrder="stroke">
+      stroke="rgb(var(--p-sup))" strokeWidth={3} paintOrder="stroke">
       {texto} −{coma(Math.abs(crisis.caida), 0)} %
-      <tspan fill="#88F9C0"> +{coma(crisis.subida, 0)} %</tspan>
+      <tspan fill="#9FE870"> +{coma(crisis.subida, 0)} %</tspan>
     </text>
   );
 }
@@ -121,9 +121,9 @@ function BolsaPinchada() {
   return (
     <svg viewBox="0 0 200 220" className="w-40 md:w-52 h-auto" aria-hidden>
       <path d="M70 40 Q100 20 130 40 L120 60 Q100 52 80 60 Z" fill="#2D2664" />
-      <path d="M80 58 Q30 90 40 150 Q50 190 100 190 Q150 190 160 150 Q170 90 120 58 Q100 50 80 58 Z" fill="#3A2F86" stroke="#6331FB" strokeWidth="2" />
+      <path d="M80 58 Q30 90 40 150 Q50 190 100 190 Q150 190 160 150 Q170 90 120 58 Q100 50 80 58 Z" fill="rgb(var(--p-muted))" stroke="rgb(var(--p-fuerte))" strokeWidth="2" />
       <text x="100" y="140" textAnchor="middle" className="font-display" fontSize="44" fill="#ffffff" opacity="0.9">€</text>
-      <ellipse cx="128" cy="186" rx="6" ry="3" fill="#01010D" />
+      <ellipse cx="128" cy="186" rx="6" ry="3" fill="rgb(var(--p-fondo))" />
       {[0, 1, 2].map((i) => (
         <motion.circle
           key={i}
@@ -170,7 +170,7 @@ function GraficoDinero() {
         </div>
       </div>
       <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/80 mb-2">
-        <li className="flex items-center gap-2"><span className="w-4 h-0.5 rounded-full bg-[#B79CFF]" /> Euros en circulación (billones)</li>
+        <li className="flex items-center gap-2"><span className="w-4 h-0.5 rounded-full bg-[rgb(var(--p-claro))]" /> Euros en circulación (billones)</li>
         <li className="flex items-center gap-2"><span className="w-4 h-0.5 rounded-full bg-[#FF5C7A]" /> Lo que compran 1.000 € de {mesLargo(v.base)}</li>
       </ul>
       <div className="h-[260px] -mx-1">
@@ -178,17 +178,17 @@ function GraficoDinero() {
           <LineChart data={filas} margin={{ top: 8, right: 0, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="rgba(255,255,255,0.07)" vertical={false} />
             <XAxis dataKey="mes" ticks={v.ticks} tickFormatter={(m) => m.slice(0, 4)} stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} tickLine={false} />
-            <YAxis yAxisId="m3" domain={[v.m3[0], v.m3.at(-1)]} ticks={v.m3} interval={0} stroke="#B79CFF" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={26} />
+            <YAxis yAxisId="m3" domain={[v.m3[0], v.m3.at(-1)]} ticks={v.m3} interval={0} stroke="rgb(var(--p-claro))" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={26} />
             <YAxis yAxisId="valor" orientation="right" domain={[v.valor[0], v.valor.at(-1)]} ticks={v.valor} interval={0} stroke="#FF5C7A" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={44}
               tickFormatter={(n) => `${n.toLocaleString("es-ES", { useGrouping: "always" })}\u00a0€`} />
             <Tooltip
               formatter={(n, id) => (id === "m3" ? [`${billones(n)} billones €`, "En circulación"] : [euros(n), "Compran"])}
               labelFormatter={mesLargo}
-              contentStyle={{ background: "#01010D", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, fontSize: 12 }}
+              contentStyle={{ background: "rgb(var(--p-fondo))", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, fontSize: 12 }}
             />
             <ReferenceArea yAxisId="m3" x1="2020-02" x2="2021-12" fill="#FFFFFF" fillOpacity={0.07} stroke="none"
               label={{ value: "Covid", position: "insideTop", fill: "rgba(255,255,255,0.7)", fontSize: 11 }} />
-            <Line yAxisId="m3" type="linear" dataKey="m3" stroke="#B79CFF" strokeWidth={3} dot={false} isAnimationActive={false} />
+            <Line yAxisId="m3" type="linear" dataKey="m3" stroke="rgb(var(--p-claro))" strokeWidth={3} dot={false} isAnimationActive={false} />
             <Line yAxisId="valor" type="linear" dataKey="valor" stroke="#FF5C7A" strokeWidth={3} dot={false} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
@@ -379,7 +379,6 @@ export default function Motivo1() {
           viewport={{ once: true }}
           className="rounded-3xl bg-brand-indigo p-7 md:p-9 relative overflow-hidden"
         >
-          <div className="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-white/10 blur-[50px] pointer-events-none" />
           <h3 className="relative font-display uppercase text-2xl md:text-3xl leading-tight mb-3">Ejemplo: la COVID</h3>
           <p className="relative text-white/85 text-lg leading-relaxed">
             De febrero de 2020 a diciembre de 2021, los euros en circulación pasaron de {billones(m3["2020-02"])} a{" "}
@@ -443,11 +442,11 @@ export default function Motivo1() {
                 {bandas.flatMap((c) => [
                   <ReferenceArea key={`${c.id}-baja`} x1={fila(c.inicio)} x2={fila(c.fondo)} fill="#FF5C7A" fillOpacity={0.25}
                     stroke="none" label={<RotuloCrisis crisis={c} />} />,
-                  <ReferenceArea key={`${c.id}-sube`} x1={fila(c.fondo)} x2={fila(c.recuperado)} fill="#88F9C0" fillOpacity={0.16} stroke="none" />,
+                  <ReferenceArea key={`${c.id}-sube`} x1={fila(c.fondo)} x2={fila(c.recuperado)} fill="#9FE870" fillOpacity={0.16} stroke="none" />,
                 ])}
                 {activos.map((a) => (
                   <Line key={a.id} type="linear" dataKey={a.id} stroke={a.color} dot={false}
-                    strokeWidth={a.id === "euro" ? 4 : 2} activeDot={{ r: 5, stroke: "#110D33", strokeWidth: 2 }}
+                    strokeWidth={a.id === "euro" ? 4 : 2} activeDot={{ r: 5, stroke: "rgb(var(--p-sup))", strokeWidth: 2 }}
                     isAnimationActive={false} />
                 ))}
               </LineChart>
